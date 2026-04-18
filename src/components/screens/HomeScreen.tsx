@@ -60,7 +60,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
     : L.statusNew;
 
   return (
-    <div style={{ background: theme.bg, minHeight: '100%', overflowY: 'auto', paddingTop: 56 }}>
+    <div style={{ background: theme.bg, height: '100%', overflowY: 'auto', paddingTop: 56 }}>
       <div style={{ padding: '8px 20px 40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
           <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>

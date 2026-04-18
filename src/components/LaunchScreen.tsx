@@ -115,21 +115,24 @@ const LivingBlob: React.FC<{ theme: PaceTheme; visible: boolean }> = ({ visible 
 
 export const LaunchScreen: React.FC<{
   theme: PaceTheme;
-  onDone: () => void;
-}> = ({ theme, onDone }) => {
-  const [phase, setPhase] = React.useState(0);
+  onDone?: () => void;
+  static?: boolean;
+}> = ({ theme, onDone, static: isStatic }) => {
   const tagline = '少一點監控，多一點陪伴';
-  const [typed, setTyped] = React.useState('');
+  const [phase, setPhase] = React.useState(isStatic ? 4 : 0);
+  const [typed, setTyped] = React.useState(isStatic ? tagline : '');
 
   React.useEffect(() => {
+    if (isStatic) return;
     const t1 = setTimeout(() => setPhase(1), 200);
     const t2 = setTimeout(() => setPhase(2), 1400);
     const t3 = setTimeout(() => setPhase(3), 2800);
     const t4 = setTimeout(() => setPhase(4), 3800);
     return () => { [t1, t2, t3, t4].forEach(clearTimeout); };
-  }, []);
+  }, [isStatic]);
 
   React.useEffect(() => {
+    if (isStatic) return;
     if (phase < 4) return;
     let i = 0;
     let timer: ReturnType<typeof setTimeout>;
@@ -141,7 +144,7 @@ export const LaunchScreen: React.FC<{
         timer = setTimeout(tick, 140 + Math.random() * 80);
       } else {
         timer = setTimeout(() => setPhase(5), 1600);
-        timer2 = setTimeout(() => onDone(), 2600);
+        timer2 = setTimeout(() => onDone?.(), 2600);
       }
     };
     timer = setTimeout(tick, 150);

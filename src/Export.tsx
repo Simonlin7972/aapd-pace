@@ -155,6 +155,9 @@ export default function ExportPage() {
         justifyContent: 'center',
         marginBottom: 80,
       }}>
+        <ScreenFrame label="啟動畫面 Launch">
+          <LaunchScreen theme={theme} static />
+        </ScreenFrame>
         {screens.map(s => {
           const Comp = SCREEN_MAP[s.name];
           return (
