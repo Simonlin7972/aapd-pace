@@ -1,0 +1,100 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: "Noto Sans TC", -apple-system, system-ui, sans-serif; }
+body { background: #E8DFCC; color: #3D342A; min-height: 100vh; }
+::-webkit-scrollbar { display: none; }
+
+.stage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* Tweaks panel */
+.tweaks-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  background: rgba(251, 246, 236, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(61, 52, 42, 0.12);
+  border-radius: 20px;
+  padding: 20px;
+  width: 260px;
+  box-shadow: 0 16px 48px rgba(61, 52, 42, 0.15);
+  display: none;
+}
+.tweaks-panel.open { display: block; }
+.tweaks-panel h3 {
+  margin: 0 0 14px;
+  font-family: "Noto Serif TC", serif;
+  font-size: 17px;
+  font-weight: 500;
+}
+.tweak-row { margin-bottom: 14px; }
+.tweak-row label {
+  display: block;
+  font-size: 11px;
+  color: #9A8F7E;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.tweak-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: transparent;
+  border: 1px solid rgba(61, 52, 42, 0.15);
+  cursor: pointer;
+  color: #6E6456;
+}
+.chip.active {
+  background: #3D342A;
+  color: #FBF6EC;
+  border-color: #3D342A;
+}
+.tweak-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.tweak-swatch.active {
+  border-color: #3D342A;
+}
+.tweaks-hint {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(61, 52, 42, 0.9);
+  color: #FBF6EC;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+body.pace-dark {
+  background: #1F1A14;
+  color: #F2EADB;
+}
+
+@keyframes paceToast {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes paceCaret {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
