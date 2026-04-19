@@ -2,7 +2,7 @@ import React from 'react';
 import { THEMES, MOOD_SCALE, FONTS, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
 import { Icons } from './components/Icons';
-import { PaceCard, PaceSerif, PaceSans, PaceNum, PaceButton, PaceSegmented, AnimatedEnter } from './components/UI';
+import { PaceCard, PaceSerif, PaceSans, PaceNum, PaceButton, SegmentedControl, AnimatedEnter } from './components/UI';
 import { MoodSlider, HoursSlider } from './components/Sliders';
 import { TopBar } from './components/screens/TopBar';
 import { NavStack } from './components/NavStack';
@@ -158,7 +158,7 @@ const SideNav: React.FC<{ activeId: string; isDark: boolean; onToggle: (v: strin
 
       {/* Theme switcher */}
       <div style={{ padding: '0 16px 16px', borderBottom: `1px solid ${t.line}`, marginBottom: 12 }}>
-        <PaceSegmented
+        <SegmentedControl
           theme={t}
           value={isDark ? 'dark' : 'light'}
           onChange={onToggle}
@@ -816,11 +816,11 @@ export default function DesignSystemPage() {
           </SubSection>
 
           {/* Segmented Control */}
-          <SubSection id="mol-segmented" title="PaceSegmented">
+          <SubSection id="mol-segmented" title="SegmentedControl">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
               <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
                 <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>2 options</PaceSans>
-                <PaceSegmented theme={theme}
+                <SegmentedControl theme={theme}
                   value={segVal === 'a' || segVal === 'b' ? segVal : 'a'}
                   onChange={setSegVal}
                   options={[{ k: 'a', l: '日間' }, { k: 'b', l: '夜間' }]}
@@ -828,7 +828,7 @@ export default function DesignSystemPage() {
               </div>
               <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
                 <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>3 options</PaceSans>
-                <PaceSegmented theme={theme}
+                <SegmentedControl theme={theme}
                   value="zh-TW"
                   onChange={() => {}}
                   options={[{ k: 'zh-TW', l: '中文' }, { k: 'en', l: 'EN' }, { k: 'ja', l: '日本語' }]}
@@ -837,7 +837,7 @@ export default function DesignSystemPage() {
             </div>
             <div style={{ marginTop: 16, background: theme.surface, borderRadius: 20, padding: 24 }}>
               <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>Compact variant</PaceSans>
-              <PaceSegmented theme={theme}
+              <SegmentedControl theme={theme}
                 value="a"
                 onChange={() => {}}
                 options={[{ k: 'a', l: '日' }, { k: 'b', l: '夜' }]}
@@ -1205,7 +1205,7 @@ export default function DesignSystemPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   <div>
                     <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>外觀</PaceSans>
-                    <PaceSegmented theme={theme}
+                    <SegmentedControl theme={theme}
                       value={isDark ? 'dark' : 'light'}
                       onChange={() => {}}
                       options={[{ k: 'light', l: '淺色' }, { k: 'dark', l: '深色' }]}

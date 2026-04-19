@@ -3,7 +3,7 @@ import type { PaceTheme } from '../../data/tokens';
 import { FONTS } from '../../data/tokens';
 import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
-import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, PaceSegmented } from '../UI';
+import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl } from '../UI';
 import { useNav } from '../NavStack';
 import { SettingsCtx } from '../../App';
 
@@ -30,7 +30,7 @@ const PaceSettingsControls: React.FC<{
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <SettingsRow theme={theme} label={L.p_appearance}>
-        <PaceSegmented theme={theme}
+        <SegmentedControl theme={theme}
           value={isDark ? 'dark' : 'light'}
           onChange={(v) => onUpdate({ dark: v === 'dark' })}
           options={[{ k: 'light', l: L.p_light }, { k: 'dark', l: L.p_dark }]}
@@ -38,7 +38,7 @@ const PaceSettingsControls: React.FC<{
         />
       </SettingsRow>
       <SettingsRow theme={theme} label={L.p_language}>
-        <PaceSegmented theme={theme}
+        <SegmentedControl theme={theme}
           value={settings.lang || 'zh-TW'}
           onChange={(v) => onUpdate({ lang: v })}
           options={LANG}
@@ -46,7 +46,7 @@ const PaceSettingsControls: React.FC<{
         />
       </SettingsRow>
       <SettingsRow theme={theme} label={L.p_variantLabel}>
-        <PaceSegmented theme={theme}
+        <SegmentedControl theme={theme}
           value={variant}
           onChange={(v) => onUpdate({ profileVariant: v })}
           options={[
