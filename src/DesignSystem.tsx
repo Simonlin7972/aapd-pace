@@ -259,6 +259,61 @@ const TokenRow: React.FC<{ label: string; value: string; token?: string; preview
   );
 };
 
+// Satisfaction card with expanding border ring on select
+const SatisfactionCard: React.FC<{
+  label: string; color: string; selected: boolean;
+  onSelect: () => void; theme: PaceTheme;
+}> = ({ label, color, selected, onSelect, theme }) => {
+  const [pulse, setPulse] = React.useState(0);
+  const prevSelected = React.useRef(selected);
+
+  React.useEffect(() => {
+    if (selected && !prevSelected.current) {
+      setPulse(p => p + 1);
+    }
+    prevSelected.current = selected;
+  }, [selected]);
+
+  return (
+    <div onClick={onSelect} style={{
+      flex: 1, padding: '18px 12px',
+      background: theme.surface, borderRadius: theme.radius,
+      cursor: 'pointer', position: 'relative',
+      border: `2px solid ${selected ? color : 'transparent'}`,
+      transition: 'border-color 200ms ease',
+      overflow: 'visible',
+    }}>
+      {/* Expanding ring pulse */}
+      {pulse > 0 && (
+        <PulseRing key={pulse} color={color} radius={theme.radius} />
+      )}
+      <div style={{
+        width: 24, height: 24, borderRadius: '50%',
+        background: color, marginBottom: 10,
+      }} />
+      <PaceSans size={14} color={theme.ink}>{label}</PaceSans>
+    </div>
+  );
+};
+
+const PulseRing: React.FC<{ color: string; radius: number }> = ({ color, radius }) => {
+  const [phase, setPhase] = React.useState<'start' | 'end'>('start');
+  React.useEffect(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => setPhase('end')));
+  }, []);
+  return (
+    <div style={{
+      position: 'absolute',
+      inset: phase === 'start' ? -2 : -8,
+      borderRadius: radius + (phase === 'start' ? 0 : 6),
+      border: `2px solid ${color}`,
+      opacity: phase === 'start' ? 0.7 : 0,
+      transition: 'all 500ms cubic-bezier(0.32, 0.72, 0, 1)',
+      pointerEvents: 'none',
+    }} />
+  );
+};
+
 // ─── Design System Page ─────────────────────────
 
 export default function DesignSystemPage() {
@@ -910,19 +965,14 @@ export default function DesignSystemPage() {
                 { k: 1, l: '均衡', c: theme.dust },
                 { k: 2, l: '放縱', c: theme.terracotta },
               ].map(h => (
-                <div key={h.k} onClick={() => setHealthVal(h.k)} style={{
-                  flex: 1, padding: '18px 12px',
-                  background: theme.surface, borderRadius: theme.radius,
-                  cursor: 'pointer', position: 'relative',
-                  border: `2px solid ${healthVal === h.k ? h.c : 'transparent'}`,
-                  transition: 'all 200ms ease',
-                }}>
-                  <div style={{
-                    width: 24, height: 24, borderRadius: '50%',
-                    background: h.c, marginBottom: 10,
-                  }} />
-                  <PaceSans size={14} color={theme.ink}>{h.l}</PaceSans>
-                </div>
+                <SatisfactionCard
+                  key={h.k}
+                  label={h.l}
+                  color={h.c}
+                  selected={healthVal === h.k}
+                  onSelect={() => setHealthVal(h.k)}
+                  theme={theme}
+                />
               ))}
             </div>
           </SubSection>
