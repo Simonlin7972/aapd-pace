@@ -5,8 +5,6 @@ import { Icons } from './components/Icons';
 import { PaceCard, PaceSerif, PaceSans, PaceNum, PaceButton, SegmentedControl, AnimatedEnter } from './components/UI';
 import { MoodSlider, HoursSlider } from './components/Sliders';
 import { TopBar } from './components/screens/TopBar';
-import { NavStack } from './components/NavStack';
-import { IOSDevice } from './components/IOSFrame';
 
 function buildTheme(dark = false): PaceTheme {
   const base = dark ? { ...THEMES.oatDark } : { ...THEMES.oat };

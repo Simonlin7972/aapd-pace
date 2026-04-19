@@ -3,7 +3,7 @@ import type { PaceTheme } from '../../data/tokens';
 import { FONTS } from '../../data/tokens';
 import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
-import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl } from '../UI';
+import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl, PageSlider } from '../UI';
 import { useNav } from '../NavStack';
 import { SettingsCtx } from '../../App';
 
@@ -467,22 +467,10 @@ export const ProfileScreen: React.FC<{
   const activeIdx = idx === -1 ? 0 : idx;
 
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-      <div style={{
-        display: 'flex',
-        width: `${VARIANTS.length * 100}%`,
-        height: '100%',
-        transform: `translateX(-${activeIdx * (100 / VARIANTS.length)}%)`,
-        transition: 'transform 400ms cubic-bezier(0.32,0.72,0,1)',
-      }}>
-        {VARIANTS.map((variant) => (
-          <div key={variant} style={{ width: `${100 / VARIANTS.length}%`, height: '100%', position: 'relative', flexShrink: 0 }}>
-            {variant === 'classic' && <ProfileClassic theme={theme} settings={settings} onUpdate={onUpdate} />}
-            {variant === 'editorial' && <ProfileEditorial theme={theme} settings={settings} onUpdate={onUpdate} />}
-            {variant === 'minimal' && <ProfileMinimal theme={theme} settings={settings} onUpdate={onUpdate} />}
-          </div>
-        ))}
-      </div>
-    </div>
+    <PageSlider activeIndex={activeIdx}>
+      <ProfileClassic theme={theme} settings={settings} onUpdate={onUpdate} />
+      <ProfileEditorial theme={theme} settings={settings} onUpdate={onUpdate} />
+      <ProfileMinimal theme={theme} settings={settings} onUpdate={onUpdate} />
+    </PageSlider>
   );
 };

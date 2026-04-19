@@ -136,5 +136,6 @@ export const AnimatedEnter: React.FC<{
   );
 };
 
-// Re-export segmented control from its own file
+// Re-export from dedicated files
+export { PageSlider } from './PageSlider';
 export { SegmentedControl, SegmentedControl as PaceSegmented } from './SegmentedControl';
