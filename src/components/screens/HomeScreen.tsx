@@ -7,6 +7,7 @@ import { PaceCard, PaceSerif, PaceSans, AnimatedEnter } from '../UI';
 import { MoodSlider } from '../Sliders';
 import { useNav, useToast, useVisited } from '../NavStack';
 import { BottomBar } from '../BottomBar';
+import { BlobShape } from '../BlobShape';
 
 const DimCard: React.FC<{ theme: PaceTheme; d: any }> = ({ theme, d }) => {
   const [pressed, setPressed] = React.useState(false);
@@ -78,12 +79,12 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
           <AnimatedEnter delay={50} skip={skip}>
             <div style={{ position: 'relative', marginBottom: 24 }}>
-              <div style={{
-                position: 'absolute', right: -6, top: -10,
-                width: 70, height: 70,
-                borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-                background: theme.dust, opacity: 0.5,
-              }} />
+              <BlobShape
+                size={70}
+                fill={theme.dust}
+                opacity={0.5}
+                style={{ position: 'absolute', right: -6, top: -10 }}
+              />
               <PaceSerif size={30} weight={500} color={theme.ink} style={{ marginBottom: 10, position: 'relative' }}>
                 {theme.name.includes('夜') ? L.greetingNight : L.greeting}
               </PaceSerif>

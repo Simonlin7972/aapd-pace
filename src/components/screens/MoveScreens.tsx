@@ -5,6 +5,7 @@ import { PaceState } from '../../data/state';
 import { PaceSerif, PaceSans, PaceButton, AnimatedEnter } from '../UI';
 import { useNav } from '../NavStack';
 import { TopBar } from './TopBar';
+import { BlobShape } from '../BlobShape';
 
 export const MoveScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();
@@ -73,12 +74,12 @@ export const MoveDoneScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   return (
     <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
       <AnimatedEnter delay={60}>
-        <div style={{
-          width: 120, height: 120, marginBottom: 32,
-          borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-          background: theme.sage,
-          boxShadow: `0 16px 40px ${theme.sage}50`,
-        }} />
+        <BlobShape
+          size={120}
+          fill={theme.sage}
+          dropShadow={`0 16px 40px ${theme.sage}50`}
+          style={{ marginBottom: 32 }}
+        />
       </AnimatedEnter>
       <AnimatedEnter delay={220}>
         <PaceSerif size={30} weight={500} color={theme.ink} style={{ textAlign: 'center', marginBottom: 12, whiteSpace: 'pre-line' }}>

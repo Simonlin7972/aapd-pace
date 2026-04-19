@@ -8,6 +8,7 @@ import { MoodSlider, HoursSlider } from '../Sliders';
 import { useNav, useVisited } from '../NavStack';
 import { TopBar } from './TopBar';
 import { BottomBar } from '../BottomBar';
+import { BlobShape } from '../BlobShape';
 
 // SleepHome: landing page for sleep tab
 const WeekChart: React.FC<{ theme: PaceTheme; data: number[]; L: Record<string, any> }> = ({ theme, data, L }) => {
@@ -78,11 +79,12 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               padding: 22, marginBottom: 16, position: 'relative', overflow: 'hidden',
             }}>
               {/* Decorative blob */}
-              <div style={{
-                position: 'absolute', right: -16, top: -16,
-                width: 80, height: 80, borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-                background: theme.dust, opacity: 0.2,
-              }} />
+              <BlobShape
+                size={80}
+                fill={theme.dust}
+                opacity={0.2}
+                style={{ position: 'absolute', right: -16, top: -16 }}
+              />
 
               {recorded ? (
                 <>
@@ -193,13 +195,13 @@ export const SleepStep1: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
       </div>
 
       <div style={{ flex: 1, padding: '40px 24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-        <div style={{
-          width: 140, height: 140, marginBottom: 36,
-          borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-          background: M[feel].color,
-          boxShadow: `0 16px 40px ${M[feel].color}60`,
-          transition: 'all 420ms cubic-bezier(0.34,1.56,0.64,1)',
-        }} />
+        <BlobShape
+          size={140}
+          fill={M[feel].color}
+          dropShadow={`0 16px 40px ${M[feel].color}60`}
+          transition="all 420ms cubic-bezier(0.34,1.56,0.64,1)"
+          style={{ marginBottom: 36 }}
+        />
         <PaceSerif size={22} color={theme.ink} style={{ marginBottom: 30 }}>{M[feel].label}</PaceSerif>
         <div style={{ width: '100%' }}>
           <MoodSlider theme={theme} value={feel} onChange={(v) => {

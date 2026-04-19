@@ -6,6 +6,7 @@ import { Icons } from '../Icons';
 import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl, PageSlider } from '../UI';
 import { useNav } from '../NavStack';
 import { SettingsCtx } from '../../App';
+import { BlobShape } from '../BlobShape';
 
 // Shared settings controls
 const SettingsRow: React.FC<{ theme: PaceTheme; label: string; children: React.ReactNode }> = ({ theme, label, children }) => (
@@ -110,13 +111,12 @@ const ProfileClassic: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
       <div style={{ padding: '32px 24px 40px' }}>
         <AnimatedEnter delay={60}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 32 }}>
-            <div style={{
-              width: 72, height: 72,
-              borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-              background: `radial-gradient(circle at 35% 35%, ${theme.dust}, ${theme.terracotta})`,
-              boxShadow: `0 8px 20px ${theme.terracotta}40`,
-              flexShrink: 0,
-            }} />
+            <BlobShape
+              size={72}
+              gradient={{ type: 'radial', from: theme.dust, to: theme.terracotta }}
+              dropShadow={`0 8px 20px ${theme.terracotta}40`}
+              style={{ flexShrink: 0 }}
+            />
             <div style={{ flex: 1, minWidth: 0 }}>
               <PaceSerif size={26} weight={500} color={theme.ink} style={{ marginBottom: 4 }}>{L.p_name}</PaceSerif>
               <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.5 }}>{L.p_bio}</PaceSans>

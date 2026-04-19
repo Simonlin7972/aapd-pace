@@ -5,6 +5,7 @@ import { Icons } from './components/Icons';
 import { PaceCard, PaceSerif, PaceSans, PaceNum, PaceButton, SegmentedControl, AnimatedEnter } from './components/UI';
 import { MoodSlider, HoursSlider } from './components/Sliders';
 import { TopBar } from './components/screens/TopBar';
+import { BlobShape } from './components/BlobShape';
 
 function buildTheme(dark = false): PaceTheme {
   const base = dark ? { ...THEMES.oatDark } : { ...THEMES.oat };
@@ -763,11 +764,7 @@ export default function DesignSystemPage() {
                 <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 10 }}>Organic blob shape</PaceSans>
                 <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
                   {[theme.dust, theme.sage, theme.terracotta].map((c, i) => (
-                    <div key={i} style={{
-                      width: 48, height: 48,
-                      borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-                      background: c, boxShadow: `0 8px 20px ${c}40`,
-                    }} />
+                    <BlobShape key={i} size={48} fill={c} dropShadow={`0 8px 20px ${c}40`} />
                   ))}
                 </div>
               </div>
@@ -1401,7 +1398,7 @@ export default function DesignSystemPage() {
                   border: `2px solid ${theme.lineStrong}`,
                   padding: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12,
                 }}>
-                  <div style={{ width: 60, height: 60, borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%', background: theme.sage, opacity: 0.7 }} />
+                  <BlobShape size={60} fill={theme.sage} opacity={0.7} />
                   <div style={{ height: 14, background: theme.line, borderRadius: 4, width: '70%' }} />
                   <div style={{ height: 8, background: theme.line, borderRadius: 3, width: '50%', opacity: 0.5 }} />
                   <div style={{ height: 36, background: theme.terracotta, borderRadius: 14, opacity: 0.8, width: '80%', marginTop: 12 }} />

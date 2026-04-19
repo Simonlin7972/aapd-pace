@@ -4,6 +4,7 @@ import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
 import { PaceSerif, PaceSans, PaceButton } from '../UI';
 import { MoodSlider } from '../Sliders';
+import { BlobShape } from '../BlobShape';
 
 export const MoodSheet: React.FC<{ theme: PaceTheme; onClose: () => void }> = ({ theme, onClose }) => {
   const L = theme.L;
@@ -25,13 +26,12 @@ export const MoodSheet: React.FC<{ theme: PaceTheme; onClose: () => void }> = ({
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         marginBottom: 28, height: 120,
       }}>
-        <div style={{
-          width: 100, height: 100,
-          borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-          background: M[val].color,
-          boxShadow: `0 12px 32px ${M[val].color}55`,
-          transition: 'all 360ms cubic-bezier(0.34,1.56,0.64,1)',
-        }} />
+        <BlobShape
+          size={100}
+          fill={M[val].color}
+          dropShadow={`0 12px 32px ${M[val].color}55`}
+          transition="all 360ms cubic-bezier(0.34,1.56,0.64,1)"
+        />
       </div>
 
       <div style={{ marginBottom: 28 }}>
