@@ -85,7 +85,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                 background: theme.dust, opacity: 0.5,
               }} />
               <PaceSerif size={30} weight={500} color={theme.ink} style={{ marginBottom: 10, position: 'relative' }}>
-                {L.greeting}
+                {theme.name.includes('夜') ? L.greetingNight : L.greeting}
               </PaceSerif>
               <PaceSerif size={19} weight={400} color={theme.inkSoft} style={{ lineHeight: 1.5, position: 'relative', textWrap: 'pretty' as any }}>
                 {status}

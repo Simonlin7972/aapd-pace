@@ -12,6 +12,7 @@ import { FoodScreen } from './components/screens/FoodScreen';
 import { InsightsScreen } from './components/screens/InsightsScreen';
 import { ProfileScreen } from './components/screens/ProfileScreens';
 import { LaunchScreen } from './components/LaunchScreen';
+import { FONTS } from './data/tokens';
 import { SettingsCtx, type Tweaks } from './App';
 
 function buildTheme(dark = false): PaceTheme {
@@ -25,16 +26,13 @@ function buildTheme(dark = false): PaceTheme {
   } as PaceTheme;
 }
 
-const theme = buildTheme(false);
-const darkTheme = buildTheme(true);
-
 // Wrapper: single screen rendered statically inside an iPhone frame
 const ScreenFrame: React.FC<{
   label: string;
   children: React.ReactNode;
   dark?: boolean;
 }> = ({ label, children, dark = false }) => {
-  const t = dark ? darkTheme : theme;
+  const t = dark ? buildTheme(true) : buildTheme(false);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
       <div style={{
@@ -52,9 +50,49 @@ const ScreenFrame: React.FC<{
   );
 };
 
+// Simple segmented control for export page (self-contained, no theme dependency)
+const ExportSegmented: React.FC<{
+  value: string;
+  onChange: (v: string) => void;
+  options: { k: string; l: string }[];
+}> = ({ value, onChange, options }) => {
+  const idx = options.findIndex(o => o.k === value);
+  const pct = 100 / options.length;
+  return (
+    <div style={{
+      position: 'relative',
+      background: 'rgba(61,52,42,0.12)',
+      borderRadius: 12, padding: 3,
+      display: 'inline-flex', height: 38, width: 240,
+    }}>
+      <div style={{
+        position: 'absolute', top: 3, bottom: 3,
+        left: `calc(${idx * pct}% + 3px)`,
+        width: `calc(${pct}% - 6px)`,
+        background: '#FBF6EC',
+        borderRadius: 9,
+        boxShadow: '0 1px 3px rgba(61,52,42,0.1)',
+        transition: 'left 280ms cubic-bezier(0.32,0.72,0,1)',
+      }} />
+      {options.map(o => (
+        <div key={o.k} onClick={() => onChange(o.k)} style={{
+          flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative', cursor: 'pointer',
+          fontFamily: FONTS.sans, fontSize: 13,
+          color: value === o.k ? '#3D342A' : '#9A8F7E',
+          fontWeight: value === o.k ? 500 : 400,
+          transition: 'color 200ms ease',
+        }}>{o.l}</div>
+      ))}
+    </div>
+  );
+};
+
 export default function ExportPage() {
-  const settings: Tweaks = { accent: 'amber', radius: 30, dark: false, lang: 'zh-TW', profileVariant: 'classic' };
-  const darkSettings: Tweaks = { accent: 'amber', radius: 30, dark: true, lang: 'zh-TW', profileVariant: 'classic' };
+  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
+  const dark = mode === 'dark';
+  const currentTheme = buildTheme(dark);
+  const currentSettings: Tweaks = { accent: 'amber', radius: 30, dark, lang: 'zh-TW', profileVariant: 'classic' };
   const noop = () => {};
 
   // Ensure state is set for screens that need it
@@ -95,27 +133,37 @@ export default function ExportPage() {
     profile: ProfileScreen,
   };
 
+  const pageBg = dark ? '#1E1A15' : '#D4CDB8';
+  const titleColor = dark ? '#F2EADB' : '#3D342A';
+  const labelColor = dark ? '#C4B8A2' : '#6E6456';
+
   return (
-    <SettingsCtx.Provider value={{ settings, onUpdate: noop }}>
+    <SettingsCtx.Provider value={{ settings: currentSettings, onUpdate: noop }}>
     <div style={{
-      background: '#D4CDB8',
+      background: pageBg,
       minHeight: '100vh',
       padding: '60px 40px',
+      transition: 'background 400ms ease',
     }}>
       <div style={{
         fontFamily: '"Noto Serif TC", serif',
         fontSize: 36, fontWeight: 500,
-        color: '#3D342A',
-        marginBottom: 12,
+        color: titleColor,
+        marginBottom: 20,
         textAlign: 'center',
+        transition: 'color 400ms ease',
       }}>Pace — All Screens</div>
-      <div style={{
-        fontFamily: '"Noto Sans TC", sans-serif',
-        fontSize: 14,
-        color: '#6E6456',
-        marginBottom: 60,
-        textAlign: 'center',
-      }}>Light Mode</div>
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 60 }}>
+        <ExportSegmented
+          value={mode}
+          onChange={(v) => setMode(v as 'light' | 'dark')}
+          options={[
+            { k: 'light', l: 'Light' },
+            { k: 'dark', l: 'Dark' },
+          ]}
+        />
+      </div>
 
       <div style={{
         display: 'flex',
@@ -124,54 +172,23 @@ export default function ExportPage() {
         justifyContent: 'center',
         marginBottom: 80,
       }}>
-        <ScreenFrame label="啟動畫面 Launch">
-          <LaunchScreen theme={theme} static />
+        <ScreenFrame label="啟動畫面 Launch" dark={dark}>
+          <LaunchScreen theme={currentTheme} static />
         </ScreenFrame>
-        {screens.map(s => {
-          return (
-            <ScreenFrame key={s.name} label={s.label}>
-              <NavStackWrapper theme={theme} screen={s.name} screens={SCREEN_MAP} />
-            </ScreenFrame>
-          );
-        })}
+        {screens.map(s => (
+          <ScreenFrame key={s.name} label={s.label} dark={dark}>
+            <NavStackWrapper theme={currentTheme} screen={s.name} screens={SCREEN_MAP} />
+          </ScreenFrame>
+        ))}
       </div>
 
       <div style={{
         fontFamily: '"Noto Sans TC", sans-serif',
         fontSize: 14,
-        color: '#9A8F7E',
+        color: labelColor,
         marginBottom: 60,
         textAlign: 'center',
-      }}>Dark Mode</div>
-
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 48,
-        justifyContent: 'center',
-        marginBottom: 80,
-      }}>
-        {['home', 'insights', 'profile'].map(name => {
-          const darkScreenMap: Record<string, React.ComponentType<any>> = {
-            ...SCREEN_MAP,
-            profile: ProfileScreen,
-          };
-          return (
-            <SettingsCtx.Provider key={`dark-${name}`} value={{ settings: darkSettings, onUpdate: noop }}>
-              <ScreenFrame label={`${screens.find(s => s.name === name)?.label} (Dark)`} dark>
-                <NavStackWrapper theme={darkTheme} screen={name} screens={darkScreenMap} />
-              </ScreenFrame>
-            </SettingsCtx.Provider>
-          );
-        })}
-      </div>
-
-      <div style={{
-        fontFamily: '"Noto Sans TC", sans-serif',
-        fontSize: 14,
-        color: '#9A8F7E',
-        marginBottom: 60,
-        textAlign: 'center',
+        transition: 'color 400ms ease',
       }}>Profile Variants</div>
 
       <div style={{
@@ -181,11 +198,11 @@ export default function ExportPage() {
         justifyContent: 'center',
       }}>
         {['editorial', 'minimal'].map(variant => {
-          const variantSettings: Tweaks = { ...settings, profileVariant: variant };
+          const variantSettings: Tweaks = { ...currentSettings, profileVariant: variant };
           return (
             <SettingsCtx.Provider key={`profile-${variant}`} value={{ settings: variantSettings, onUpdate: noop }}>
-              <ScreenFrame label={`Profile ${variant}`}>
-                <NavStackWrapper theme={theme} screen="profile" screens={SCREEN_MAP} />
+              <ScreenFrame label={`Profile ${variant}`} dark={dark}>
+                <NavStackWrapper theme={currentTheme} screen="profile" screens={SCREEN_MAP} />
               </ScreenFrame>
             </SettingsCtx.Provider>
           );
