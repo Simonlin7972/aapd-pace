@@ -198,6 +198,7 @@ export const SleepStep1: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
         <BlobShape
           size={140}
           fill={M[feel].color}
+          mood={feel}
           dropShadow={`0 16px 40px ${M[feel].color}60`}
           transition="all 420ms cubic-bezier(0.34,1.56,0.64,1)"
           style={{ marginBottom: 36 }}
