@@ -8,6 +8,7 @@ import { HomeScreen } from './components/screens/HomeScreen';
 import { SleepHome, SleepStep1, SleepStep2, SleepStep3 } from './components/screens/SleepScreens';
 import { MoodSheet } from './components/screens/MoodSheet';
 import { MoveScreen, MoveDoneScreen } from './components/screens/MoveScreens';
+import { ExerciseHome, ExerciseRecord } from './components/screens/ExerciseScreens';
 import { FoodScreen } from './components/screens/FoodScreen';
 import { InsightsScreen } from './components/screens/InsightsScreen';
 import { ProfileScreen } from './components/screens/ProfileScreens';
@@ -72,6 +73,8 @@ function App() {
     moodSheet: MoodSheet,
     move: MoveScreen,
     moveDone: MoveDoneScreen,
+    exerciseHome: ExerciseHome,
+    exerciseRecord: ExerciseRecord,
     food: FoodScreen,
     insights: InsightsScreen,
     profile: ProfileScreen,

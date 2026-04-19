@@ -18,7 +18,7 @@ export const BottomBar: React.FC<{
   const items: { k: BottomTabKey; label: string; icon: React.ReactNode; tap: () => void }[] = [
     { k: 'today', label: '今天', icon: Icons.Home({ size: 17 }), tap: () => nav.replace('home') },
     { k: 'sleep', label: L.dim_sleep, icon: Icons.Sleep({ size: 17 }), tap: () => nav.replace('sleepHome') },
-    { k: 'move', label: L.dim_move, icon: Icons.Move({ size: 17 }), tap: () => nav.push('move') },
+    { k: 'move', label: L.dim_move, icon: Icons.Move({ size: 17 }), tap: () => nav.replace('exerciseHome') },
     { k: 'food', label: L.dim_food, icon: Icons.Food({ size: 17 }), tap: () => nav.push('food') },
     { k: 'mood', label: L.dim_mood, icon: Icons.Mood({ size: 17 }), tap: () => nav.presentSheet('moodSheet') },
   ];

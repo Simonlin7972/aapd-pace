@@ -9,4 +9,11 @@ export const PaceState = {
   foodLogged: 2,
   streak: 3,
   sleepWeekly: [6, 7.5, 5, 6.5, 8, 0, 0] as number[],
+  // Exercise
+  exerciseType: '' as string,
+  exerciseDuration: 30,
+  exerciseIntensity: 2,
+  exerciseMood: 2,
+  exerciseRecorded: false,
+  exerciseWeekly: [30, 0, 45, 20, 0, 0, 0] as number[],
 };

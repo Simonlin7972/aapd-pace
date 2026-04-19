@@ -8,6 +8,7 @@ import { HomeScreen } from './components/screens/HomeScreen';
 import { SleepHome, SleepStep1, SleepStep2, SleepStep3 } from './components/screens/SleepScreens';
 import { MoodSheet } from './components/screens/MoodSheet';
 import { MoveScreen, MoveDoneScreen } from './components/screens/MoveScreens';
+import { ExerciseHome, ExerciseRecord } from './components/screens/ExerciseScreens';
 import { FoodScreen } from './components/screens/FoodScreen';
 import { InsightsScreen } from './components/screens/InsightsScreen';
 import { ProfileScreen } from './components/screens/ProfileScreens';
@@ -104,6 +105,12 @@ export default function ExportPage() {
   PaceState.moveMinutes = 25;
   PaceState.foodLogged = 2;
   PaceState.sleepWeekly = [6, 7.5, 5, 6.5, 8, 0, 0];
+  PaceState.exerciseType = 'run';
+  PaceState.exerciseDuration = 30;
+  PaceState.exerciseIntensity = 2;
+  PaceState.exerciseMood = 3;
+  PaceState.exerciseRecorded = true;
+  PaceState.exerciseWeekly = [30, 0, 45, 20, 0, 0, 0];
 
   const screens = [
     { label: '首頁 Home', name: 'home' },
@@ -114,6 +121,8 @@ export default function ExportPage() {
     { label: '情緒 Mood', name: 'moodSheet' },
     { label: '運動 Move', name: 'move' },
     { label: '運動完成 Move Done', name: 'moveDone' },
+    { label: '運動首頁 Exercise Home', name: 'exerciseHome' },
+    { label: '運動記錄 Exercise Record', name: 'exerciseRecord' },
     { label: '飲食 Food', name: 'food' },
     { label: '週報 Insights', name: 'insights' },
     { label: '個人 Profile Classic', name: 'profile' },
@@ -128,6 +137,8 @@ export default function ExportPage() {
     moodSheet: (props: any) => <MoodSheet {...props} onClose={() => {}} />,
     move: MoveScreen,
     moveDone: MoveDoneScreen,
+    exerciseHome: ExerciseHome,
+    exerciseRecord: ExerciseRecord,
     food: FoodScreen,
     insights: InsightsScreen,
     profile: ProfileScreen,
