@@ -50,7 +50,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   React.useEffect(() => { state.mood = moodLive; }, [moodLive]);
 
   const dims = [
-    { k: 'sleep', icon: Icons.Sleep({ size: 32 }), label: L.dim_sleep, val: state.sleepRecorded ? state.sleepHours : '—', unit: state.sleepRecorded ? L.u_hour : '', note: state.sleepRecorded ? L.sleepNote_shallow : L.notRecorded, tone: theme.dust, tap: () => nav.push('sleepStep1') },
+    { k: 'sleep', icon: Icons.Sleep({ size: 32 }), label: L.dim_sleep, val: state.sleepRecorded ? state.sleepHours : '—', unit: state.sleepRecorded ? L.u_hour : '', note: state.sleepRecorded ? L.sleepNote_shallow : L.notRecorded, tone: theme.dust, tap: () => nav.push('sleepHome') },
     { k: 'move', icon: Icons.Move({ size: 32 }), label: L.dim_move, val: state.moveDone ? state.moveMinutes : '—', unit: state.moveDone ? L.u_minute : '', note: state.moveDone ? L.moveNote_walk : L.notMoved, tone: theme.sage, tap: () => nav.push('move') },
     { k: 'food', icon: Icons.Food({ size: 32 }), label: L.dim_food, val: `${state.foodLogged}/3`, unit: L.u_meal, note: L.foodNote, tone: theme.terracotta, light: true, tap: () => nav.push('food') },
     { k: 'mood', icon: Icons.Mood({ size: 32 }), label: L.dim_mood, val: MOOD_SCALE[state.mood].label, unit: '', note: L.moodNote, tone: MOOD_SCALE[state.mood].color, tap: () => nav.presentSheet('moodSheet') },

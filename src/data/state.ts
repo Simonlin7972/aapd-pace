@@ -8,4 +8,5 @@ export const PaceState = {
   moveDone: true,
   foodLogged: 2,
   streak: 3,
+  sleepWeekly: [6, 7.5, 5, 6.5, 8, 0, 0] as number[],
 };

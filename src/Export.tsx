@@ -5,7 +5,7 @@ import { PaceState } from './data/state';
 import { IOSDevice } from './components/IOSFrame';
 import { NavStack } from './components/NavStack';
 import { HomeScreen } from './components/screens/HomeScreen';
-import { SleepStep1, SleepStep2, SleepStep3 } from './components/screens/SleepScreens';
+import { SleepHome, SleepStep1, SleepStep2, SleepStep3 } from './components/screens/SleepScreens';
 import { MoodSheet } from './components/screens/MoodSheet';
 import { MoveScreen, MoveDoneScreen } from './components/screens/MoveScreens';
 import { FoodScreen } from './components/screens/FoodScreen';
@@ -65,9 +65,11 @@ export default function ExportPage() {
   PaceState.moveDone = true;
   PaceState.moveMinutes = 25;
   PaceState.foodLogged = 2;
+  PaceState.sleepWeekly = [6, 7.5, 5, 6.5, 8, 0, 0];
 
   const screens = [
     { label: '首頁 Home', name: 'home' },
+    { label: '睡眠首頁 Sleep Home', name: 'sleepHome' },
     { label: '睡眠 Step 1', name: 'sleepStep1' },
     { label: '睡眠 Step 2', name: 'sleepStep2' },
     { label: '睡眠 Step 3', name: 'sleepStep3' },
@@ -81,6 +83,7 @@ export default function ExportPage() {
 
   const SCREEN_MAP: Record<string, React.ComponentType<any>> = {
     home: HomeScreen,
+    sleepHome: SleepHome,
     sleepStep1: SleepStep1,
     sleepStep2: SleepStep2,
     sleepStep3: SleepStep3,

@@ -7,6 +7,166 @@ import { PaceSerif, PaceSans, PaceButton, AnimatedEnter } from '../UI';
 import { MoodSlider, HoursSlider } from '../Sliders';
 import { useNav } from '../NavStack';
 import { TopBar } from './TopBar';
+import { BottomBar } from '../BottomBar';
+
+// SleepHome: landing page for sleep tab
+const WeekChart: React.FC<{ theme: PaceTheme; data: number[]; L: Record<string, any> }> = ({ theme, data, L }) => {
+  const max = Math.max(...data, 10);
+  const barH = 100;
+  const today = new Date().getDay(); // 0=Sun
+  const todayIdx = today === 0 ? 6 : today - 1; // convert to Mon=0
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: barH + 24, padding: '0 4px' }}>
+      {data.map((h, i) => {
+        const height = h > 0 ? Math.max((h / max) * barH, 6) : 4;
+        const isToday = i === todayIdx;
+        return (
+          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+            <div style={{
+              width: '100%', maxWidth: 32,
+              height,
+              borderRadius: 8,
+              background: h > 0
+                ? isToday ? theme.terracotta : theme.dust
+                : theme.line,
+              opacity: h > 0 ? (isToday ? 1 : 0.6) : 0.4,
+              transition: 'height 400ms cubic-bezier(0.32,0.72,0,1)',
+            }} />
+            <PaceSans size={10} color={isToday ? theme.ink : theme.inkMuted} weight={isToday ? 600 : 400}>
+              {L.week[i]}
+            </PaceSans>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
+  const nav = useNav();
+  const L = theme.L;
+  const st = PaceState;
+  const M = MOOD_SCALE;
+  const recorded = st.sleepRecorded;
+  const weekly = st.sleepWeekly;
+  const validDays = weekly.filter(h => h > 0);
+  const weekAvg = validDays.length > 0 ? validDays.reduce((a, b) => a + b, 0) / validDays.length : 0;
+  const insight = weekAvg >= 6.5 ? L.sleepHome_insight : L.sleepHome_insightLow;
+
+  return (
+    <div style={{ background: theme.bg, height: '100%', position: 'relative' }}>
+      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
+        <div style={{ padding: '8px 20px 120px' }}>
+          {/* Header */}
+          <AnimatedEnter delay={50}>
+            <div style={{ marginBottom: 28 }}>
+              <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+                {L.sleepHome_title}
+              </PaceSans>
+              <PaceSerif size={26} weight={500} color={theme.ink}>
+                {L.sleepHome_today}
+              </PaceSerif>
+            </div>
+          </AnimatedEnter>
+
+          {/* Hero card */}
+          <AnimatedEnter delay={120}>
+            <div style={{
+              background: theme.surface, borderRadius: theme.radius,
+              padding: 22, marginBottom: 16, position: 'relative', overflow: 'hidden',
+            }}>
+              {/* Decorative blob */}
+              <div style={{
+                position: 'absolute', right: -16, top: -16,
+                width: 80, height: 80, borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
+                background: theme.dust, opacity: 0.2,
+              }} />
+
+              {recorded ? (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, position: 'relative' }}>
+                    <div style={{ color: theme.inkSoft }}>{Icons.Sleep({ size: 22 })}</div>
+                    <PaceSans size={13} color={theme.inkSoft}>{L.lastNight}</PaceSans>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8, position: 'relative' }}>
+                    <PaceSerif size={42} weight={400} color={theme.ink}>{st.sleepHours.toFixed(1)}</PaceSerif>
+                    <PaceSans size={16} color={theme.inkMuted}>{L.u_hour}</PaceSans>
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 18, position: 'relative' }}>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      background: `${M[st.sleepFeel].color}20`,
+                      padding: '5px 12px', borderRadius: 12,
+                    }}>
+                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: M[st.sleepFeel].color }} />
+                      <PaceSans size={12} color={theme.ink}>{L[`mood_${M[st.sleepFeel].key}`]}</PaceSans>
+                    </div>
+                    <div style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      background: theme.line, padding: '5px 12px', borderRadius: 12,
+                    }}>
+                      <PaceSans size={12} color={theme.inkSoft}>00:30 → 07:00</PaceSans>
+                    </div>
+                  </div>
+                  <PaceButton theme={theme} variant="soft" full onClick={() => nav.push('sleepStep1')}>
+                    {L.sleepHome_reRecord}
+                  </PaceButton>
+                </>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '20px 0', position: 'relative' }}>
+                  <div style={{ color: theme.inkMuted, marginBottom: 16 }}>{Icons.Sleep({ size: 36 })}</div>
+                  <PaceSans size={14} color={theme.inkSoft} style={{ marginBottom: 20 }}>
+                    {L.sleepHome_empty}
+                  </PaceSans>
+                  <PaceButton theme={theme} full onClick={() => nav.push('sleepStep1')}>
+                    {L.sleepHome_startRecord}
+                  </PaceButton>
+                </div>
+              )}
+            </div>
+          </AnimatedEnter>
+
+          {/* Week trend */}
+          <AnimatedEnter delay={240}>
+            <div style={{
+              background: theme.surface, borderRadius: theme.radius,
+              padding: 22, marginBottom: 16,
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 18 }}>
+                <PaceSerif size={17} color={theme.ink}>{L.sleepHome_weekTrend}</PaceSerif>
+                {validDays.length > 0 && (
+                  <PaceSans size={12} color={theme.inkMuted}>
+                    {weekAvg.toFixed(1)}h · {L.sleepHome_weekAvg}
+                  </PaceSans>
+                )}
+              </div>
+              <WeekChart theme={theme} data={weekly} L={L} />
+            </div>
+          </AnimatedEnter>
+
+          {/* Insight card */}
+          {validDays.length > 0 && (
+            <AnimatedEnter delay={360}>
+              <div style={{
+                background: theme.surface, borderRadius: theme.radius,
+                padding: 18, display: 'flex', gap: 12,
+              }}>
+                <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.75 }}>{Icons.Leaf({ size: 18 })}</div>
+                <div style={{ flex: 1 }}>
+                  <PaceSerif size={15} color={theme.ink} style={{ marginBottom: 4 }}>{L.sleepHome_insightTip}</PaceSerif>
+                  <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.55 }}>
+                    {insight}
+                  </PaceSans>
+                </div>
+              </div>
+            </AnimatedEnter>
+          )}
+        </div>
+      </div>
+      <BottomBar theme={theme} active="sleep" />
+    </div>
+  );
+};
 
 // Step 1: Feel
 export const SleepStep1: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
@@ -123,7 +283,7 @@ export const SleepStep3: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
   return (
     <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar theme={theme} onClose={() => nav.replace('home')} step={L.done} />
+      <TopBar theme={theme} onClose={() => nav.replace('sleepHome')} step={L.done} />
       <div style={{ padding: '28px 24px 0', flex: 1 }}>
         <AnimatedEnter delay={80}>
           <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
@@ -181,7 +341,7 @@ export const SleepStep3: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
       </div>
 
       <div style={{ padding: '24px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => nav.replace('home')}>{L.okThanks}</PaceButton>
+        <PaceButton theme={theme} full onClick={() => nav.replace('sleepHome')}>{L.okThanks}</PaceButton>
       </div>
     </div>
   );

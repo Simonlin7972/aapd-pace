@@ -73,6 +73,17 @@ export const PACE_I18N: Record<string, Record<string, any>> = {
     p_everyday: '你的每一天',
     p_today: '今天',
     dim_sleep_label: '睡眠',
+    // SleepHome
+    sleepHome_title: '睡眠',
+    sleepHome_today: '今日睡眠',
+    sleepHome_empty: '還沒記錄今天的睡眠',
+    sleepHome_startRecord: '開始記錄',
+    sleepHome_reRecord: '重新記錄',
+    sleepHome_weekTrend: '本週趨勢',
+    sleepHome_weekAvg: '週平均',
+    sleepHome_insight: '這週你的睡眠節奏還算穩定，繼續保持。',
+    sleepHome_insightLow: '這週睡得比較少，試著早一點休息。',
+    sleepHome_insightTip: '小觀察',
   },
 
   'en': {
@@ -150,6 +161,17 @@ export const PACE_I18N: Record<string, Record<string, any>> = {
     p_everyday: 'Your everyday',
     p_today: 'today',
     dim_sleep_label: 'Sleep',
+    // SleepHome
+    sleepHome_title: 'Sleep',
+    sleepHome_today: 'Today\u2019s sleep',
+    sleepHome_empty: 'You haven\u2019t logged sleep yet',
+    sleepHome_startRecord: 'Start recording',
+    sleepHome_reRecord: 'Record again',
+    sleepHome_weekTrend: 'This week',
+    sleepHome_weekAvg: 'weekly avg',
+    sleepHome_insight: 'Your sleep rhythm has been fairly steady this week. Keep it up.',
+    sleepHome_insightLow: 'You slept a bit less this week. Try resting earlier.',
+    sleepHome_insightTip: 'A small observation',
   },
 
   'ja': {
@@ -224,5 +246,16 @@ export const PACE_I18N: Record<string, Record<string, any>> = {
     p_everyday: 'あなたの毎日',
     p_today: '今日',
     dim_sleep_label: '睡眠',
+    // SleepHome
+    sleepHome_title: '睡眠',
+    sleepHome_today: '今日の睡眠',
+    sleepHome_empty: 'まだ記録していません',
+    sleepHome_startRecord: '記録する',
+    sleepHome_reRecord: 'もう一度記録',
+    sleepHome_weekTrend: '今週のリズム',
+    sleepHome_weekAvg: '週平均',
+    sleepHome_insight: '今週の睡眠リズムはまずまず安定。この調子で。',
+    sleepHome_insightLow: '今週は少し睡眠が足りないかも。早めに休んでみて。',
+    sleepHome_insightTip: '小さな気づき',
   },
 };

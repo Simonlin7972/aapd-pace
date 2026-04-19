@@ -5,7 +5,7 @@ import { IOSDevice } from './components/IOSFrame';
 import { NavStack } from './components/NavStack';
 import { LaunchScreen } from './components/LaunchScreen';
 import { HomeScreen } from './components/screens/HomeScreen';
-import { SleepStep1, SleepStep2, SleepStep3 } from './components/screens/SleepScreens';
+import { SleepHome, SleepStep1, SleepStep2, SleepStep3 } from './components/screens/SleepScreens';
 import { MoodSheet } from './components/screens/MoodSheet';
 import { MoveScreen, MoveDoneScreen } from './components/screens/MoveScreens';
 import { FoodScreen } from './components/screens/FoodScreen';
@@ -65,6 +65,7 @@ function App() {
   // Stable SCREENS object — ProfileScreen reads settings from context
   const SCREENS = React.useMemo<Record<string, React.ComponentType<any>>>(() => ({
     home: HomeScreen,
+    sleepHome: SleepHome,
     sleepStep1: SleepStep1,
     sleepStep2: SleepStep2,
     sleepStep3: SleepStep3,

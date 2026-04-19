@@ -1,0 +1,32 @@
+[
+  {
+    "id": "theme-light",
+    "name": "Light",
+    "group": "Mode",
+    "selectedTokenSets": {
+      "color":       "source",
+      "color-light": "enabled",
+      "color-mood":  "enabled",
+      "spacing":     "enabled",
+      "radius":      "enabled",
+      "typography":  "enabled",
+      "motion":      "enabled",
+      "shadow":      "enabled"
+    }
+  },
+  {
+    "id": "theme-dark",
+    "name": "Dark",
+    "group": "Mode",
+    "selectedTokenSets": {
+      "color":      "source",
+      "color-dark": "enabled",
+      "color-mood": "enabled",
+      "spacing":    "enabled",
+      "radius":     "enabled",
+      "typography": "enabled",
+      "motion":     "enabled",
+      "shadow":     "enabled"
+    }
+  }
+]

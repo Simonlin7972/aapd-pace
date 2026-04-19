@@ -1,0 +1,13 @@
+{
+  "tokenSetOrder": [
+    "color",
+    "color-light",
+    "color-dark",
+    "color-mood",
+    "spacing",
+    "radius",
+    "typography",
+    "motion",
+    "shadow"
+  ]
+}
