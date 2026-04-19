@@ -19,27 +19,33 @@ function buildTheme(dark = false): PaceTheme {
   } as PaceTheme;
 }
 
-const theme = buildTheme(false);
-const darkTheme = buildTheme(true);
+// React context to thread active theme through helper components
+const ThemeCtx = React.createContext<PaceTheme>(buildTheme(false));
 
 // ─── Layout helpers ─────────────────────────────
 
-const Section: React.FC<{ id?: string; title: string; subtitle?: string; children: React.ReactNode }> = ({ id, title, subtitle, children }) => (
-  <div id={id} style={{ marginBottom: 80, scrollMarginTop: 32 }}>
-    <div style={{ marginBottom: 32 }}>
-      <PaceSerif size={28} weight={500} color="#3D342A" style={{ marginBottom: 6 }}>{title}</PaceSerif>
-      {subtitle && <PaceSans size={14} color="#9A8F7E" style={{ lineHeight: 1.6 }}>{subtitle}</PaceSans>}
+const Section: React.FC<{ id?: string; title: string; subtitle?: string; children: React.ReactNode }> = ({ id, title, subtitle, children }) => {
+  const t = React.useContext(ThemeCtx);
+  return (
+    <div id={id} style={{ marginBottom: 80, scrollMarginTop: 32 }}>
+      <div style={{ marginBottom: 32 }}>
+        <PaceSerif size={28} weight={500} color={t.ink} style={{ marginBottom: 6 }}>{title}</PaceSerif>
+        {subtitle && <PaceSans size={14} color={t.inkMuted} style={{ lineHeight: 1.6 }}>{subtitle}</PaceSans>}
+      </div>
+      {children}
     </div>
-    {children}
-  </div>
-);
+  );
+};
 
-const SubSection: React.FC<{ id?: string; title: string; children: React.ReactNode }> = ({ id, title, children }) => (
-  <div id={id} style={{ marginBottom: 40, scrollMarginTop: 32 }}>
-    <PaceSans size={12} color="#9A8F7E" style={{ letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>{title}</PaceSans>
-    {children}
-  </div>
-);
+const SubSection: React.FC<{ id?: string; title: string; children: React.ReactNode }> = ({ id, title, children }) => {
+  const t = React.useContext(ThemeCtx);
+  return (
+    <div id={id} style={{ marginBottom: 40, scrollMarginTop: 32 }}>
+      <PaceSans size={12} color={t.inkMuted} style={{ letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>{title}</PaceSans>
+      {children}
+    </div>
+  );
+};
 
 // ─── Side navigation ────────────────────────────
 
@@ -54,7 +60,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'part-foundations', label: 'Foundations', level: 0 },
 
   { id: 'colors', label: 'Color', level: 1 },
-  { id: 'colors-bg-light', label: 'Background', level: 2 },
+  { id: 'colors-bg', label: 'Background', level: 2 },
   { id: 'colors-accent', label: 'Accent palette', level: 2 },
   { id: 'colors-ink', label: 'Text (Ink)', level: 2 },
   { id: 'colors-line', label: 'Border & divider', level: 2 },
@@ -115,7 +121,8 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'tpl-layouts', label: 'Screen layouts', level: 2 },
 ];
 
-const SideNav: React.FC<{ activeId: string }> = ({ activeId }) => {
+const SideNav: React.FC<{ activeId: string; isDark: boolean; onToggle: (v: string) => void }> = ({ activeId, isDark, onToggle }) => {
+  const t = React.useContext(ThemeCtx);
   const handleClick = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -125,27 +132,39 @@ const SideNav: React.FC<{ activeId: string }> = ({ activeId }) => {
     <nav style={{
       position: 'fixed', left: 0, top: 0, bottom: 0,
       width: 232,
-      background: 'rgba(239,231,216,0.92)',
+      background: isDark ? 'rgba(42,36,29,0.92)' : 'rgba(239,231,216,0.92)',
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
-      borderRight: '1px solid rgba(61,52,42,0.09)',
+      borderRight: `1px solid ${t.line}`,
       overflowY: 'auto',
       padding: '28px 0',
       zIndex: 100,
       fontFamily: FONTS.sans,
+      transition: 'background 300ms ease',
     }}>
       {/* Logo */}
       <div
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         style={{
-          padding: '0 20px 20px',
-          borderBottom: '1px solid rgba(61,52,42,0.09)',
-          marginBottom: 16,
+          padding: '0 20px 16px',
+          borderBottom: `1px solid ${t.line}`,
+          marginBottom: 12,
           cursor: 'pointer',
         }}
       >
-        <div style={{ fontFamily: FONTS.serif, fontSize: 20, fontWeight: 500, color: '#3D342A', marginBottom: 2 }}>Pace</div>
-        <div style={{ fontSize: 11, color: '#9A8F7E', letterSpacing: '0.06em' }}>Design System</div>
+        <div style={{ fontFamily: FONTS.serif, fontSize: 20, fontWeight: 500, color: t.ink, marginBottom: 2 }}>Pace</div>
+        <div style={{ fontSize: 11, color: t.inkMuted, letterSpacing: '0.06em' }}>Design System</div>
+      </div>
+
+      {/* Theme switcher */}
+      <div style={{ padding: '0 16px 16px', borderBottom: `1px solid ${t.line}`, marginBottom: 12 }}>
+        <PaceSegmented
+          theme={t}
+          value={isDark ? 'dark' : 'light'}
+          onChange={onToggle}
+          options={[{ k: 'light', l: '淺色' }, { k: 'dark', l: '深色' }]}
+          compact
+        />
       </div>
 
       {/* Nav items */}
@@ -160,7 +179,7 @@ const SideNav: React.FC<{ activeId: string }> = ({ activeId }) => {
               <div key={item.id} style={{
                 fontSize: 10,
                 fontWeight: 600,
-                color: '#9A8F7E',
+                color: t.inkMuted,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
                 padding: '20px 12px 8px',
@@ -175,12 +194,12 @@ const SideNav: React.FC<{ activeId: string }> = ({ activeId }) => {
               style={{
                 fontSize: isLevel1 ? 13 : 12,
                 fontWeight: isActive ? 500 : 400,
-                color: isActive ? '#3D342A' : (isLevel1 ? '#6E6456' : '#9A8F7E'),
+                color: isActive ? t.ink : (isLevel1 ? t.inkSoft : t.inkMuted),
                 padding: isLevel1 ? '7px 12px' : '5px 12px',
                 paddingLeft: isLevel1 ? 12 : 24,
                 borderRadius: 8,
                 cursor: 'pointer',
-                background: isActive ? 'rgba(61,52,42,0.07)' : 'transparent',
+                background: isActive ? (isDark ? 'rgba(242,234,219,0.07)' : 'rgba(61,52,42,0.07)') : 'transparent',
                 transition: 'all 150ms ease',
                 lineHeight: 1.4,
               }}
@@ -200,7 +219,6 @@ function useScrollSpy(ids: string[]): string {
   React.useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // Find the topmost visible entry
         const visible = entries
           .filter(e => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
@@ -222,38 +240,45 @@ function useScrollSpy(ids: string[]): string {
   return active;
 }
 
-const Swatch: React.FC<{ color: string; name: string; value: string; dark?: boolean }> = ({ color, name, value, dark }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-    <div style={{
-      width: '100%', aspectRatio: '1', borderRadius: 16,
-      background: color,
-      border: `1px solid rgba(${dark ? '255,255,255' : '0,0,0'},0.08)`,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-    }} />
-    <div>
-      <PaceSans size={13} color={dark ? '#C4B8A2' : '#3D342A'} weight={500}>{name}</PaceSans>
-      <PaceSans size={11} color={dark ? '#8A7F6E' : '#9A8F7E'} style={{ fontFamily: FONTS.mono }}>{value}</PaceSans>
+const Swatch: React.FC<{ color: string; name: string; value: string }> = ({ color, name, value }) => {
+  const t = React.useContext(ThemeCtx);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{
+        width: '100%', aspectRatio: '1', borderRadius: 16,
+        background: color,
+        border: `1px solid ${t.line}`,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+      }} />
+      <div>
+        <PaceSans size={13} color={t.ink} weight={500}>{name}</PaceSans>
+        <PaceSans size={11} color={t.inkMuted} style={{ fontFamily: FONTS.mono }}>{value}</PaceSans>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-const TokenRow: React.FC<{ label: string; value: string; preview?: React.ReactNode }> = ({ label, value, preview }) => (
-  <div style={{
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: '12px 0',
-    borderBottom: '1px solid rgba(61,52,42,0.08)',
-  }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-      {preview}
-      <PaceSans size={14} color="#3D342A">{label}</PaceSans>
+const TokenRow: React.FC<{ label: string; value: string; preview?: React.ReactNode }> = ({ label, value, preview }) => {
+  const t = React.useContext(ThemeCtx);
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '12px 0',
+      borderBottom: `1px solid ${t.line}`,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {preview}
+        <PaceSans size={14} color={t.ink}>{label}</PaceSans>
+      </div>
+      <PaceNum size={12} color={t.inkMuted}>{value}</PaceNum>
     </div>
-    <PaceNum size={12} color="#9A8F7E">{value}</PaceNum>
-  </div>
-);
+  );
+};
 
 // ─── Design System Page ─────────────────────────
 
 export default function DesignSystemPage() {
+  const [isDark, setIsDark] = React.useState(false);
   const [segVal, setSegVal] = React.useState('a');
   const [moodVal, setMoodVal] = React.useState(2);
   const [hoursVal, setHoursVal] = React.useState(6.5);
@@ -262,12 +287,20 @@ export default function DesignSystemPage() {
   const [mealVal, setMealVal] = React.useState(1);
   const [healthVal, setHealthVal] = React.useState(1);
 
+  const theme = buildTheme(isDark);
+  const themeSource = isDark ? THEMES.oatDark : THEMES.oat;
+
   const sectionIds = NAV_ITEMS.filter(n => n.level > 0).map(n => n.id);
   const activeId = useScrollSpy(sectionIds);
 
+  const handleThemeToggle = (v: string) => {
+    setIsDark(v === 'dark');
+  };
+
   return (
-    <div style={{ background: '#E8DFCC', minHeight: '100vh' }}>
-      <SideNav activeId={activeId} />
+    <ThemeCtx.Provider value={theme}>
+    <div style={{ background: isDark ? '#1F1A14' : '#E8DFCC', minHeight: '100vh', transition: 'background 300ms ease' }}>
+      <SideNav activeId={activeId} isDark={isDark} onToggle={handleThemeToggle} />
       <div style={{
         marginLeft: 232,
         padding: '80px 60px',
@@ -275,123 +308,81 @@ export default function DesignSystemPage() {
       }}>
       {/* Header */}
       <div style={{ marginBottom: 80, textAlign: 'center' }}>
-        <PaceSerif size={48} weight={500} color="#3D342A" style={{ marginBottom: 12 }}>
+        <PaceSerif size={48} weight={500} color={theme.ink} style={{ marginBottom: 12 }}>
           Pace — Design System
         </PaceSerif>
-        <PaceSans size={16} color="#6E6456" style={{ lineHeight: 1.6 }}>
+        <PaceSans size={16} color={theme.inkSoft} style={{ lineHeight: 1.6 }}>
           Foundations &amp; Component Library
         </PaceSans>
-        <div style={{ width: 48, height: 2, background: '#A8734F', margin: '24px auto 0', opacity: 0.6 }} />
+        <div style={{ width: 48, height: 2, background: theme.terracotta, margin: '24px auto 0', opacity: 0.6 }} />
       </div>
 
       {/* ═══════════════════════════════════════════════
           PART 1 — FUNDAMENTALS (Design Tokens)
           ═══════════════════════════════════════════════ */}
       <div id="part-foundations" style={{ marginBottom: 100, scrollMarginTop: 32 }}>
-        <PaceSans size={11} color="#9A8F7E" style={{
+        <PaceSans size={11} color={theme.inkMuted} style={{
           letterSpacing: '0.24em', textTransform: 'uppercase', marginBottom: 40,
           textAlign: 'center',
         }}>Foundations</PaceSans>
 
         {/* ── Colors ── */}
-        <Section id="colors" title="Colors" subtitle="Warm, desaturated palette rooted in oat & earth tones. Two themes: Oat (light) and Oat·Night (dark).">
+        <Section id="colors" title="Colors" subtitle={`Warm, desaturated palette rooted in oat & earth tones. Currently viewing: ${isDark ? 'Oat·Night (dark)' : 'Oat (light)'}.`}>
 
-          {/* Backgrounds — Light & Dark */}
-          <SubSection id="colors-bg-light" title="Background">
-            <PaceSans size={12} color="#9A8F7E" style={{ marginBottom: 12 }}>Light — 燕麥 Oat</PaceSans>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24 }}>
-              <Swatch color={THEMES.oat.bg} name="bg" value={THEMES.oat.bg} />
-              <Swatch color={THEMES.oat.surface} name="surface" value={THEMES.oat.surface} />
-              <Swatch color={THEMES.oat.surfaceElevated} name="surfaceElevated" value={THEMES.oat.surfaceElevated} />
-            </div>
-            <PaceSans size={12} color="#9A8F7E" style={{ marginBottom: 12 }}>Dark — 燕麥·夜 Oat·Night</PaceSans>
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20,
-              background: '#1F1A14', borderRadius: 20, padding: 24,
-            }}>
-              <Swatch color={THEMES.oatDark.bg} name="bg" value={THEMES.oatDark.bg} dark />
-              <Swatch color={THEMES.oatDark.surface} name="surface" value={THEMES.oatDark.surface} dark />
-              <Swatch color={THEMES.oatDark.surfaceElevated} name="surfaceElevated" value={THEMES.oatDark.surfaceElevated} dark />
+          {/* Backgrounds */}
+          <SubSection id="colors-bg" title="Background">
+            <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 12 }}>
+              {isDark ? 'Dark — 燕麥·夜 Oat·Night' : 'Light — 燕麥 Oat'}
+            </PaceSans>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+              <Swatch color={themeSource.bg} name="bg" value={themeSource.bg} />
+              <Swatch color={themeSource.surface} name="surface" value={themeSource.surface} />
+              <Swatch color={themeSource.surfaceElevated} name="surfaceElevated" value={themeSource.surfaceElevated} />
             </div>
           </SubSection>
 
           {/* Accent colors */}
           <SubSection id="colors-accent" title="Accent Colors">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 20 }}>
-              <Swatch color={THEMES.oat.terracotta} name="terracotta" value={THEMES.oat.terracotta} />
-              <Swatch color={THEMES.oat.amber} name="amber" value={THEMES.oat.amber} />
-              <Swatch color={THEMES.oat.sage} name="sage" value={THEMES.oat.sage} />
-              <Swatch color={THEMES.oat.dust} name="dust" value={THEMES.oat.dust} />
-            </div>
-            <PaceSans size={12} color="#9A8F7E" style={{ marginBottom: 12 }}>Dark variants</PaceSans>
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20,
-              background: '#1F1A14', borderRadius: 20, padding: 24,
-            }}>
-              <Swatch color={THEMES.oatDark.terracotta} name="terracotta" value={THEMES.oatDark.terracotta} dark />
-              <Swatch color={THEMES.oatDark.amber} name="amber" value={THEMES.oatDark.amber} dark />
-              <Swatch color={THEMES.oatDark.sage} name="sage" value={THEMES.oatDark.sage} dark />
-              <Swatch color={THEMES.oatDark.dust} name="dust" value={THEMES.oatDark.dust} dark />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+              <Swatch color={themeSource.terracotta} name="terracotta" value={themeSource.terracotta} />
+              <Swatch color={themeSource.amber} name="amber" value={themeSource.amber} />
+              <Swatch color={themeSource.sage} name="sage" value={themeSource.sage} />
+              <Swatch color={themeSource.dust} name="dust" value={themeSource.dust} />
             </div>
           </SubSection>
 
           {/* Text colors */}
           <SubSection id="colors-ink" title="Text Colors (Ink)">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
-              <div>
-                <PaceSans size={12} color="#9A8F7E" style={{ marginBottom: 12 }}>Light</PaceSans>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <TokenRow label="ink — Primary text" value={THEMES.oat.ink}
-                    preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: THEMES.oat.ink }} />} />
-                  <TokenRow label="inkSoft — Secondary text" value={THEMES.oat.inkSoft}
-                    preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: THEMES.oat.inkSoft }} />} />
-                  <TokenRow label="inkMuted — Tertiary / labels" value={THEMES.oat.inkMuted}
-                    preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: THEMES.oat.inkMuted }} />} />
-                </div>
-              </div>
-              <div style={{ background: '#1F1A14', borderRadius: 16, padding: 20 }}>
-                <PaceSans size={12} color="#8A7F6E" style={{ marginBottom: 12 }}>Dark</PaceSans>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <TokenRow label="ink" value={THEMES.oatDark.ink}
-                    preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: THEMES.oatDark.ink }} />} />
-                  <TokenRow label="inkSoft" value={THEMES.oatDark.inkSoft}
-                    preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: THEMES.oatDark.inkSoft }} />} />
-                  <TokenRow label="inkMuted" value={THEMES.oatDark.inkMuted}
-                    preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: THEMES.oatDark.inkMuted }} />} />
-                </div>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <TokenRow label="ink — Primary text" value={themeSource.ink}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.ink }} />} />
+              <TokenRow label="inkSoft — Secondary text" value={themeSource.inkSoft}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.inkSoft }} />} />
+              <TokenRow label="inkMuted — Tertiary / labels" value={themeSource.inkMuted}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.inkMuted }} />} />
             </div>
           </SubSection>
 
           {/* Line / border colors */}
           <SubSection id="colors-line" title="Line / Border Colors">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
-              <div>
-                <TokenRow label="line" value="rgba(61,52,42,0.09)"
-                  preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: '#F7F1E5', border: `2px solid ${THEMES.oat.line}` }} />} />
-                <TokenRow label="lineStrong" value="rgba(61,52,42,0.16)"
-                  preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: '#F7F1E5', border: `2px solid ${THEMES.oat.lineStrong}` }} />} />
-              </div>
-              <div style={{ background: '#1F1A14', borderRadius: 16, padding: 20 }}>
-                <TokenRow label="line" value="rgba(242,234,219,0.08)"
-                  preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: '#342D24', border: `2px solid ${THEMES.oatDark.line}` }} />} />
-                <TokenRow label="lineStrong" value="rgba(242,234,219,0.15)"
-                  preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: '#342D24', border: `2px solid ${THEMES.oatDark.lineStrong}` }} />} />
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              <TokenRow label="line" value={isDark ? 'rgba(242,234,219,0.08)' : 'rgba(61,52,42,0.09)'}
+                preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: theme.surface, border: `2px solid ${themeSource.line}` }} />} />
+              <TokenRow label="lineStrong" value={isDark ? 'rgba(242,234,219,0.15)' : 'rgba(61,52,42,0.16)'}
+                preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: theme.surface, border: `2px solid ${themeSource.lineStrong}` }} />} />
             </div>
           </SubSection>
 
           {/* Semantic / warn */}
           <SubSection id="colors-semantic" title="Semantic Colors">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              <Swatch color={THEMES.oat.warn} name="warn (light)" value={THEMES.oat.warn} />
-              <Swatch color={THEMES.oatDark.warn} name="warn (dark)" value={THEMES.oatDark.warn} />
+              <Swatch color={themeSource.warn} name="warn" value={themeSource.warn} />
             </div>
           </SubSection>
 
           {/* Mood color scale */}
           <SubSection id="colors-mood" title="Mood Color Scale">
-            <PaceSans size={13} color="#6E6456" style={{ marginBottom: 16, lineHeight: 1.6 }}>
+            <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
               Five steps from cool to warm. No red — designed to avoid negative connotations.
             </PaceSans>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
@@ -403,9 +394,9 @@ export default function DesignSystemPage() {
                     boxShadow: `0 8px 20px ${m.color}40`,
                   }} />
                   <div>
-                    <PaceSans size={13} color="#3D342A" weight={500}>{m.label}</PaceSans>
-                    <PaceSans size={11} color="#9A8F7E" style={{ fontFamily: FONTS.mono }}>{m.color}</PaceSans>
-                    <PaceSans size={10} color="#9A8F7E">dot: {m.dot}</PaceSans>
+                    <PaceSans size={13} color={theme.ink} weight={500}>{m.label}</PaceSans>
+                    <PaceSans size={11} color={theme.inkMuted} style={{ fontFamily: FONTS.mono }}>{m.color}</PaceSans>
+                    <PaceSans size={10} color={theme.inkMuted}>dot: {m.dot}</PaceSans>
                   </div>
                 </div>
               ))}
@@ -664,7 +655,7 @@ export default function DesignSystemPage() {
           PART 2 — COMPONENTS (Atomic Design)
           ═══════════════════════════════════════════════ */}
       <div id="part-components" style={{ scrollMarginTop: 32 }}>
-        <PaceSans size={11} color="#9A8F7E" style={{
+        <PaceSans size={11} color={theme.inkMuted} style={{
           letterSpacing: '0.24em', textTransform: 'uppercase', marginBottom: 40,
           textAlign: 'center',
         }}>Components</PaceSans>
@@ -695,7 +686,7 @@ export default function DesignSystemPage() {
 
           {/* Icons */}
           <SubSection id="atom-icons" title="Icons">
-            <PaceSans size={13} color="#6E6456" style={{ marginBottom: 16, lineHeight: 1.6 }}>
+            <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
               18 stroke-based SVG icons. Default: 24×24, stroke-width 1.6. Configurable size prop.
             </PaceSans>
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
@@ -791,19 +782,10 @@ export default function DesignSystemPage() {
 
           {/* Buttons */}
           <SubSection id="mol-button" title="PaceButton">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
-              <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <PaceSans size={11} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>Light</PaceSans>
-                <PaceButton theme={theme} full>Primary — 記錄</PaceButton>
-                <PaceButton theme={theme} variant="soft" full>Soft — 稍後再說</PaceButton>
-                <PaceButton theme={theme} variant="text" full>Text — 跳過也沒關係</PaceButton>
-              </div>
-              <div style={{ background: '#1F1A14', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <PaceSans size={11} color="#8A7F6E" style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>Dark</PaceSans>
-                <PaceButton theme={darkTheme} full>Primary — 記錄</PaceButton>
-                <PaceButton theme={darkTheme} variant="soft" full>Soft — 稍後再說</PaceButton>
-                <PaceButton theme={darkTheme} variant="text" full>Text — 跳過也沒關係</PaceButton>
-              </div>
+            <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <PaceButton theme={theme} full>Primary — 記錄</PaceButton>
+              <PaceButton theme={theme} variant="soft" full>Soft — 稍後再說</PaceButton>
+              <PaceButton theme={theme} variant="text" full>Text — 跳過也沒關係</PaceButton>
             </div>
           </SubSection>
 
@@ -853,9 +835,9 @@ export default function DesignSystemPage() {
                 />
               </div>
             </div>
-            <div style={{ marginTop: 16, background: '#1F1A14', borderRadius: 20, padding: 24 }}>
-              <PaceSans size={11} color="#8A7F6E" style={{ marginBottom: 12 }}>Dark mode + compact</PaceSans>
-              <PaceSegmented theme={darkTheme}
+            <div style={{ marginTop: 16, background: theme.surface, borderRadius: 20, padding: 24 }}>
+              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>Compact variant</PaceSans>
+              <PaceSegmented theme={theme}
                 value="a"
                 onChange={() => {}}
                 options={[{ k: 'a', l: '日' }, { k: 'b', l: '夜' }]}
@@ -969,7 +951,7 @@ export default function DesignSystemPage() {
                 Fade + translateY entrance wrapper. Stagger with increasing delay values (60ms increments).
               </PaceSans>
               <div style={{ display: 'flex', gap: 12 }}>
-                {[0, 60, 120, 180, 240].map((d, i) => (
+                {[0, 60, 120, 180, 240].map((d) => (
                   <AnimatedEnter key={d} delay={d}>
                     <div style={{
                       background: theme.bg, borderRadius: 12,
@@ -991,7 +973,8 @@ export default function DesignSystemPage() {
               </PaceSans>
               <div style={{ position: 'relative', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{
-                  background: 'rgba(61,52,42,0.92)', color: '#FBF6EC',
+                  background: isDark ? 'rgba(242,234,219,0.92)' : 'rgba(61,52,42,0.92)',
+                  color: isDark ? '#2A241D' : '#FBF6EC',
                   padding: '10px 18px', borderRadius: 999,
                   fontFamily: FONTS.sans, fontSize: 13,
                   whiteSpace: 'nowrap',
@@ -1223,7 +1206,7 @@ export default function DesignSystemPage() {
                   <div>
                     <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>外觀</PaceSans>
                     <PaceSegmented theme={theme}
-                      value="light"
+                      value={isDark ? 'dark' : 'light'}
                       onChange={() => {}}
                       options={[{ k: 'light', l: '淺色' }, { k: 'dark', l: '深色' }]}
                       compact
@@ -1283,7 +1266,7 @@ export default function DesignSystemPage() {
               {/* Fake backdrop */}
               <div style={{
                 position: 'absolute', inset: 0,
-                background: 'rgba(61,52,42,0.4)',
+                background: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(61,52,42,0.4)',
               }} />
               {/* Sheet */}
               <div style={{
@@ -1438,5 +1421,6 @@ export default function DesignSystemPage() {
       </div>
       </div>
     </div>
+    </ThemeCtx.Provider>
   );
 }

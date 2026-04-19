@@ -12,6 +12,7 @@ import { FoodScreen } from './components/screens/FoodScreen';
 import { InsightsScreen } from './components/screens/InsightsScreen';
 import { ProfileScreen } from './components/screens/ProfileScreens';
 import { LaunchScreen } from './components/LaunchScreen';
+import { SettingsCtx, type Tweaks } from './App';
 
 function buildTheme(dark = false): PaceTheme {
   const base = dark ? { ...THEMES.oatDark } : { ...THEMES.oat };
@@ -51,46 +52,10 @@ const ScreenFrame: React.FC<{
   );
 };
 
-// Static screen renderer - renders a single screen without NavStack
-const StaticScreen: React.FC<{
-  label: string;
-  screen: React.ComponentType<any>;
-  dark?: boolean;
-  extraProps?: Record<string, any>;
-}> = ({ label, screen: Screen, dark = false, extraProps = {} }) => {
-  const t = dark ? darkTheme : theme;
-  // Provide a dummy nav context
-  const dummyNav = {
-    push: () => {},
-    pop: () => {},
-    replace: () => {},
-    presentSheet: () => {},
-    dismissSheet: () => {},
-    stack: [],
-  };
-  const NavCtx = React.createContext(dummyNav);
-
-  return (
-    <ScreenFrame label={label} dark={dark}>
-      {/* We need NavCtx provider - import it from NavStack */}
-      <Screen theme={t} {...extraProps} />
-    </ScreenFrame>
-  );
-};
-
-// We need the NavCtx from NavStack - let's use a simpler approach
-// Just render each screen directly with a nav context wrapper
-import { useNav } from './components/NavStack';
-
-// Create a wrapper that provides nav context
-const NavProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // We'll create a minimal context
-  return <>{children}</>;
-};
-
 export default function ExportPage() {
-  const settings = { dark: false, lang: 'zh-TW', profileVariant: 'classic' };
-  const darkSettings = { dark: true, lang: 'zh-TW', profileVariant: 'classic' };
+  const settings: Tweaks = { accent: 'amber', radius: 30, dark: false, lang: 'zh-TW', profileVariant: 'classic' };
+  const darkSettings: Tweaks = { accent: 'amber', radius: 30, dark: true, lang: 'zh-TW', profileVariant: 'classic' };
+  const noop = () => {};
 
   // Ensure state is set for screens that need it
   PaceState.sleepRecorded = true;
@@ -124,10 +89,11 @@ export default function ExportPage() {
     moveDone: MoveDoneScreen,
     food: FoodScreen,
     insights: InsightsScreen,
-    profile: (props: any) => <ProfileScreen {...props} settings={settings} onUpdate={() => {}} />,
+    profile: ProfileScreen,
   };
 
   return (
+    <SettingsCtx.Provider value={{ settings, onUpdate: noop }}>
     <div style={{
       background: '#D4CDB8',
       minHeight: '100vh',
@@ -159,7 +125,6 @@ export default function ExportPage() {
           <LaunchScreen theme={theme} static />
         </ScreenFrame>
         {screens.map(s => {
-          const Comp = SCREEN_MAP[s.name];
           return (
             <ScreenFrame key={s.name} label={s.label}>
               <NavStackWrapper theme={theme} screen={s.name} screens={SCREEN_MAP} />
@@ -186,12 +151,14 @@ export default function ExportPage() {
         {['home', 'insights', 'profile'].map(name => {
           const darkScreenMap: Record<string, React.ComponentType<any>> = {
             ...SCREEN_MAP,
-            profile: (props: any) => <ProfileScreen {...props} settings={darkSettings} onUpdate={() => {}} />,
+            profile: ProfileScreen,
           };
           return (
-            <ScreenFrame key={`dark-${name}`} label={`${screens.find(s => s.name === name)?.label} (Dark)`} dark>
-              <NavStackWrapper theme={darkTheme} screen={name} screens={darkScreenMap} />
-            </ScreenFrame>
+            <SettingsCtx.Provider key={`dark-${name}`} value={{ settings: darkSettings, onUpdate: noop }}>
+              <ScreenFrame label={`${screens.find(s => s.name === name)?.label} (Dark)`} dark>
+                <NavStackWrapper theme={darkTheme} screen={name} screens={darkScreenMap} />
+              </ScreenFrame>
+            </SettingsCtx.Provider>
           );
         })}
       </div>
@@ -211,18 +178,18 @@ export default function ExportPage() {
         justifyContent: 'center',
       }}>
         {['editorial', 'minimal'].map(variant => {
-          const variantScreenMap: Record<string, React.ComponentType<any>> = {
-            ...SCREEN_MAP,
-            profile: (props: any) => <ProfileScreen {...props} settings={{ ...settings, profileVariant: variant }} onUpdate={() => {}} />,
-          };
+          const variantSettings: Tweaks = { ...settings, profileVariant: variant };
           return (
-            <ScreenFrame key={`profile-${variant}`} label={`Profile ${variant}`}>
-              <NavStackWrapper theme={theme} screen="profile" screens={variantScreenMap} />
-            </ScreenFrame>
+            <SettingsCtx.Provider key={`profile-${variant}`} value={{ settings: variantSettings, onUpdate: noop }}>
+              <ScreenFrame label={`Profile ${variant}`}>
+                <NavStackWrapper theme={theme} screen="profile" screens={SCREEN_MAP} />
+              </ScreenFrame>
+            </SettingsCtx.Provider>
           );
         })}
       </div>
     </div>
+    </SettingsCtx.Provider>
   );
 }
 

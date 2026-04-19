@@ -5,6 +5,7 @@ import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
 import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, PaceSegmented } from '../UI';
 import { useNav } from '../NavStack';
+import { SettingsCtx } from '../../App';
 
 // Shared settings controls
 const SettingsRow: React.FC<{ theme: PaceTheme; label: string; children: React.ReactNode }> = ({ theme, label, children }) => (
@@ -454,14 +455,34 @@ const ProfileMinimal: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
   );
 };
 
-// Dispatcher
+// Dispatcher — slides between variants without remounting
+const VARIANTS = ['classic', 'editorial', 'minimal'] as const;
+
 export const ProfileScreen: React.FC<{
   theme: PaceTheme;
-  settings: any;
-  onUpdate: (patch: Record<string, any>) => void;
-}> = ({ theme, settings, onUpdate }) => {
+}> = ({ theme }) => {
+  const { settings, onUpdate } = React.useContext(SettingsCtx);
   const v = settings.profileVariant || theme.profileVariant || 'classic';
-  if (v === 'editorial') return <ProfileEditorial theme={theme} settings={settings} onUpdate={onUpdate} />;
-  if (v === 'minimal') return <ProfileMinimal theme={theme} settings={settings} onUpdate={onUpdate} />;
-  return <ProfileClassic theme={theme} settings={settings} onUpdate={onUpdate} />;
+  const idx = VARIANTS.indexOf(v as any);
+  const activeIdx = idx === -1 ? 0 : idx;
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+      <div style={{
+        display: 'flex',
+        width: `${VARIANTS.length * 100}%`,
+        height: '100%',
+        transform: `translateX(-${activeIdx * (100 / VARIANTS.length)}%)`,
+        transition: 'transform 400ms cubic-bezier(0.32,0.72,0,1)',
+      }}>
+        {VARIANTS.map((variant) => (
+          <div key={variant} style={{ width: `${100 / VARIANTS.length}%`, height: '100%', position: 'relative', flexShrink: 0 }}>
+            {variant === 'classic' && <ProfileClassic theme={theme} settings={settings} onUpdate={onUpdate} />}
+            {variant === 'editorial' && <ProfileEditorial theme={theme} settings={settings} onUpdate={onUpdate} />}
+            {variant === 'minimal' && <ProfileMinimal theme={theme} settings={settings} onUpdate={onUpdate} />}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };

@@ -153,7 +153,7 @@ export const PaceSegmented: React.FC<{
   return (
     <div style={{
       position: 'relative',
-      background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(61,52,42,0.12)',
+      background: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(61,52,42,0.12)',
       borderRadius: 12, padding: 3,
       display: 'flex', height: compact ? 32 : 36,
     }}>
@@ -164,7 +164,7 @@ export const PaceSegmented: React.FC<{
         background: theme.surfaceElevated || theme.surface,
         borderRadius: 9,
         boxShadow: isDark
-          ? '0 1px 2px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.1)'
+          ? '0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)'
           : '0 1px 2px rgba(61,52,42,0.12), 0 2px 6px rgba(61,52,42,0.08)',
         transition: 'left 280ms cubic-bezier(0.32,0.72,0,1)',
       }} />

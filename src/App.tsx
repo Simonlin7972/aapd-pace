@@ -12,13 +12,19 @@ import { FoodScreen } from './components/screens/FoodScreen';
 import { InsightsScreen } from './components/screens/InsightsScreen';
 import { ProfileScreen } from './components/screens/ProfileScreens';
 
-interface Tweaks {
+export interface Tweaks {
   accent: string;
   radius: number;
   dark: boolean;
   lang: string;
   profileVariant: string;
 }
+
+// Settings context so ProfileScreen can read settings without remounting
+export const SettingsCtx = React.createContext<{
+  settings: Tweaks;
+  onUpdate: (patch: Partial<Tweaks>) => void;
+}>(null!);
 
 function buildTheme(t: Tweaks): PaceTheme {
   const base = t.dark ? { ...THEMES.oatDark } : { ...THEMES.oat };
@@ -56,8 +62,8 @@ function App() {
     setTweaks(p => ({ ...p, ...patch }));
   };
 
-  // Build screens with settings passthrough for profile
-  const SCREENS: Record<string, React.ComponentType<any>> = {
+  // Stable SCREENS object — ProfileScreen reads settings from context
+  const SCREENS = React.useMemo<Record<string, React.ComponentType<any>>>(() => ({
     home: HomeScreen,
     sleepStep1: SleepStep1,
     sleepStep2: SleepStep2,
@@ -67,24 +73,19 @@ function App() {
     moveDone: MoveDoneScreen,
     food: FoodScreen,
     insights: InsightsScreen,
-    profile: (props: any) => (
-      <ProfileScreen
-        {...props}
-        settings={tweaks}
-        onUpdate={update}
-      />
-    ),
-  };
+    profile: ProfileScreen,
+  }), []);
 
   return (
-    <div className="stage">
-      <div style={{ position: 'relative' }}>
-        <IOSDevice width={380} height={820} dark={tweaks.dark} bg={theme.bg}>
-          <DeviceRoot key={jumpTo} theme={theme} screens={SCREENS} />
-        </IOSDevice>
+    <SettingsCtx.Provider value={{ settings: tweaks, onUpdate: update }}>
+      <div className="stage">
+        <div style={{ position: 'relative' }}>
+          <IOSDevice width={380} height={820} dark={tweaks.dark} bg={theme.bg}>
+            <DeviceRoot key={jumpTo} theme={theme} screens={SCREENS} />
+          </IOSDevice>
+        </div>
       </div>
-
-    </div>
+    </SettingsCtx.Provider>
   );
 }
 
