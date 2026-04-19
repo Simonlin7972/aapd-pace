@@ -26,6 +26,10 @@ body { background: #E8DFCC; color: #3D342A; min-height: 100vh; }
     border-radius: 0 !important;
     box-shadow: none !important;
   }
+  .ios-status-bar,
+  .ios-home-indicator {
+    display: none !important;
+  }
 }
 
 /* Tweaks panel */

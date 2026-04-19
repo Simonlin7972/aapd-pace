@@ -55,7 +55,7 @@ export const IOSDevice: React.FC<{
       WebkitFontSmoothing: 'antialiased',
     }}>
       {/* Status bar */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+      <div className="ios-status-bar" style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
         <IOSStatusBar dark={dark} />
       </div>
       {/* Content */}
@@ -63,7 +63,7 @@ export const IOSDevice: React.FC<{
         <div style={{ flex: 1, overflow: 'auto' }}>{children}</div>
       </div>
       {/* Home indicator */}
-      <div style={{
+      <div className="ios-home-indicator" style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 60,
         height: 34, display: 'flex', justifyContent: 'center', alignItems: 'flex-end',
         paddingBottom: 8, pointerEvents: 'none',
