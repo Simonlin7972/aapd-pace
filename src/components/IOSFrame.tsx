@@ -47,7 +47,7 @@ export const IOSDevice: React.FC<{
 }> = ({ children, width = 380, height = 820, dark = false, bg }) => {
   const frameBg = bg || (dark ? '#000' : '#F2F2F7');
   return (
-    <div style={{
+    <div className="ios-device" style={{
       width, height, borderRadius: 48, overflow: 'hidden',
       position: 'relative', background: frameBg,
       boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',

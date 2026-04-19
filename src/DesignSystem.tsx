@@ -50,57 +50,69 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { id: 'part-fundamentals', label: 'Fundamentals', level: 0 },
-  { id: 'colors', label: 'Colors', level: 1 },
-  { id: 'colors-bg-light', label: 'Background — Light', level: 2 },
-  { id: 'colors-bg-dark', label: 'Background — Dark', level: 2 },
-  { id: 'colors-accent', label: 'Accent Colors', level: 2 },
-  { id: 'colors-ink', label: 'Text Colors (Ink)', level: 2 },
-  { id: 'colors-line', label: 'Line / Border', level: 2 },
+  // ── Foundations ──
+  { id: 'part-foundations', label: 'Foundations', level: 0 },
+
+  { id: 'colors', label: 'Color', level: 1 },
+  { id: 'colors-bg-light', label: 'Background', level: 2 },
+  { id: 'colors-accent', label: 'Accent palette', level: 2 },
+  { id: 'colors-ink', label: 'Text (Ink)', level: 2 },
+  { id: 'colors-line', label: 'Border & divider', level: 2 },
   { id: 'colors-semantic', label: 'Semantic', level: 2 },
-  { id: 'colors-mood', label: 'Mood Scale', level: 2 },
+  { id: 'colors-mood', label: 'Mood scale', level: 2 },
+
   { id: 'typography', label: 'Typography', level: 1 },
-  { id: 'type-families', label: 'Font Families', level: 2 },
-  { id: 'type-scale', label: 'Type Scale', level: 2 },
-  { id: 'type-weights', label: 'Font Weights', level: 2 },
-  { id: 'radius', label: 'Border Radius', level: 1 },
-  { id: 'radius-special', label: 'Special Values', level: 2 },
+  { id: 'type-families', label: 'Font families', level: 2 },
+  { id: 'type-scale', label: 'Type scale', level: 2 },
+  { id: 'type-weights', label: 'Font weights', level: 2 },
+
   { id: 'spacing', label: 'Spacing', level: 1 },
-  { id: 'shadows', label: 'Shadows', level: 1 },
+
+  { id: 'radius', label: 'Shape', level: 1 },
+  { id: 'radius-special', label: 'Special values', level: 2 },
+
+  { id: 'shadows', label: 'Elevation', level: 1 },
+
   { id: 'motion', label: 'Motion', level: 1 },
-  { id: 'motion-easing', label: 'Easing Curves', level: 2 },
-  { id: 'motion-duration', label: 'Duration Scale', level: 2 },
+  { id: 'motion-easing', label: 'Easing curves', level: 2 },
+  { id: 'motion-duration', label: 'Duration scale', level: 2 },
+
+  // ── Components ──
   { id: 'part-components', label: 'Components', level: 0 },
+
   { id: 'atoms', label: 'Atoms', level: 1 },
-  { id: 'atom-typography', label: 'Typography Components', level: 2 },
-  { id: 'atom-icons', label: 'Icons', level: 2 },
-  { id: 'atom-dividers', label: 'Dividers & Separators', level: 2 },
-  { id: 'atom-indicators', label: 'Color Indicators', level: 2 },
+  { id: 'atom-typography', label: 'Text primitives', level: 2 },
+  { id: 'atom-icons', label: 'Iconography', level: 2 },
+  { id: 'atom-dividers', label: 'Dividers', level: 2 },
+  { id: 'atom-indicators', label: 'Color indicators', level: 2 },
+
   { id: 'molecules', label: 'Molecules', level: 1 },
-  { id: 'mol-button', label: 'PaceButton', level: 2 },
-  { id: 'mol-card', label: 'PaceCard', level: 2 },
-  { id: 'mol-segmented', label: 'PaceSegmented', level: 2 },
-  { id: 'mol-mood-slider', label: 'MoodSlider', level: 2 },
-  { id: 'mol-hours-slider', label: 'HoursSlider', level: 2 },
-  { id: 'mol-chips', label: 'Chips & Pills', level: 2 },
-  { id: 'mol-satisfaction', label: 'Satisfaction Cards', level: 2 },
-  { id: 'mol-animated', label: 'AnimatedEnter', level: 2 },
+  { id: 'mol-button', label: 'Button', level: 2 },
+  { id: 'mol-card', label: 'Card', level: 2 },
+  { id: 'mol-segmented', label: 'Segmented control', level: 2 },
+  { id: 'mol-mood-slider', label: 'Mood slider', level: 2 },
+  { id: 'mol-hours-slider', label: 'Hours slider', level: 2 },
+  { id: 'mol-chips', label: 'Chips & pills', level: 2 },
+  { id: 'mol-satisfaction', label: 'Satisfaction cards', level: 2 },
+  { id: 'mol-animated', label: 'Animated enter', level: 2 },
   { id: 'mol-toast', label: 'Toast', level: 2 },
+
   { id: 'organisms', label: 'Organisms', level: 1 },
-  { id: 'org-topbar', label: 'TopBar', level: 2 },
-  { id: 'org-dimcard', label: 'DimCard', level: 2 },
-  { id: 'org-stats', label: 'Stats Grid', level: 2 },
-  { id: 'org-profile-stats', label: 'Profile Stats Variants', level: 2 },
-  { id: 'org-heatmap', label: 'Mood Heatmap', level: 2 },
-  { id: 'org-sleep-chart', label: 'Sleep Trend Chart', level: 2 },
-  { id: 'org-settings-row', label: 'SettingsRow & ClassicRow', level: 2 },
-  { id: 'org-insight', label: 'Insight Card', level: 2 },
-  { id: 'org-sheet', label: 'Bottom Sheet', level: 2 },
-  { id: 'org-quote', label: 'Quote Block', level: 2 },
-  { id: 'org-hint', label: 'Hint Line', level: 2 },
-  { id: 'org-calendar', label: 'Activity Calendar', level: 2 },
+  { id: 'org-topbar', label: 'Top bar', level: 2 },
+  { id: 'org-dimcard', label: 'Dimension card', level: 2 },
+  { id: 'org-stats', label: 'Stats grid', level: 2 },
+  { id: 'org-profile-stats', label: 'Profile stats', level: 2 },
+  { id: 'org-heatmap', label: 'Mood heatmap', level: 2 },
+  { id: 'org-sleep-chart', label: 'Sleep trend chart', level: 2 },
+  { id: 'org-settings-row', label: 'Settings row', level: 2 },
+  { id: 'org-insight', label: 'Insight card', level: 2 },
+  { id: 'org-sheet', label: 'Bottom sheet', level: 2 },
+  { id: 'org-quote', label: 'Quote block', level: 2 },
+  { id: 'org-hint', label: 'Hint line', level: 2 },
+  { id: 'org-calendar', label: 'Activity calendar', level: 2 },
+
   { id: 'templates', label: 'Templates', level: 1 },
-  { id: 'tpl-layouts', label: 'Screen Layout Patterns', level: 2 },
+  { id: 'tpl-layouts', label: 'Screen layouts', level: 2 },
 ];
 
 const SideNav: React.FC<{ activeId: string }> = ({ activeId }) => {
@@ -267,7 +279,7 @@ export default function DesignSystemPage() {
           Pace — Design System
         </PaceSerif>
         <PaceSans size={16} color="#6E6456" style={{ lineHeight: 1.6 }}>
-          Fundamentals &amp; Component Library
+          Foundations &amp; Component Library
         </PaceSans>
         <div style={{ width: 48, height: 2, background: '#A8734F', margin: '24px auto 0', opacity: 0.6 }} />
       </div>
@@ -275,26 +287,24 @@ export default function DesignSystemPage() {
       {/* ═══════════════════════════════════════════════
           PART 1 — FUNDAMENTALS (Design Tokens)
           ═══════════════════════════════════════════════ */}
-      <div id="part-fundamentals" style={{ marginBottom: 100, scrollMarginTop: 32 }}>
+      <div id="part-foundations" style={{ marginBottom: 100, scrollMarginTop: 32 }}>
         <PaceSans size={11} color="#9A8F7E" style={{
           letterSpacing: '0.24em', textTransform: 'uppercase', marginBottom: 40,
           textAlign: 'center',
-        }}>Part I — Fundamentals</PaceSans>
+        }}>Foundations</PaceSans>
 
         {/* ── Colors ── */}
         <Section id="colors" title="Colors" subtitle="Warm, desaturated palette rooted in oat & earth tones. Two themes: Oat (light) and Oat·Night (dark).">
 
-          {/* Light theme backgrounds */}
-          <SubSection id="colors-bg-light" title="Background — Light (燕麥 Oat)">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          {/* Backgrounds — Light & Dark */}
+          <SubSection id="colors-bg-light" title="Background">
+            <PaceSans size={12} color="#9A8F7E" style={{ marginBottom: 12 }}>Light — 燕麥 Oat</PaceSans>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24 }}>
               <Swatch color={THEMES.oat.bg} name="bg" value={THEMES.oat.bg} />
               <Swatch color={THEMES.oat.surface} name="surface" value={THEMES.oat.surface} />
               <Swatch color={THEMES.oat.surfaceElevated} name="surfaceElevated" value={THEMES.oat.surfaceElevated} />
             </div>
-          </SubSection>
-
-          {/* Dark theme backgrounds */}
-          <SubSection id="colors-bg-dark" title="Background — Dark (燕麥·夜 Oat·Night)">
+            <PaceSans size={12} color="#9A8F7E" style={{ marginBottom: 12 }}>Dark — 燕麥·夜 Oat·Night</PaceSans>
             <div style={{
               display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20,
               background: '#1F1A14', borderRadius: 20, padding: 24,
@@ -489,43 +499,6 @@ export default function DesignSystemPage() {
           </SubSection>
         </Section>
 
-        {/* ── Border Radius ── */}
-        <Section id="radius" title="Border Radius" subtitle="Three configurable radius options applied globally via theme.radius.">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24 }}>
-            {[
-              { r: 14, label: 'Small' },
-              { r: 22, label: 'Medium' },
-              { r: 30, label: 'Large (default)' },
-            ].map(v => (
-              <div key={v.r} style={{
-                background: theme.surface, borderRadius: v.r, padding: 32,
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-              }}>
-                <PaceSerif size={28} color={theme.ink}>{v.r}px</PaceSerif>
-                <PaceSans size={13} color={theme.inkSoft}>{v.label}</PaceSans>
-              </div>
-            ))}
-          </div>
-          <SubSection id="radius-special" title="Special Radius Values">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-              {[
-                { r: 'min(radius, 20)', val: 20, label: 'Button', show: 20 },
-                { r: '12px', val: 12, label: 'Segmented Control', show: 12 },
-                { r: '24px', val: 24, label: 'Bottom Sheet', show: 24 },
-                { r: '999px', val: 999, label: 'Pill / Chip', show: 999 },
-              ].map(v => (
-                <div key={v.label} style={{
-                  background: theme.surface, borderRadius: v.show, padding: '18px 16px',
-                  textAlign: 'center',
-                }}>
-                  <PaceNum size={14} color={theme.ink}>{v.r}</PaceNum>
-                  <PaceSans size={11} color={theme.inkMuted} style={{ marginTop: 4 }}>{v.label}</PaceSans>
-                </div>
-              ))}
-            </div>
-          </SubSection>
-        </Section>
-
         {/* ── Spacing ── */}
         <Section id="spacing" title="Spacing" subtitle="Consistent spacing values used throughout the app.">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
@@ -573,8 +546,45 @@ export default function DesignSystemPage() {
           </div>
         </Section>
 
+        {/* ── Shape (Border Radius) ── */}
+        <Section id="radius" title="Shape" subtitle="Border radius tokens. Three configurable radius options applied globally via theme.radius.">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, marginBottom: 24 }}>
+            {[
+              { r: 14, label: 'Small' },
+              { r: 22, label: 'Medium' },
+              { r: 30, label: 'Large (default)' },
+            ].map(v => (
+              <div key={v.r} style={{
+                background: theme.surface, borderRadius: v.r, padding: 32,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+              }}>
+                <PaceSerif size={28} color={theme.ink}>{v.r}px</PaceSerif>
+                <PaceSans size={13} color={theme.inkSoft}>{v.label}</PaceSans>
+              </div>
+            ))}
+          </div>
+          <SubSection id="radius-special" title="Special Radius Values">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+              {[
+                { r: 'min(radius, 20)', val: 20, label: 'Button', show: 20 },
+                { r: '12px', val: 12, label: 'Segmented Control', show: 12 },
+                { r: '24px', val: 24, label: 'Bottom Sheet', show: 24 },
+                { r: '999px', val: 999, label: 'Pill / Chip', show: 999 },
+              ].map(v => (
+                <div key={v.label} style={{
+                  background: theme.surface, borderRadius: v.show, padding: '18px 16px',
+                  textAlign: 'center',
+                }}>
+                  <PaceNum size={14} color={theme.ink}>{v.r}</PaceNum>
+                  <PaceSans size={11} color={theme.inkMuted} style={{ marginTop: 4 }}>{v.label}</PaceSans>
+                </div>
+              ))}
+            </div>
+          </SubSection>
+        </Section>
+
         {/* ── Shadows ── */}
-        <Section id="shadows" title="Shadows" subtitle="Layered shadows for depth and elevation hierarchy.">
+        <Section id="shadows" title="Elevation" subtitle="Layered shadows for depth and elevation hierarchy.">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
             {[
               { label: 'Device Frame', shadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)', desc: 'iOS device mockup' },
@@ -657,7 +667,7 @@ export default function DesignSystemPage() {
         <PaceSans size={11} color="#9A8F7E" style={{
           letterSpacing: '0.24em', textTransform: 'uppercase', marginBottom: 40,
           textAlign: 'center',
-        }}>Part II — Components</PaceSans>
+        }}>Components</PaceSans>
 
         {/* ── ATOMS ── */}
         <Section id="atoms" title="Atoms" subtitle="The smallest indivisible UI elements.">
@@ -1424,7 +1434,7 @@ export default function DesignSystemPage() {
       {/* Footer */}
       <div style={{ textAlign: 'center', padding: '60px 0 40px', borderTop: `1px solid ${theme.line}` }}>
         <PaceSerif size={20} color={theme.inkSoft} style={{ fontStyle: 'italic', marginBottom: 8 }}>Pace</PaceSerif>
-        <PaceSans size={12} color={theme.inkMuted}>Design System v0.1 — Fundamentals &amp; Components</PaceSans>
+        <PaceSans size={12} color={theme.inkMuted}>Design System v0.1 — Foundations &amp; Components</PaceSans>
       </div>
       </div>
     </div>

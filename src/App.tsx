@@ -45,7 +45,6 @@ function App() {
     lang: 'zh-TW',
     profileVariant: 'classic',
   });
-  const [panelOpen, setPanelOpen] = React.useState(false);
   const [jumpTo] = React.useState(0);
   const theme = buildTheme(tweaks);
 
@@ -85,52 +84,6 @@ function App() {
         </IOSDevice>
       </div>
 
-      {!panelOpen && (
-        <div className="tweaks-hint" onClick={() => setPanelOpen(true)}>Tweaks</div>
-      )}
-      <div className={`tweaks-panel ${panelOpen ? 'open' : ''}`}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-          <h3>Tweaks</h3>
-          <div style={{ cursor: 'pointer', color: '#9A8F7E', fontSize: 18 }} onClick={() => setPanelOpen(false)}>×</div>
-        </div>
-        <div className="tweak-row">
-          <label>主色（強調）</label>
-          <div style={{ display: 'flex', gap: 8 }}>
-            {[
-              { k: 'terracotta', c: '#A8734F' },
-              { k: 'amber', c: '#8B5E3C' },
-              { k: 'sage', c: '#9AA590' },
-              { k: 'dust', c: '#C4A898' },
-            ].map(s => (
-              <div
-                key={s.k}
-                className={`tweak-swatch ${tweaks.accent === s.k ? 'active' : ''}`}
-                style={{ background: s.c }}
-                onClick={() => update({ accent: s.k })}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="tweak-row">
-          <label>圓角</label>
-          <div className="tweak-chips">
-            {[{ k: 14, l: '小' }, { k: 22, l: '中' }, { k: 30, l: '大' }].map(o => (
-              <div
-                key={o.k}
-                className={`chip ${tweaks.radius === o.k ? 'active' : ''}`}
-                onClick={() => update({ radius: o.k })}
-              >{o.l}</div>
-            ))}
-          </div>
-        </div>
-        <div className="tweak-row">
-          <label>模式</label>
-          <div className="tweak-chips">
-            <div className={`chip ${!tweaks.dark ? 'active' : ''}`} onClick={() => update({ dark: false })}>日</div>
-            <div className={`chip ${tweaks.dark ? 'active' : ''}`} onClick={() => update({ dark: true })}>夜</div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
