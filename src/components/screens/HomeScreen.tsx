@@ -64,7 +64,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
   return (
     <div style={{ background: theme.bg, height: '100%', position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
+      <div className="screen-scroll" style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
         <div style={{ padding: '8px 20px 120px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
             <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>

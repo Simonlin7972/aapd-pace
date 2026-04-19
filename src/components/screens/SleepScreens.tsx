@@ -57,7 +57,7 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
   return (
     <div style={{ background: theme.bg, height: '100%', position: 'relative' }}>
-      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
+      <div className="screen-scroll" style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
         <div style={{ padding: '8px 20px 120px' }}>
           {/* Header */}
           <AnimatedEnter delay={50} skip={skip}>

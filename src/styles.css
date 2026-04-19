@@ -30,6 +30,9 @@ body { background: #E8DFCC; color: #3D342A; min-height: 100vh; }
   .ios-home-indicator {
     display: none !important;
   }
+  .screen-scroll {
+    padding-top: 16px !important;
+  }
 }
 
 /* Tweaks panel */
