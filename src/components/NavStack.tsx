@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PaceTheme } from '../data/tokens';
 
-const iosEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
+const iosEase = 'cubic-bezier(0.25, 0.8, 0.25, 1)';
 
 // Navigation context
 interface NavContextType {
@@ -42,12 +42,12 @@ const BottomSheet: React.FC<{
         position: 'absolute', inset: 0,
         background: 'rgba(61,52,42,0.4)',
         opacity: visible ? 1 : 0,
-        transition: `opacity 320ms ${iosEase}`,
+        transition: `opacity 420ms ${iosEase}`,
       }} />
       <div style={{
         position: 'relative',
         transform: visible ? 'translateY(0)' : 'translateY(100%)',
-        transition: `transform 380ms ${iosEase}`,
+        transition: `transform 520ms ${iosEase}`,
         background: theme.bg,
         borderTopLeftRadius: 24, borderTopRightRadius: 24,
         maxHeight: '86%',
@@ -91,13 +91,19 @@ export const NavStack: React.FC<{
 }> = ({ initial, screens, theme }) => {
   const [stack, setStack] = React.useState([{ name: initial, props: {} as Record<string, any> }]);
   const [popping, setPopping] = React.useState(false);
-  const [pushing, setPushing] = React.useState(false);
+  const [enteringIdx, setEnteringIdx] = React.useState(-1); // index of page currently sliding in
   const [sheet, setSheet] = React.useState<{ name: string; props: Record<string, any> } | null>(null);
 
   const push = (name: string, props = {}) => {
-    setPushing(true);
-    setStack(s => [...s, { name, props }]);
-    setTimeout(() => setPushing(false), 420);
+    setStack(s => {
+      const next = [...s, { name, props }];
+      setEnteringIdx(next.length - 1); // mark as off-screen initially
+      // Next frame: clear enteringIdx so CSS transition slides it in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setEnteringIdx(-1));
+      });
+      return next;
+    });
   };
   const pop = () => {
     if (stack.length <= 1) return;
@@ -105,7 +111,7 @@ export const NavStack: React.FC<{
     setTimeout(() => {
       setStack(s => s.slice(0, -1));
       setPopping(false);
-    }, 380);
+    }, 520);
   };
   const replace = (name: string, props = {}) => {
     setStack([{ name, props }]);
@@ -122,8 +128,9 @@ export const NavStack: React.FC<{
           const Comp = screens[frame.name];
           const isTop = i === stack.length - 1;
           const isUnder = i === stack.length - 2;
+          const isEntering = i === enteringIdx;
           const transform = isTop
-            ? (pushing ? 'translateX(100%)' : popping ? 'translateX(100%)' : 'translateX(0)')
+            ? (isEntering ? 'translateX(100%)' : popping ? 'translateX(100%)' : 'translateX(0)')
             : isUnder
               ? (popping ? 'translateX(0) scale(1)' : 'translateX(-22%) scale(0.97)')
               : 'translateX(-22%) scale(0.97)';
@@ -133,7 +140,7 @@ export const NavStack: React.FC<{
               position: 'absolute', inset: 0,
               transform,
               opacity,
-              transition: `transform 380ms ${iosEase}, opacity 380ms ${iosEase}`,
+              transition: isEntering ? 'none' : `transform 520ms ${iosEase}, opacity 520ms ${iosEase}`,
               boxShadow: isTop && i > 0 ? '-12px 0 40px rgba(0,0,0,0.12)' : 'none',
               background: theme.bg,
               pointerEvents: isTop ? 'auto' : 'none',
