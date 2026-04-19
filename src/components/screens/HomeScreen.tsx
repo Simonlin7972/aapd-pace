@@ -6,6 +6,7 @@ import { Icons } from '../Icons';
 import { PaceCard, PaceSerif, PaceSans, AnimatedEnter } from '../UI';
 import { MoodSlider } from '../Sliders';
 import { useNav, useToast } from '../NavStack';
+import { BottomBar } from '../BottomBar';
 
 const DimCard: React.FC<{ theme: PaceTheme; d: any }> = ({ theme, d }) => {
   const [pressed, setPressed] = React.useState(false);
@@ -60,74 +61,77 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
     : L.statusNew;
 
   return (
-    <div style={{ background: theme.bg, height: '100%', overflowY: 'auto', paddingTop: 56 }}>
-      <div style={{ padding: '8px 20px 40px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
-          <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            {L.dateToday}
-          </PaceSans>
-          <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
-            <div onClick={() => nav.push('insights')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
-            <div onClick={() => nav.push('profile')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Me({ size: 20 })}</div>
-          </div>
-        </div>
-
-        <AnimatedEnter delay={50}>
-          <div style={{ position: 'relative', marginBottom: 24 }}>
-            <div style={{
-              position: 'absolute', right: -6, top: -10,
-              width: 70, height: 70,
-              borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
-              background: theme.dust, opacity: 0.5,
-            }} />
-            <PaceSerif size={30} weight={500} color={theme.ink} style={{ marginBottom: 10, position: 'relative' }}>
-              {L.greeting}
-            </PaceSerif>
-            <PaceSerif size={19} weight={400} color={theme.inkSoft} style={{ lineHeight: 1.5, position: 'relative', textWrap: 'pretty' as any }}>
-              {status}
-            </PaceSerif>
-          </div>
-        </AnimatedEnter>
-
-        <AnimatedEnter delay={120}>
-          <PaceCard theme={theme} padding={18} style={{ marginBottom: 18 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-              <PaceSans size={13} color={theme.inkSoft}>{L.feelNow}</PaceSans>
-              <PaceSans size={12} color={theme.inkMuted}>{L.dragToRecord}</PaceSans>
-            </div>
-            <MoodSlider theme={theme} value={moodLive} onChange={(v) => {
-              if (v !== moodLive && navigator.vibrate) navigator.vibrate(6);
-              setMoodLive(v);
-            }} />
-          </PaceCard>
-        </AnimatedEnter>
-
-        <AnimatedEnter delay={200}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '8px 2px 14px' }}>
-            <PaceSerif size={18} color={theme.ink}>{L.fourWindows}</PaceSerif>
-          </div>
-        </AnimatedEnter>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-          {dims.map((d, i) => (
-            <AnimatedEnter key={d.k} delay={240 + i * 60} y={14}>
-              <DimCard theme={theme} d={d} />
-            </AnimatedEnter>
-          ))}
-        </div>
-
-        <AnimatedEnter delay={520}>
-          <div style={{ margin: '24px 4px 8px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-            <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.7 }}>
-              {Icons.Leaf({ size: 16 })}
-            </div>
-            <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.6, flex: 1 }}>
-              {L.streakLine}
+    <div style={{ background: theme.bg, height: '100%', position: 'relative' }}>
+      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
+        <div style={{ padding: '8px 20px 120px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
+            <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              {L.dateToday}
             </PaceSans>
+            <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
+              <div onClick={() => nav.push('insights')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
+              <div onClick={() => nav.push('profile')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Me({ size: 20 })}</div>
+            </div>
           </div>
-        </AnimatedEnter>
+
+          <AnimatedEnter delay={50}>
+            <div style={{ position: 'relative', marginBottom: 24 }}>
+              <div style={{
+                position: 'absolute', right: -6, top: -10,
+                width: 70, height: 70,
+                borderRadius: '52% 48% 45% 55% / 55% 60% 40% 45%',
+                background: theme.dust, opacity: 0.5,
+              }} />
+              <PaceSerif size={30} weight={500} color={theme.ink} style={{ marginBottom: 10, position: 'relative' }}>
+                {L.greeting}
+              </PaceSerif>
+              <PaceSerif size={19} weight={400} color={theme.inkSoft} style={{ lineHeight: 1.5, position: 'relative', textWrap: 'pretty' as any }}>
+                {status}
+              </PaceSerif>
+            </div>
+          </AnimatedEnter>
+
+          <AnimatedEnter delay={120}>
+            <PaceCard theme={theme} padding={18} style={{ marginBottom: 18 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                <PaceSans size={13} color={theme.inkSoft}>{L.feelNow}</PaceSans>
+                <PaceSans size={12} color={theme.inkMuted}>{L.dragToRecord}</PaceSans>
+              </div>
+              <MoodSlider theme={theme} value={moodLive} onChange={(v) => {
+                if (v !== moodLive && navigator.vibrate) navigator.vibrate(6);
+                setMoodLive(v);
+              }} />
+            </PaceCard>
+          </AnimatedEnter>
+
+          <AnimatedEnter delay={200}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '8px 2px 14px' }}>
+              <PaceSerif size={18} color={theme.ink}>{L.fourWindows}</PaceSerif>
+            </div>
+          </AnimatedEnter>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {dims.map((d, i) => (
+              <AnimatedEnter key={d.k} delay={240 + i * 60} y={14}>
+                <DimCard theme={theme} d={d} />
+              </AnimatedEnter>
+            ))}
+          </div>
+
+          <AnimatedEnter delay={520}>
+            <div style={{ margin: '24px 4px 8px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.7 }}>
+                {Icons.Leaf({ size: 16 })}
+              </div>
+              <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.6, flex: 1 }}>
+                {L.streakLine}
+              </PaceSans>
+            </div>
+          </AnimatedEnter>
+        </div>
+        {toast.node}
       </div>
-      {toast.node}
+      <BottomBar theme={theme} active="today" />
     </div>
   );
 };
