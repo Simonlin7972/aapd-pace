@@ -239,7 +239,7 @@ function useScrollSpy(ids: string[]): string {
   return active;
 }
 
-const TokenRow: React.FC<{ label: string; value: string; preview?: React.ReactNode }> = ({ label, value, preview }) => {
+const TokenRow: React.FC<{ label: string; value: string; token?: string; preview?: React.ReactNode }> = ({ label, value, token, preview }) => {
   const t = React.useContext(ThemeCtx);
   return (
     <div style={{
@@ -249,7 +249,10 @@ const TokenRow: React.FC<{ label: string; value: string; preview?: React.ReactNo
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {preview}
-        <PaceSans size={14} color={t.ink}>{label}</PaceSans>
+        <div>
+          <PaceSans size={14} color={t.ink}>{label}</PaceSans>
+          {token && <PaceSans size={11} color={t.inkMuted} style={{ fontFamily: FONTS.mono, marginTop: 2 }}>{token}</PaceSans>}
+        </div>
       </div>
       <PaceNum size={12} color={t.inkMuted}>{value}</PaceNum>
     </div>
@@ -284,8 +287,13 @@ export default function DesignSystemPage() {
       <SideNav activeId={activeId} isDark={isDark} onToggle={handleThemeToggle} />
       <div style={{
         marginLeft: 232,
+        display: 'flex',
+        justifyContent: 'center',
+      }}>
+      <div style={{
         padding: '80px 60px',
-        maxWidth: 1200,
+        maxWidth: 960,
+        width: '100%',
       }}>
       {/* Header */}
       <div style={{ marginBottom: 80, textAlign: 'center' }}>
@@ -316,56 +324,56 @@ export default function DesignSystemPage() {
               {isDark ? 'Dark — 燕麥·夜 Oat·Night' : 'Light — 燕麥 Oat'}
             </PaceSans>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <TokenRow label="bg — Canvas background" value={themeSource.bg}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.bg, border: `1px solid ${theme.line}` }} />} />
-              <TokenRow label="surface — Card / section fill" value={themeSource.surface}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.surface, border: `1px solid ${theme.line}` }} />} />
-              <TokenRow label="surfaceElevated — Elevated card / BottomBar" value={themeSource.surfaceElevated}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.surfaceElevated, border: `1px solid ${theme.line}` }} />} />
+              <TokenRow label="bg — Canvas background" value={themeSource.bg} token="theme.bg → color/bg/canvas"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.bg, border: `1px solid ${theme.line}` }} />} />
+              <TokenRow label="surface — Card / section fill" value={themeSource.surface} token="theme.surface → color/bg/surface"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.surface, border: `1px solid ${theme.line}` }} />} />
+              <TokenRow label="surfaceElevated — Elevated card / BottomBar" value={themeSource.surfaceElevated} token="theme.surfaceElevated → color/bg/elevated"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.surfaceElevated, border: `1px solid ${theme.line}` }} />} />
             </div>
           </SubSection>
 
           {/* Accent colors */}
           <SubSection id="colors-accent" title="Accent Colors">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <TokenRow label="terracotta — Primary action / brand" value={themeSource.terracotta}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.terracotta }} />} />
-              <TokenRow label="amber — Deep brand accent" value={themeSource.amber}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.amber }} />} />
-              <TokenRow label="sage — Calm / move accent" value={themeSource.sage}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.sage }} />} />
-              <TokenRow label="dust — Soft / sleep accent" value={themeSource.dust}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.dust }} />} />
+              <TokenRow label="terracotta — Primary action / brand" value={themeSource.terracotta} token="theme.terracotta → color/brand/default"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.terracotta }} />} />
+              <TokenRow label="amber — Deep brand accent" value={themeSource.amber} token="theme.amber → color/brand/deep"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.amber }} />} />
+              <TokenRow label="sage — Calm / move accent" value={themeSource.sage} token="theme.sage → color/accent/calm"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.sage }} />} />
+              <TokenRow label="dust — Soft / sleep accent" value={themeSource.dust} token="theme.dust → color/accent/soft"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.dust }} />} />
             </div>
           </SubSection>
 
           {/* Text colors */}
           <SubSection id="colors-ink" title="Text Colors (Ink)">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <TokenRow label="ink — Primary text" value={themeSource.ink}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.ink }} />} />
-              <TokenRow label="inkSoft — Secondary text" value={themeSource.inkSoft}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.inkSoft }} />} />
-              <TokenRow label="inkMuted — Tertiary / labels" value={themeSource.inkMuted}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.inkMuted }} />} />
+              <TokenRow label="ink — Primary text" value={themeSource.ink} token="theme.ink → color/text/primary"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.ink }} />} />
+              <TokenRow label="inkSoft — Secondary text" value={themeSource.inkSoft} token="theme.inkSoft → color/text/secondary"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.inkSoft }} />} />
+              <TokenRow label="inkMuted — Tertiary / labels" value={themeSource.inkMuted} token="theme.inkMuted → color/text/tertiary"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.inkMuted }} />} />
             </div>
           </SubSection>
 
           {/* Line / border colors */}
           <SubSection id="colors-line" title="Line / Border Colors">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              <TokenRow label="line" value={isDark ? 'rgba(242,234,219,0.08)' : 'rgba(61,52,42,0.09)'}
-                preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: theme.surface, border: `2px solid ${themeSource.line}` }} />} />
-              <TokenRow label="lineStrong" value={isDark ? 'rgba(242,234,219,0.15)' : 'rgba(61,52,42,0.16)'}
-                preview={<div style={{ width: 40, height: 24, borderRadius: 6, background: theme.surface, border: `2px solid ${themeSource.lineStrong}` }} />} />
+              <TokenRow label="line — Subtle border" value={isDark ? 'rgba(242,234,219,0.08)' : 'rgba(61,52,42,0.09)'} token="theme.line → color/border/subtle"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: theme.surface, border: `2px solid ${themeSource.line}` }} />} />
+              <TokenRow label="lineStrong — Strong border" value={isDark ? 'rgba(242,234,219,0.15)' : 'rgba(61,52,42,0.16)'} token="theme.lineStrong → color/border/strong"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: theme.surface, border: `2px solid ${themeSource.lineStrong}` }} />} />
             </div>
           </SubSection>
 
           {/* Semantic / warn */}
           <SubSection id="colors-semantic" title="Semantic Colors">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <TokenRow label="warn — Warning / alert" value={themeSource.warn}
-                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.warn }} />} />
+              <TokenRow label="warn — Warning / alert" value={themeSource.warn} token="theme.warn → color/feedback/warn"
+                preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: themeSource.warn }} />} />
             </div>
           </SubSection>
 
@@ -376,8 +384,8 @@ export default function DesignSystemPage() {
             </PaceSans>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {MOOD_SCALE.map(m => (
-                <TokenRow key={m.key} label={`${m.label} — ${m.key}`} value={`${m.color} · dot: ${m.dot}`}
-                  preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: m.color, boxShadow: `0 4px 10px ${m.color}40` }} />} />
+                <TokenRow key={m.key} label={`${m.label} — ${m.key}`} value={`${m.color} · dot: ${m.dot}`} token={`MOOD_SCALE[${m.key}] → color/mood/${m.key}/color`}
+                  preview={<div style={{ width: 32, height: 32, borderRadius: 8, background: m.color, boxShadow: `0 4px 10px ${m.color}40` }} />} />
               ))}
             </div>
             {/* Gradient preview */}
@@ -416,21 +424,21 @@ export default function DesignSystemPage() {
           <SubSection id="type-scale" title="Type Scale">
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
               {[
-                { size: 64, label: 'Display Large', font: 'serif', weight: 400, sample: '6.5' },
-                { size: 56, label: 'Display / App Name', font: 'serif', weight: 500, sample: 'Pace' },
-                { size: 42, label: 'Editorial Title', font: 'serif', weight: 400, sample: '安靜地活著' },
-                { size: 36, label: 'Profile Name', font: 'serif', weight: 400, sample: 'alice.' },
-                { size: 30, label: 'Page Title', font: 'serif', weight: 500, sample: '你的一週' },
-                { size: 28, label: 'Screen Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？' },
-                { size: 26, label: 'Section Title', font: 'serif', weight: 500, sample: '今日能量' },
-                { size: 22, label: 'Card Title', font: 'serif', weight: 500, sample: '充滿能量' },
-                { size: 18, label: 'Subtitle', font: 'serif', weight: 400, sample: '我們注意到⋯' },
-                { size: 15, label: 'Body / TopBar', font: 'sans', weight: 400, sample: '記錄你今天的感受' },
-                { size: 14, label: 'Body Small', font: 'sans', weight: 400, sample: '睡眠品質還算穩定' },
-                { size: 13, label: 'Caption', font: 'sans', weight: 400, sample: '向右滑動以記錄' },
-                { size: 12, label: 'Label', font: 'sans', weight: 400, sample: '上次記錄' },
-                { size: 11, label: 'Micro Label', font: 'sans', weight: 400, sample: '持續天數' },
-                { size: 10, label: 'Tiny / Tag', font: 'sans', weight: 400, sample: '6W · TODAY' },
+                { size: 64, label: 'Display Large', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 56, label: 'Display / App Name', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 42, label: 'Editorial Title', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 36, label: 'Profile Name', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 30, label: 'Page Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 28, label: 'Screen Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 26, label: 'Section Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 22, label: 'Card Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 18, label: 'Subtitle', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 15, label: 'Body / TopBar', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 14, label: 'Body Small', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 13, label: 'Caption', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 12, label: 'Label', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 11, label: 'Micro Label', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
+                { size: 10, label: 'Tiny / Tag', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
               ].map(t => (
                 <div key={t.label} style={{
                   display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
@@ -1393,6 +1401,7 @@ export default function DesignSystemPage() {
       <div style={{ textAlign: 'center', padding: '60px 0 40px', borderTop: `1px solid ${theme.line}` }}>
         <PaceSerif size={20} color={theme.inkSoft} style={{ fontStyle: 'italic', marginBottom: 8 }}>Pace</PaceSerif>
         <PaceSans size={12} color={theme.inkMuted}>Design System v0.1 — Foundations &amp; Components</PaceSans>
+      </div>
       </div>
       </div>
     </div>
