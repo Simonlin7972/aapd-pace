@@ -88,3 +88,7 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 - 用 inline style，不要引入 Tailwind 或 CSS module
 - Zh-TW 為主要語系，user-facing 文字走 `theme.L`
 - 回覆預設 Traditional Chinese、簡短
+
+## 文案規範
+
+所有 user-facing 文字（標題、副標、按鈕、空狀態、toast、insight）必須遵循 [docs/copywriting.md](docs/copywriting.md)。核心原則：陪伴 > 指導、觀察 > 判斷、溫柔 > 鼓勵。新增文案時三語系（zh-TW / en / ja）同步加到 [src/data/i18n.ts](src/data/i18n.ts)。
