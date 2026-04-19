@@ -63,6 +63,25 @@ npm run lint    # eslint
 
 沒有 test suite。Node 需 20.19+ 或 22.12+（22.10.0 會警告但能跑）。
 
+## Figma 同步規則
+
+Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
+
+將 code 轉成 Figma design 時，**禁止 hardcode**，必須使用 Figma 的 design system assets：
+
+1. **Variables** — 顏色用 `setBoundVariableForPaint` 綁定 semantic variables（`color/bg/*`、`color/text/*`、`color/brand/*`），圓角用 `setBoundVariable` 綁定 `radius/*`，間距綁定 `spacing/*`
+2. **Components** — 已建立的 Component Set（如 `PaceButton`）直接 `createInstance()`，不要手刻 frame。用 `setProperties()` 覆寫 TEXT properties
+3. **Styles** — 若檔案有 text styles / effect styles，用 `textStyleId` / `effectStyleId` 套用
+4. **驗證** — 完成後 `get_screenshot` 確認視覺正確，並確認切換 Figma mode 時 light/dark 自動適配
+
+### 已建立的 Figma assets
+
+| Asset | 位置 | 備註 |
+|---|---|---|
+| `primitives` collection | 本地 variables | `space/*`、`radius/*`、`color/oat/*`、`color/ink/*`、`color/mood/*` 等原始 tokens |
+| `semantic` collection | 本地 variables | 兩個 mode（Default=dark, Mode=light）。`color/bg/*`、`color/text/*`、`color/brand/*`、`spacing/*`、`radius/*` |
+| `PaceButton` | Design System 頁（`50:38`） | 3 Variant × 3 State × 2 Width = 18 variants，Label TEXT property |
+
 ## 風格
 
 - Prototype 等級 — 不要加 error handling、validation、abstraction。三行重複好過早抽象
