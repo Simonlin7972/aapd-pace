@@ -1,0 +1,45 @@
+{
+  "primitive": {
+    "shadow": {
+      "device": {
+        "$type": "shadow",
+        "$value": [
+          { "color": "rgba(0,0,0,0.18)", "offsetX": "0px", "offsetY": "40px", "blur": "80px", "spread": "0px" },
+          { "color": "rgba(0,0,0,0.12)", "offsetX": "0px", "offsetY": "0px",  "blur": "0px",  "spread": "1px" }
+        ]
+      },
+      "cardHover": {
+        "$type": "shadow",
+        "$value": { "color": "rgba(0,0,0,0.12)", "offsetX": "0px", "offsetY": "8px", "blur": "24px", "spread": "0px" }
+      },
+      "knob": {
+        "$type": "shadow",
+        "$value": [
+          { "color": "rgba(61,52,42,0.12)", "offsetX": "0px", "offsetY": "1px", "blur": "2px", "spread": "0px" },
+          { "color": "rgba(61,52,42,0.08)", "offsetX": "0px", "offsetY": "2px", "blur": "6px", "spread": "0px" }
+        ]
+      },
+      "moodBlob": {
+        "$type": "shadow",
+        "$value": { "color": "rgba(196,128,92,0.38)", "offsetX": "0px", "offsetY": "16px", "blur": "40px", "spread": "0px" }
+      },
+      "sliderThumb": {
+        "$type": "shadow",
+        "$value": [
+          { "color": "rgba(200,184,158,0.44)", "offsetX": "0px", "offsetY": "8px", "blur": "24px", "spread": "0px" },
+          { "color": "rgba(0,0,0,0.15)",       "offsetX": "0px", "offsetY": "2px", "blur": "6px",  "spread": "0px" }
+        ]
+      }
+    }
+  },
+
+  "semantic": {
+    "elevation": {
+      "device":      { "$value": "{primitive.shadow.device}",      "$type": "shadow" },
+      "cardHover":   { "$value": "{primitive.shadow.cardHover}",   "$type": "shadow" },
+      "knob":        { "$value": "{primitive.shadow.knob}",        "$type": "shadow" },
+      "moodBlob":    { "$value": "{primitive.shadow.moodBlob}",    "$type": "shadow" },
+      "sliderThumb": { "$value": "{primitive.shadow.sliderThumb}", "$type": "shadow" }
+    }
+  }
+}
