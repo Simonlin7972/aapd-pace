@@ -60,12 +60,12 @@
       },
       "alpha": {
         "ink": {
-          "09": { "$value": "rgba(61,52,42,0.09)", "$type": "color" },
-          "16": { "$value": "rgba(61,52,42,0.16)", "$type": "color" }
+          "09": { "$value": "#3D342A17", "$type": "color" },
+          "16": { "$value": "#3D342A29", "$type": "color" }
         },
         "bone": {
-          "08": { "$value": "rgba(242,234,219,0.08)", "$type": "color" },
-          "15": { "$value": "rgba(242,234,219,0.15)", "$type": "color" }
+          "08": { "$value": "#F2EADB14", "$type": "color" },
+          "15": { "$value": "#F2EADB26", "$type": "color" }
         }
       }
     }
