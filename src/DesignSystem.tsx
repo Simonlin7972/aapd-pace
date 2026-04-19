@@ -239,24 +239,6 @@ function useScrollSpy(ids: string[]): string {
   return active;
 }
 
-const Swatch: React.FC<{ color: string; name: string; value: string }> = ({ color, name, value }) => {
-  const t = React.useContext(ThemeCtx);
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={{
-        width: '100%', aspectRatio: '1', borderRadius: 16,
-        background: color,
-        border: `1px solid ${t.line}`,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-      }} />
-      <div>
-        <PaceSans size={13} color={t.ink} weight={500}>{name}</PaceSans>
-        <PaceSans size={11} color={t.inkMuted} style={{ fontFamily: FONTS.mono }}>{value}</PaceSans>
-      </div>
-    </div>
-  );
-};
-
 const TokenRow: React.FC<{ label: string; value: string; preview?: React.ReactNode }> = ({ label, value, preview }) => {
   const t = React.useContext(ThemeCtx);
   return (
@@ -333,20 +315,27 @@ export default function DesignSystemPage() {
             <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 12 }}>
               {isDark ? 'Dark — 燕麥·夜 Oat·Night' : 'Light — 燕麥 Oat'}
             </PaceSans>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-              <Swatch color={themeSource.bg} name="bg" value={themeSource.bg} />
-              <Swatch color={themeSource.surface} name="surface" value={themeSource.surface} />
-              <Swatch color={themeSource.surfaceElevated} name="surfaceElevated" value={themeSource.surfaceElevated} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <TokenRow label="bg — Canvas background" value={themeSource.bg}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.bg, border: `1px solid ${theme.line}` }} />} />
+              <TokenRow label="surface — Card / section fill" value={themeSource.surface}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.surface, border: `1px solid ${theme.line}` }} />} />
+              <TokenRow label="surfaceElevated — Elevated card / BottomBar" value={themeSource.surfaceElevated}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.surfaceElevated, border: `1px solid ${theme.line}` }} />} />
             </div>
           </SubSection>
 
           {/* Accent colors */}
           <SubSection id="colors-accent" title="Accent Colors">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
-              <Swatch color={themeSource.terracotta} name="terracotta" value={themeSource.terracotta} />
-              <Swatch color={themeSource.amber} name="amber" value={themeSource.amber} />
-              <Swatch color={themeSource.sage} name="sage" value={themeSource.sage} />
-              <Swatch color={themeSource.dust} name="dust" value={themeSource.dust} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <TokenRow label="terracotta — Primary action / brand" value={themeSource.terracotta}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.terracotta }} />} />
+              <TokenRow label="amber — Deep brand accent" value={themeSource.amber}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.amber }} />} />
+              <TokenRow label="sage — Calm / move accent" value={themeSource.sage}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.sage }} />} />
+              <TokenRow label="dust — Soft / sleep accent" value={themeSource.dust}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.dust }} />} />
             </div>
           </SubSection>
 
@@ -374,8 +363,9 @@ export default function DesignSystemPage() {
 
           {/* Semantic / warn */}
           <SubSection id="colors-semantic" title="Semantic Colors">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              <Swatch color={themeSource.warn} name="warn" value={themeSource.warn} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <TokenRow label="warn — Warning / alert" value={themeSource.warn}
+                preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: themeSource.warn }} />} />
             </div>
           </SubSection>
 
@@ -384,20 +374,10 @@ export default function DesignSystemPage() {
             <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
               Five steps from cool to warm. No red — designed to avoid negative connotations.
             </PaceSans>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {MOOD_SCALE.map(m => (
-                <div key={m.key} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{
-                    width: '100%', aspectRatio: '1', borderRadius: 16,
-                    background: m.color,
-                    boxShadow: `0 8px 20px ${m.color}40`,
-                  }} />
-                  <div>
-                    <PaceSans size={13} color={theme.ink} weight={500}>{m.label}</PaceSans>
-                    <PaceSans size={11} color={theme.inkMuted} style={{ fontFamily: FONTS.mono }}>{m.color}</PaceSans>
-                    <PaceSans size={10} color={theme.inkMuted}>dot: {m.dot}</PaceSans>
-                  </div>
-                </div>
+                <TokenRow key={m.key} label={`${m.label} — ${m.key}`} value={`${m.color} · dot: ${m.dot}`}
+                  preview={<div style={{ width: 24, height: 24, borderRadius: 6, background: m.color, boxShadow: `0 4px 10px ${m.color}40` }} />} />
               ))}
             </div>
             {/* Gradient preview */}
