@@ -5,7 +5,7 @@ import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
 import { PaceCard, PaceSerif, PaceSans, AnimatedEnter } from '../UI';
 import { MoodSlider } from '../Sliders';
-import { useNav, useToast } from '../NavStack';
+import { useNav, useToast, useVisited } from '../NavStack';
 import { BottomBar } from '../BottomBar';
 
 const DimCard: React.FC<{ theme: PaceTheme; d: any }> = ({ theme, d }) => {
@@ -44,6 +44,8 @@ const DimCard: React.FC<{ theme: PaceTheme; d: any }> = ({ theme, d }) => {
 export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();
   const toast = useToast();
+  const visited = useVisited();
+  const skip = visited.has('home');
   const L = theme.L;
   const state = PaceState;
   const [moodLive, setMoodLive] = React.useState(state.mood);
@@ -74,7 +76,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
             </div>
           </div>
 
-          <AnimatedEnter delay={50}>
+          <AnimatedEnter delay={50} skip={skip}>
             <div style={{ position: 'relative', marginBottom: 24 }}>
               <div style={{
                 position: 'absolute', right: -6, top: -10,
@@ -91,7 +93,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
             </div>
           </AnimatedEnter>
 
-          <AnimatedEnter delay={120}>
+          <AnimatedEnter delay={120} skip={skip}>
             <PaceCard theme={theme} padding={18} style={{ marginBottom: 18 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                 <PaceSans size={13} color={theme.inkSoft}>{L.feelNow}</PaceSans>
@@ -104,7 +106,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
             </PaceCard>
           </AnimatedEnter>
 
-          <AnimatedEnter delay={200}>
+          <AnimatedEnter delay={200} skip={skip}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '8px 2px 14px' }}>
               <PaceSerif size={18} color={theme.ink}>{L.fourWindows}</PaceSerif>
             </div>
@@ -112,13 +114,13 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             {dims.map((d, i) => (
-              <AnimatedEnter key={d.k} delay={240 + i * 60} y={14}>
+              <AnimatedEnter key={d.k} delay={240 + i * 60} y={14} skip={skip}>
                 <DimCard theme={theme} d={d} />
               </AnimatedEnter>
             ))}
           </div>
 
-          <AnimatedEnter delay={520}>
+          <AnimatedEnter delay={520} skip={skip}>
             <div style={{ margin: '24px 4px 8px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
               <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.7 }}>
                 {Icons.Leaf({ size: 16 })}

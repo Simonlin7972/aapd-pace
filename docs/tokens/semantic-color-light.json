@@ -1,0 +1,84 @@
+{
+  "color": {
+    "bg": {
+      "canvas": {
+        "$value": "{color.oat.200}",
+        "$type": "color"
+      },
+      "surface": {
+        "$value": "{color.oat.100}",
+        "$type": "color"
+      },
+      "elevated": {
+        "$value": "{color.oat.50}",
+        "$type": "color"
+      }
+    },
+    "text": {
+      "primary": {
+        "$value": "{color.ink.900}",
+        "$type": "color"
+      },
+      "secondary": {
+        "$value": "{color.ink.700}",
+        "$type": "color"
+      },
+      "tertiary": {
+        "$value": "{color.ink.500}",
+        "$type": "color"
+      },
+      "inverse": {
+        "$value": "{color.oat.200}",
+        "$type": "color"
+      },
+      "brand": {
+        "$value": "{color.terracotta.500}",
+        "$type": "color"
+      },
+      "onBrand": {
+        "$value": "{color.oat.50}",
+        "$type": "color"
+      }
+    },
+    "border": {
+      "subtle": {
+        "$value": "{color.alpha.ink.09}",
+        "$type": "color"
+      },
+      "strong": {
+        "$value": "{color.alpha.ink.16}",
+        "$type": "color"
+      },
+      "focus": {
+        "$value": "{color.terracotta.500}",
+        "$type": "color"
+      }
+    },
+    "brand": {
+      "default": {
+        "$value": "{color.terracotta.500}",
+        "$type": "color"
+      },
+      "deep": {
+        "$value": "{color.amber.500}",
+        "$type": "color"
+      }
+    },
+    "accent": {
+      "calm": {
+        "$value": "{color.sage.500}",
+        "$type": "color"
+      },
+      "soft": {
+        "$value": "{color.dust.500}",
+        "$type": "color"
+      }
+    },
+    "feedback": {
+      "warn": {
+        "$value": "{color.warn.500}",
+        "$type": "color"
+      }
+    }
+  }
+}

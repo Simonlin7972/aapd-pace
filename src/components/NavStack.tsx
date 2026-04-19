@@ -16,6 +16,10 @@ interface NavContextType {
 const NavCtx = React.createContext<NavContextType | null>(null);
 export const useNav = () => React.useContext(NavCtx)!;
 
+// Track visited screens — skip entry animation on revisit
+const VisitedCtx = React.createContext<Set<string>>(new Set());
+export const useVisited = () => React.useContext(VisitedCtx);
+
 // Bottom sheet
 const BottomSheet: React.FC<{
   theme: PaceTheme;
@@ -120,9 +124,15 @@ export const NavStack: React.FC<{
   const dismissSheet = () => setSheet(null);
 
   const nav = { push, pop, replace, presentSheet, dismissSheet, stack };
+  const [visited] = React.useState(() => new Set<string>([initial]));
+
+  // Track visited screens
+  const topName = stack[stack.length - 1]?.name;
+  React.useEffect(() => { visited.add(topName); }, [topName, visited]);
 
   return (
     <NavCtx.Provider value={nav}>
+    <VisitedCtx.Provider value={visited}>
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: theme.bg }}>
         {stack.map((frame, i) => {
           const Comp = screens[frame.name];
@@ -156,6 +166,7 @@ export const NavStack: React.FC<{
           </BottomSheet>
         )}
       </div>
+    </VisitedCtx.Provider>
     </NavCtx.Provider>
   );
 };

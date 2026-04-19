@@ -1,0 +1,56 @@
+{
+  "spacing": {
+    "screen": {
+      "x": {
+        "$value": "{space.10}",
+        "$type": "dimension"
+      },
+      "safeTop": {
+        "$value": "{space.safeTop}",
+        "$type": "dimension"
+      }
+    },
+    "card": {
+      "padding": {
+        "$value": "{space.9}",
+        "$type": "dimension"
+      },
+      "compact": {
+        "$value": "{space.8}",
+        "$type": "dimension"
+      },
+      "tight": {
+        "$value": "{space.6}",
+        "$type": "dimension"
+      }
+    },
+    "section": {
+      "gap": {
+        "$value": "{space.11}",
+        "$type": "dimension"
+      },
+      "margin": {
+        "$value": "{space.10}",
+        "$type": "dimension"
+      }
+    },
+    "grid": {
+      "gap": {
+        "$value": "{space.5}",
+        "$type": "dimension"
+      }
+    },
+    "chip": {
+      "gap": {
+        "$value": "{space.3}",
+        "$type": "dimension"
+      }
+    },
+    "heatmap": {
+      "gap": {
+        "$value": "{space.2}",
+        "$type": "dimension"
+      }
+    }
+  }
+}

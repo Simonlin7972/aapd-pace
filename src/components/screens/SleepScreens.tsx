@@ -5,7 +5,7 @@ import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
 import { PaceSerif, PaceSans, PaceButton, AnimatedEnter } from '../UI';
 import { MoodSlider, HoursSlider } from '../Sliders';
-import { useNav } from '../NavStack';
+import { useNav, useVisited } from '../NavStack';
 import { TopBar } from './TopBar';
 import { BottomBar } from '../BottomBar';
 
@@ -44,6 +44,8 @@ const WeekChart: React.FC<{ theme: PaceTheme; data: number[]; L: Record<string, 
 
 export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();
+  const visited = useVisited();
+  const skip = visited.has('sleepHome');
   const L = theme.L;
   const st = PaceState;
   const M = MOOD_SCALE;
@@ -58,7 +60,7 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
       <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
         <div style={{ padding: '8px 20px 120px' }}>
           {/* Header */}
-          <AnimatedEnter delay={50}>
+          <AnimatedEnter delay={50} skip={skip}>
             <div style={{ marginBottom: 28 }}>
               <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
                 {L.sleepHome_title}
@@ -70,7 +72,7 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
           </AnimatedEnter>
 
           {/* Hero card */}
-          <AnimatedEnter delay={120}>
+          <AnimatedEnter delay={120} skip={skip}>
             <div style={{
               background: theme.surface, borderRadius: theme.radius,
               padding: 22, marginBottom: 16, position: 'relative', overflow: 'hidden',
@@ -127,7 +129,7 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
           </AnimatedEnter>
 
           {/* Week trend */}
-          <AnimatedEnter delay={240}>
+          <AnimatedEnter delay={240} skip={skip}>
             <div style={{
               background: theme.surface, borderRadius: theme.radius,
               padding: 22, marginBottom: 16,
@@ -146,7 +148,7 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
           {/* Insight card */}
           {validDays.length > 0 && (
-            <AnimatedEnter delay={360}>
+            <AnimatedEnter delay={360} skip={skip}>
               <div style={{
                 background: theme.surface, borderRadius: theme.radius,
                 padding: 18, display: 'flex', gap: 12,

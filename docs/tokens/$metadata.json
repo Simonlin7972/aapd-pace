@@ -1,13 +1,18 @@
 {
   "tokenSetOrder": [
-    "color",
-    "color-light",
-    "color-dark",
-    "color-mood",
-    "spacing",
-    "radius",
-    "typography",
-    "motion",
-    "shadow"
+    "primitive-color",
+    "primitive-spacing",
+    "primitive-radius",
+    "primitive-typography",
+    "primitive-motion",
+    "primitive-shadow",
+    "semantic-color-light",
+    "semantic-color-dark",
+    "semantic-color-mood",
+    "semantic-spacing",
+    "semantic-radius",
+    "semantic-typography",
+    "semantic-motion",
+    "semantic-elevation"
   ]
 }

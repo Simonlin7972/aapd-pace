@@ -1,0 +1,24 @@
+{
+  "elevation": {
+    "device": {
+      "$value": "{shadow.device}",
+      "$type": "shadow"
+    },
+    "cardHover": {
+      "$value": "{shadow.cardHover}",
+      "$type": "shadow"
+    },
+    "knob": {
+      "$value": "{shadow.knob}",
+      "$type": "shadow"
+    },
+    "moodBlob": {
+      "$value": "{shadow.moodBlob}",
+      "$type": "shadow"
+    },
+    "sliderThumb": {
+      "$value": "{shadow.sliderThumb}",
+      "$type": "shadow"
+    }
+  }
+}
