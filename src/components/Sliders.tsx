@@ -6,6 +6,7 @@ const iosEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
 const spring = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 
 // Draggable mood slider — horizontal drag, 5 snap points
+// Free drag during touch, snaps to nearest value on release
 export const MoodSlider: React.FC<{
   theme: PaceTheme;
   value: number;
@@ -17,28 +18,39 @@ export const MoodSlider: React.FC<{
   const M = MOOD_SCALE;
   const trackRef = React.useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = React.useState(false);
+  const [dragRatio, setDragRatio] = React.useState(-1); // -1 = not dragging
 
-  const getIdxFromX = (clientX: number) => {
+  const getRatioFromX = (clientX: number) => {
     const rect = trackRef.current!.getBoundingClientRect();
-    const ratio = (clientX - rect.left) / rect.width;
-    const clamped = Math.max(0, Math.min(0.9999, ratio));
-    return Math.floor(clamped * M.length);
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  };
+
+  const snapToNearest = (ratio: number) => {
+    const idx = Math.round(ratio * (M.length - 1));
+    return Math.max(0, Math.min(M.length - 1, idx));
   };
 
   const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
     setDragging(true);
     const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    onChange(getIdxFromX(x));
+    const ratio = getRatioFromX(x);
+    setDragRatio(ratio);
+    onChange(snapToNearest(ratio));
   };
 
   React.useEffect(() => {
     if (!dragging) return;
     const handleMove = (e: MouseEvent | TouchEvent) => {
       const x = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-      const next = getIdxFromX(x);
+      const ratio = getRatioFromX(x);
+      setDragRatio(ratio);
+      const next = snapToNearest(ratio);
       if (next !== value) onChange(next);
     };
-    const handleEnd = () => setDragging(false);
+    const handleEnd = () => {
+      setDragging(false);
+      setDragRatio(-1);
+    };
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseup', handleEnd);
     window.addEventListener('touchmove', handleMove);
@@ -51,7 +63,9 @@ export const MoodSlider: React.FC<{
     };
   }, [dragging, value, onChange]);
 
-  const leftPct = ((value + 0.5) / M.length) * 100;
+  // During drag: thumb follows finger. On release: snap to value center.
+  const snappedPct = ((value + 0.5) / M.length) * 100;
+  const leftPct = dragging && dragRatio >= 0 ? dragRatio * 100 : snappedPct;
   const thumbColor = M[value].color;
 
   return (
@@ -67,11 +81,11 @@ export const MoodSlider: React.FC<{
           opacity: 0.55,
         }} />
         <div style={{ position: 'relative', display: 'flex', height: '100%' }}>
-          {M.map((m, i) => (
+          {M.map((m) => (
             <div key={m.key} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{
-                width: i === value ? 0 : 6,
-                height: i === value ? 0 : 6,
+                width: 6,
+                height: 6,
                 borderRadius: '50%',
                 background: theme.ink,
                 opacity: 0.35,
@@ -94,7 +108,7 @@ export const MoodSlider: React.FC<{
         }} />
       </div>
       {showLabels && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
+        <div style={{ display: 'flex', marginTop: 10 }}>
           {M.map((m, i) => {
             const L = theme.L || {};
             const label = L[`mood_${m.key}`] || m.label;
@@ -102,7 +116,7 @@ export const MoodSlider: React.FC<{
               <PaceSans key={m.key} size={10}
                 color={i === value ? theme.ink : theme.inkMuted}
                 weight={i === value ? 500 : 400}
-                style={{ width: 54, textAlign: 'center', transition: `color 200ms ${iosEase}` }}>
+                style={{ flex: 1, textAlign: 'center', transition: `color 200ms ${iosEase}` }}>
                 {label}
               </PaceSans>
             );
