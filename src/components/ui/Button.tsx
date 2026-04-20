@@ -10,7 +10,7 @@ export const Button: React.FC<{
   full?: boolean;
 }> = ({ theme, children, onClick, variant = 'primary', style, full }) => {
   const styles = variant === 'primary'
-    ? { background: theme.terracotta, color: '#FBF6EC' }
+    ? { background: theme.terracotta, color: theme.textOnBrand }
     : variant === 'soft'
     ? { background: theme.surface, color: theme.ink, border: `1px solid ${theme.line}` }
     : { background: 'transparent', color: theme.terracotta };

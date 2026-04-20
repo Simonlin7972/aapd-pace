@@ -16,6 +16,7 @@ export interface PaceTheme {
   inkMuted: string;
   line: string;
   lineStrong: string;
+  textOnBrand: string;
   radius: number;
   lang: string;
   L: Record<string, any>;
@@ -38,6 +39,7 @@ export const THEMES = {
     inkMuted: '#9A8F7E',
     line: 'rgba(61,52,42,0.09)',
     lineStrong: 'rgba(61,52,42,0.16)',
+    textOnBrand: '#FBF6EC',
   },
   oatDark: {
     name: '燕麥·夜',
@@ -54,6 +56,7 @@ export const THEMES = {
     inkMuted: '#8A7F6E',
     line: 'rgba(242,234,219,0.08)',
     lineStrong: 'rgba(242,234,219,0.15)',
+    textOnBrand: '#2A241D',
   },
 };
 
