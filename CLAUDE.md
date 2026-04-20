@@ -33,7 +33,7 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 8，無 UI f
 - Tokens 在 [src/data/tokens.ts](src/data/tokens.ts)：`THEMES.oat` / `THEMES.oatDark` + `MOOD_SCALE` + `FONTS`
 - `theme.L` 是當前語系字典（來自 [src/data/i18n.ts](src/data/i18n.ts)），新文案要同時加到每個語系
 - 字型：`FONTS.serif`（Noto Serif TC，標題）/ `FONTS.sans`（Noto Sans TC，內文）
-- Type scale：`FONT_SIZES`（display/h1-h6/textLg-Xs 共 12 階數字）+ `TYPE_SCALE`（帶 family/weight/lh metadata），對應 Figma 的 `Display` / `Heading/1-6` / `Text/LG-XS` text styles
+- Type scale：`FONT_SIZES`（display/h1-h6/textLg-Xs/text2Xs 共 13 階）+ `TYPE_SCALE`（帶 family/weight/lh metadata，含 `textMdMedium` / `textRgMedium` / `textSmMedium` / `textXsMedium` 4 個 Medium 變體），對應 Figma 的 `Display` / `Heading/1-6` / `Text/LG-XS` / `Text/2XS` / `Text/{MD,RG,SM,XS} Medium` 共 17 個 text styles
 
 ## State
 
@@ -85,7 +85,7 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 | `SegmentedControl` | Design System 頁（`91:61`） | Size（Default/Compact）× Count（2/3/4）= 6 variants。Track 綁 `color/bg/track`、outer radius 綁 `radius/segmented` |
 | `MoodSlider` | Design System 頁（`96:199`） | Value 0–4 共 5 variants。Thumb fill 綁 `color/mood/{key}/color` primitive、stroke 綁 `color/bg/canvas`；gradient track 採 MOOD_SCALE hex 直填 |
 | `color/bg/track` | semantic variable | SegmentedControl track 底色。Light=`color/alpha/ink/09`、Dark=`color/alpha/bone/15` |
-| Typography text styles | 本地 text styles（12 個） | `Display`、`Heading/1`–`Heading/6`（Serif Medium）、`Text/LG`–`Text/XS`（Sans Regular）。對應 code 的 `TYPE_SCALE` / `FONT_SIZES` |
+| Typography text styles | 本地 text styles（17 個） | `Display`、`Heading/1`–`Heading/6`（Serif Medium）、`Text/LG`–`Text/XS` + `Text/2XS`（Sans Regular）、`Text/MD Medium` / `Text/RG Medium` / `Text/SM Medium` / `Text/XS Medium`（Sans Medium，UI 標籤 / 選中態用）。對應 code 的 `TYPE_SCALE` / `FONT_SIZES` |
 
 ## 元件命名與位置
 
