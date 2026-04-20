@@ -80,42 +80,6 @@ export const PaceNum: React.FC<{
   }}>{children}</span>
 );
 
-// Primary button
-export const PaceButton: React.FC<{
-  theme: PaceTheme;
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: 'primary' | 'soft' | 'text';
-  style?: React.CSSProperties;
-  full?: boolean;
-}> = ({ theme, children, onClick, variant = 'primary', style, full }) => {
-  const styles = variant === 'primary'
-    ? { background: theme.terracotta, color: '#FBF6EC' }
-    : variant === 'soft'
-    ? { background: theme.surface, color: theme.ink, border: `1px solid ${theme.line}` }
-    : { background: 'transparent', color: theme.terracotta };
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        gap: 8,
-        padding: '14px 22px',
-        borderRadius: Math.min(theme.radius, 20),
-        fontFamily: FONTS.sans, fontSize: 15, fontWeight: 500,
-        cursor: 'pointer',
-        width: full ? '100%' : undefined,
-        boxSizing: 'border-box',
-        transition: 'transform 180ms, opacity 180ms',
-        ...styles,
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
 // Animated enter wrapper — skips animation on revisited screens
 export const AnimatedEnter: React.FC<{
   children: React.ReactNode;
@@ -141,3 +105,4 @@ export const AnimatedEnter: React.FC<{
 // Re-export from dedicated files
 export { PageSlider } from './PageSlider';
 export { SegmentedControl, SegmentedControl as PaceSegmented } from './SegmentedControl';
+export { PaceButton } from './ui/PaceButton';

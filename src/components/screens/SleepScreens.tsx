@@ -172,85 +172,227 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   );
 };
 
-// Step 1: Feel
-export const SleepStep1: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
+// Sleep flow — single screen with internal step management
+// TopBar + progress bar stays fixed; only content transitions between steps
+const iosEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
+
+export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();
   const L = theme.L;
-  const [feel, setFeel] = React.useState(PaceState.sleepFeel);
   const M = MOOD_SCALE;
+  const [step, setStep] = React.useState(1);
+  const [feel, setFeel] = React.useState(PaceState.sleepFeel);
+  const [h, setH] = React.useState(PaceState.sleepHours);
+  const [dir, setDir] = React.useState<'forward' | 'back'>('forward');
+  const [transitioning, setTransitioning] = React.useState(false);
+
+  const goTo = (next: number, direction: 'forward' | 'back') => {
+    setDir(direction);
+    setTransitioning(true);
+    setTimeout(() => {
+      setStep(next);
+      setTransitioning(false);
+    }, 280);
+  };
+
+  const handleClose = () => {
+    if (step === 3) {
+      nav.replace('sleepHome');
+    } else {
+      nav.pop();
+    }
+  };
+
+  const handleBack = () => {
+    if (step > 1) goTo(step - 1, 'back');
+    else nav.pop();
+  };
+
+  const st = PaceState;
+  const summary = st.sleepHours >= 7 ? L.summary_good : st.sleepHours >= 5.5 ? L.summary_ok : L.summary_low;
+
+  const contentStyle: React.CSSProperties = {
+    flex: 1, display: 'flex', flexDirection: 'column',
+    opacity: transitioning ? 0 : 1,
+    transform: transitioning
+      ? `translateX(${dir === 'forward' ? '40px' : '-40px'})`
+      : 'translateX(0)',
+    transition: transitioning ? 'none' : `opacity 320ms ${iosEase}, transform 320ms ${iosEase}`,
+  };
 
   return (
-    <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar theme={theme} onClose={() => nav.pop()} step="1 / 3" />
-      <div style={{ padding: '28px 24px 0' }}>
-        <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-          {L.dim_sleep}
-        </PaceSans>
-        <PaceSerif size={28} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 10, whiteSpace: 'pre-line' }}>
-          {L.sleep_step1_title}
-        </PaceSerif>
-        <PaceSans size={14} color={theme.inkSoft} style={{ lineHeight: 1.6 }}>
-          {L.sleep_step1_sub}
-        </PaceSans>
-      </div>
+    <div style={{ background: theme.bg, height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {/* Fixed TopBar — never transitions */}
+      <TopBar
+        theme={theme}
+        onClose={step === 1 || step === 3 ? handleClose : undefined}
+        onBack={step === 2 ? handleBack : undefined}
+        progress={{ current: step, total: 3 }}
+      />
 
-      <div style={{ flex: 1, padding: '40px 24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
-        <BlobShape
-          size={140}
-          fill={M[feel].color}
-          mood={feel}
-          dropShadow={`0 16px 40px ${M[feel].color}60`}
-          transition="all 420ms cubic-bezier(0.34,1.56,0.64,1)"
-          style={{ marginBottom: 36 }}
-        />
-        <PaceSerif size={22} color={theme.ink} style={{ marginBottom: 30 }}>{M[feel].label}</PaceSerif>
-        <div style={{ width: '100%' }}>
-          <MoodSlider theme={theme} value={feel} onChange={(v) => {
-            if (v !== feel && navigator.vibrate) navigator.vibrate(6);
-            setFeel(v);
-          }} />
-        </div>
-      </div>
+      {/* Step content — fades/slides on transition */}
+      <div style={contentStyle}>
+        {step === 1 && (
+          <>
+            <div style={{ padding: '28px 24px 0' }}>
+              <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                {L.dim_sleep}
+              </PaceSans>
+              <PaceSerif size={28} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 10, whiteSpace: 'pre-line' }}>
+                {L.sleep_step1_title}
+              </PaceSerif>
+              <PaceSans size={14} color={theme.inkSoft} style={{ lineHeight: 1.6 }}>
+                {L.sleep_step1_sub}
+              </PaceSans>
+            </div>
+            <div style={{ flex: 1, padding: '40px 24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+              <BlobShape
+                size={140}
+                fill={M[feel].color}
+                mood={feel}
+                dropShadow={`0 16px 40px ${M[feel].color}60`}
+                transition="all 420ms cubic-bezier(0.34,1.56,0.64,1)"
+                style={{ marginBottom: 36 }}
+              />
+              <PaceSerif size={22} color={theme.ink} style={{ marginBottom: 30 }}>{M[feel].label}</PaceSerif>
+              <div style={{ width: '100%' }}>
+                <MoodSlider theme={theme} value={feel} onChange={(v) => {
+                  if (v !== feel && navigator.vibrate) navigator.vibrate(6);
+                  setFeel(v);
+                }} />
+              </div>
+            </div>
+            <div style={{ padding: '28px 20px' }}>
+              <PaceButton theme={theme} full onClick={() => {
+                PaceState.sleepFeel = feel;
+                goTo(2, 'forward');
+              }}>{L.continue}</PaceButton>
+            </div>
+          </>
+        )}
 
-      <div style={{ padding: '28px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => {
-          PaceState.sleepFeel = feel;
-          nav.push('sleepStep2');
-        }}>{L.continue}</PaceButton>
+        {step === 2 && (
+          <>
+            <div style={{ padding: '28px 24px 0' }}>
+              <PaceSerif size={28} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 10, whiteSpace: 'pre-line' }}>
+                {L.sleep_step2_title}
+              </PaceSerif>
+              <PaceSans size={13} color={theme.inkSoft}>{L.sleep_step2_sub}</PaceSans>
+            </div>
+            <div style={{ flex: 1, padding: '40px 24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 36 }}>
+                <PaceSerif size={64} weight={400} color={theme.ink} style={{ transition: 'color 200ms' }}>{h.toFixed(1)}</PaceSerif>
+                <PaceSans size={18} color={theme.inkSoft}>{L.u_hour}</PaceSans>
+              </div>
+              <div style={{ width: '100%' }}>
+                <HoursSlider theme={theme} value={h} onChange={(v) => {
+                  if (v !== h && navigator.vibrate) navigator.vibrate(4);
+                  setH(v);
+                }} />
+              </div>
+              <div style={{ marginTop: 44, display: 'flex', gap: 8, width: '100%' }}>
+                <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
+                  <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.bedtime}</PaceSans>
+                  <PaceSerif size={17} color={theme.ink}>00:30</PaceSerif>
+                </div>
+                <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
+                  <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.waketime}</PaceSans>
+                  <PaceSerif size={17} color={theme.ink}>07:00</PaceSerif>
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: '28px 20px' }}>
+              <PaceButton theme={theme} full onClick={() => {
+                PaceState.sleepHours = h;
+                PaceState.sleepRecorded = true;
+                goTo(3, 'forward');
+              }}>{L.seeLastNight}</PaceButton>
+            </div>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <div style={{ padding: '28px 24px 0', flex: 1 }}>
+              <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                {L.lastNight}
+              </PaceSans>
+              <PaceSerif size={30} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 24, textWrap: 'balance' as any }}>
+                {summary}
+              </PaceSerif>
+
+              <div style={{ marginBottom: 28, padding: '10px 0' }}>
+                <svg viewBox="0 0 320 80" width="100%" height="80" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="s-g" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0" stopColor={theme.dust} stopOpacity="0.45" />
+                      <stop offset="1" stopColor={theme.dust} stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 45 Q 40 55, 80 40 T 160 50 Q 200 60, 240 35 T 320 45 L 320 80 L 0 80 Z" fill="url(#s-g)" />
+                  <path d="M0 45 Q 40 55, 80 40 T 160 50 Q 200 60, 240 35 T 320 45" fill="none" stroke={theme.terracotta} strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 24 }}>
+                {[
+                  { l: L.stat_duration, v: st.sleepHours.toFixed(1), u: 'h' },
+                  { l: L.stat_feel, v: L[`mood_${M[st.sleepFeel].key}`], u: '' },
+                  { l: L.stat_week, v: '6.3', u: 'h avg' },
+                ].map((x, i) => (
+                  <div key={i} style={{ background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
+                    <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{x.l}</PaceSans>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
+                      <PaceSerif size={17} color={theme.ink}>{x.v}</PaceSerif>
+                      <PaceSans size={10} color={theme.inkMuted}>{x.u}</PaceSans>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ background: theme.surface, borderRadius: theme.radius, padding: 18, display: 'flex', gap: 12 }}>
+                <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.75 }}>{Icons.Leaf({ size: 18 })}</div>
+                <div style={{ flex: 1 }}>
+                  <PaceSerif size={15} color={theme.ink} style={{ marginBottom: 4 }}>{L.suggestTitle}</PaceSerif>
+                  <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.55 }}>
+                    {st.sleepHours >= 7 ? L.suggest_focus : L.suggest_rest}
+                  </PaceSans>
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: '24px 20px' }}>
+              <PaceButton theme={theme} full onClick={() => nav.replace('sleepHome')}>{L.okThanks}</PaceButton>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 };
 
-// Step 2: Hours
+// Keep old exports as aliases for backward compatibility in Export.tsx
+export const SleepStep1 = SleepFlow;
 export const SleepStep2: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
-  const nav = useNav();
+  // Export page renders this standalone — show step 2 content statically
   const L = theme.L;
-  const [h, setH] = React.useState(PaceState.sleepHours);
-
+  const st = PaceState;
   return (
     <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar theme={theme} onBack={() => nav.pop()} step="2 / 3" />
+      <TopBar theme={theme} onBack={() => {}} progress={{ current: 2, total: 3 }} />
       <div style={{ padding: '28px 24px 0' }}>
         <PaceSerif size={28} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 10, whiteSpace: 'pre-line' }}>
           {L.sleep_step2_title}
         </PaceSerif>
         <PaceSans size={13} color={theme.inkSoft}>{L.sleep_step2_sub}</PaceSans>
       </div>
-
       <div style={{ flex: 1, padding: '40px 24px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 36 }}>
-          <PaceSerif size={64} weight={400} color={theme.ink} style={{ transition: 'color 200ms' }}>{h.toFixed(1)}</PaceSerif>
+          <PaceSerif size={64} weight={400} color={theme.ink}>{st.sleepHours.toFixed(1)}</PaceSerif>
           <PaceSans size={18} color={theme.inkSoft}>{L.u_hour}</PaceSans>
         </div>
-
         <div style={{ width: '100%' }}>
-          <HoursSlider theme={theme} value={h} onChange={(v) => {
-            if (v !== h && navigator.vibrate) navigator.vibrate(4);
-            setH(v);
-          }} />
+          <HoursSlider theme={theme} value={st.sleepHours} onChange={() => {}} />
         </div>
-
         <div style={{ marginTop: 44, display: 'flex', gap: 8, width: '100%' }}>
           <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
             <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.bedtime}</PaceSans>
@@ -262,91 +404,67 @@ export const SleepStep2: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
           </div>
         </div>
       </div>
-
       <div style={{ padding: '28px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => {
-          PaceState.sleepHours = h;
-          PaceState.sleepRecorded = true;
-          nav.push('sleepStep3');
-        }}>{L.seeLastNight}</PaceButton>
+        <PaceButton theme={theme} full onClick={() => {}}>{L.seeLastNight}</PaceButton>
       </div>
     </div>
   );
 };
 
-// Step 3: Summary
 export const SleepStep3: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
-  const nav = useNav();
   const L = theme.L;
   const M = MOOD_SCALE;
   const st = PaceState;
-  const summary = st.sleepHours >= 7
-    ? L.summary_good
-    : st.sleepHours >= 5.5
-      ? L.summary_ok
-      : L.summary_low;
-
+  const summary = st.sleepHours >= 7 ? L.summary_good : st.sleepHours >= 5.5 ? L.summary_ok : L.summary_low;
   return (
     <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar theme={theme} onClose={() => nav.replace('sleepHome')} step={L.done} />
+      <TopBar theme={theme} onClose={() => {}} progress={{ current: 3, total: 3 }} />
       <div style={{ padding: '28px 24px 0', flex: 1 }}>
-        <AnimatedEnter delay={80}>
-          <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            {L.lastNight}
-          </PaceSans>
-          <PaceSerif size={30} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 24, textWrap: 'balance' as any }}>
-            {summary}
-          </PaceSerif>
-        </AnimatedEnter>
-
-        <AnimatedEnter delay={220}>
-          <div style={{ marginBottom: 28, padding: '10px 0' }}>
-            <svg viewBox="0 0 320 80" width="100%" height="80" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="s-g" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0" stopColor={theme.dust} stopOpacity="0.45" />
-                  <stop offset="1" stopColor={theme.dust} stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              <path d="M0 45 Q 40 55, 80 40 T 160 50 Q 200 60, 240 35 T 320 45 L 320 80 L 0 80 Z" fill="url(#s-g)" />
-              <path d="M0 45 Q 40 55, 80 40 T 160 50 Q 200 60, 240 35 T 320 45" fill="none" stroke={theme.terracotta} strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
-        </AnimatedEnter>
-
-        <AnimatedEnter delay={320}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 24 }}>
-            {[
-              { l: L.stat_duration, v: st.sleepHours.toFixed(1), u: 'h' },
-              { l: L.stat_feel, v: L[`mood_${M[st.sleepFeel].key}`], u: '' },
-              { l: L.stat_week, v: '6.3', u: 'h avg' },
-            ].map((x, i) => (
-              <div key={i} style={{ background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
-                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{x.l}</PaceSans>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-                  <PaceSerif size={17} color={theme.ink}>{x.v}</PaceSerif>
-                  <PaceSans size={10} color={theme.inkMuted}>{x.u}</PaceSans>
-                </div>
+        <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          {L.lastNight}
+        </PaceSans>
+        <PaceSerif size={30} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 24, textWrap: 'balance' as any }}>
+          {summary}
+        </PaceSerif>
+        <div style={{ marginBottom: 28, padding: '10px 0' }}>
+          <svg viewBox="0 0 320 80" width="100%" height="80" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="s-g" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stopColor={theme.dust} stopOpacity="0.45" />
+                <stop offset="1" stopColor={theme.dust} stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M0 45 Q 40 55, 80 40 T 160 50 Q 200 60, 240 35 T 320 45 L 320 80 L 0 80 Z" fill="url(#s-g)" />
+            <path d="M0 45 Q 40 55, 80 40 T 160 50 Q 200 60, 240 35 T 320 45" fill="none" stroke={theme.terracotta} strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 24 }}>
+          {[
+            { l: L.stat_duration, v: st.sleepHours.toFixed(1), u: 'h' },
+            { l: L.stat_feel, v: L[`mood_${M[st.sleepFeel].key}`], u: '' },
+            { l: L.stat_week, v: '6.3', u: 'h avg' },
+          ].map((x, i) => (
+            <div key={i} style={{ background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
+              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{x.l}</PaceSans>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
+                <PaceSerif size={17} color={theme.ink}>{x.v}</PaceSerif>
+                <PaceSans size={10} color={theme.inkMuted}>{x.u}</PaceSans>
               </div>
-            ))}
-          </div>
-        </AnimatedEnter>
-
-        <AnimatedEnter delay={420}>
-          <div style={{ background: theme.surface, borderRadius: theme.radius, padding: 18, display: 'flex', gap: 12 }}>
-            <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.75 }}>{Icons.Leaf({ size: 18 })}</div>
-            <div style={{ flex: 1 }}>
-              <PaceSerif size={15} color={theme.ink} style={{ marginBottom: 4 }}>{L.suggestTitle}</PaceSerif>
-              <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.55 }}>
-                {st.sleepHours >= 7 ? L.suggest_focus : L.suggest_rest}
-              </PaceSans>
             </div>
+          ))}
+        </div>
+        <div style={{ background: theme.surface, borderRadius: theme.radius, padding: 18, display: 'flex', gap: 12 }}>
+          <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.75 }}>{Icons.Leaf({ size: 18 })}</div>
+          <div style={{ flex: 1 }}>
+            <PaceSerif size={15} color={theme.ink} style={{ marginBottom: 4 }}>{L.suggestTitle}</PaceSerif>
+            <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.55 }}>
+              {st.sleepHours >= 7 ? L.suggest_focus : L.suggest_rest}
+            </PaceSans>
           </div>
-        </AnimatedEnter>
+        </div>
       </div>
-
       <div style={{ padding: '24px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => nav.replace('sleepHome')}>{L.okThanks}</PaceButton>
+        <PaceButton theme={theme} full onClick={() => {}}>{L.okThanks}</PaceButton>
       </div>
     </div>
   );
