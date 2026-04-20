@@ -2,6 +2,7 @@ import React from 'react';
 import type { PaceTheme } from '../../data/tokens';
 import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
+import { appendRow, nowFields } from '../../data/db';
 import { Icons } from '../Icons';
 import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
 import { MoodSlider, HoursSlider } from '../Sliders';
@@ -184,16 +185,21 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const [feel, setFeel] = React.useState(PaceState.sleepFeel);
   const [h, setH] = React.useState(PaceState.sleepHours);
   const [dir, setDir] = React.useState<'forward' | 'back'>('forward');
-  const [transitioning, setTransitioning] = React.useState(false);
+  const [entering, setEntering] = React.useState(false);
 
   const goTo = (next: number, direction: 'forward' | 'back') => {
     setDir(direction);
-    setTransitioning(true);
-    setTimeout(() => {
-      setStep(next);
-      setTransitioning(false);
-    }, 280);
+    setEntering(true);
+    setStep(next);
   };
+
+  React.useEffect(() => {
+    if (!entering) return;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setEntering(false));
+    });
+    return () => cancelAnimationFrame(id);
+  }, [entering]);
 
   const handleBack = () => {
     if (step === 2) goTo(1, 'back');
@@ -205,11 +211,11 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
   const contentStyle: React.CSSProperties = {
     flex: 1, display: 'flex', flexDirection: 'column',
-    opacity: transitioning ? 0 : 1,
-    transform: transitioning
-      ? `translateX(${dir === 'forward' ? '40px' : '-40px'})`
+    opacity: entering ? 0 : 1,
+    transform: entering
+      ? `translateX(${dir === 'forward' ? '8px' : '-8px'})`
       : 'translateX(0)',
-    transition: transitioning ? 'none' : `opacity 320ms ${iosEase}, transform 320ms ${iosEase}`,
+    transition: entering ? 'none' : `opacity 320ms ${iosEase}, transform 320ms ${iosEase}`,
   };
 
   return (
@@ -296,6 +302,13 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               <Button theme={theme} full onClick={() => {
                 PaceState.sleepHours = h;
                 PaceState.sleepRecorded = true;
+                // Prototype DB：寫入 Google Sheet (fire-and-forget)
+                appendRow('sleep', {
+                  ...nowFields(),
+                  hours: h,
+                  feel: PaceState.sleepFeel,
+                  note: '',
+                });
                 goTo(3, 'forward');
               }}>{L.seeLastNight}</Button>
             </div>

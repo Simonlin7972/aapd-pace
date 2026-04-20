@@ -7,6 +7,7 @@ import {
 import type { PaceTheme } from '../../data/tokens';
 import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
+import { appendRow, nowFields } from '../../data/db';
 import { Icons } from '../Icons';
 import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
 import { MoodSlider } from '../Sliders';
@@ -345,6 +346,14 @@ export const ExerciseRecord: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
     PaceState.exerciseIntensity = intensity;
     PaceState.exerciseMood = mood;
     PaceState.exerciseRecorded = true;
+    // Prototype DB：寫入 Google Sheet (fire-and-forget)
+    appendRow('exercise', {
+      ...nowFields(),
+      type,
+      duration,
+      intensity,
+      mood,
+    });
     setDone(true);
     setTimeout(() => nav.replace('exerciseHome'), 1200);
   };
