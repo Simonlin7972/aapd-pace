@@ -51,5 +51,26 @@
     "segmented": { "$value": "{radius.sm}",   "$type": "dimension" },
     "sheet":     { "$value": "{radius.2xl}",  "$type": "dimension" },
     "pill":      { "$value": "{radius.full}", "$type": "dimension" }
+  },
+  "typography": {
+    "display": {
+      "$type": "typography",
+      "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.56}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.tight}" }
+    },
+    "heading": {
+      "1": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.42}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.tight}" } },
+      "2": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.36}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.tight}" } },
+      "3": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.30}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.tight}" } },
+      "4": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.26}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.tight}" } },
+      "5": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.22}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.snug}" } },
+      "6": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.serif}", "fontSize": "{fontSize.18}", "fontWeight": "{fontWeight.medium}", "lineHeight": "{lineHeight.normal}" } }
+    },
+    "text": {
+      "lg": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.sans}", "fontSize": "{fontSize.15}", "fontWeight": "{fontWeight.regular}", "lineHeight": "{lineHeight.loose}" } },
+      "md": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.sans}", "fontSize": "{fontSize.14}", "fontWeight": "{fontWeight.regular}", "lineHeight": "{lineHeight.loose}" } },
+      "rg": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.sans}", "fontSize": "{fontSize.13}", "fontWeight": "{fontWeight.regular}", "lineHeight": "{lineHeight.relaxed}" } },
+      "sm": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.sans}", "fontSize": "{fontSize.12}", "fontWeight": "{fontWeight.regular}", "lineHeight": "{lineHeight.relaxed}" } },
+      "xs": { "$type": "typography", "$value": { "fontFamily": "{fontFamily.sans}", "fontSize": "{fontSize.11}", "fontWeight": "{fontWeight.regular}", "lineHeight": "{lineHeight.normal}" } }
+    }
   }
 }

@@ -72,5 +72,36 @@
     "2xl":  { "$value": "24px",   "$type": "dimension" },
     "3xl":  { "$value": "30px",   "$type": "dimension" },
     "full": { "$value": "9999px", "$type": "dimension" }
+  },
+  "fontFamily": {
+    "serif": { "$value": "\"Noto Serif TC\", \"Source Serif\", Georgia, \"PingFang TC\", serif",    "$type": "fontFamily" },
+    "sans":  { "$value": "\"Noto Sans TC\", -apple-system, system-ui, \"PingFang TC\", sans-serif", "$type": "fontFamily" },
+    "mono":  { "$value": "\"SF Mono\", \"Roboto Mono\", ui-monospace, monospace",                   "$type": "fontFamily" }
+  },
+  "fontWeight": {
+    "regular": { "$value": 400, "$type": "fontWeight" },
+    "medium":  { "$value": 500, "$type": "fontWeight" },
+    "bold":    { "$value": 700, "$type": "fontWeight" }
+  },
+  "fontSize": {
+    "11": { "$value": "11px", "$type": "dimension" },
+    "12": { "$value": "12px", "$type": "dimension" },
+    "13": { "$value": "13px", "$type": "dimension" },
+    "14": { "$value": "14px", "$type": "dimension" },
+    "15": { "$value": "15px", "$type": "dimension" },
+    "18": { "$value": "18px", "$type": "dimension" },
+    "22": { "$value": "22px", "$type": "dimension" },
+    "26": { "$value": "26px", "$type": "dimension" },
+    "30": { "$value": "30px", "$type": "dimension" },
+    "36": { "$value": "36px", "$type": "dimension" },
+    "42": { "$value": "42px", "$type": "dimension" },
+    "56": { "$value": "56px", "$type": "dimension" }
+  },
+  "lineHeight": {
+    "tight":   { "$value": "130%", "$type": "dimension" },
+    "snug":    { "$value": "135%", "$type": "dimension" },
+    "normal":  { "$value": "140%", "$type": "dimension" },
+    "relaxed": { "$value": "150%", "$type": "dimension" },
+    "loose":   { "$value": "155%", "$type": "dimension" }
   }
 }
