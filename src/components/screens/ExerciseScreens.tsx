@@ -1,4 +1,9 @@
 import React from 'react';
+import {
+  PersonSimpleWalkIcon, PersonSimpleRunIcon, PersonSimpleTaiChiIcon, BarbellIcon,
+  PersonSimpleBikeIcon, PersonSimpleSwimIcon, PersonSimpleHikeIcon, MusicNotesIcon,
+  PersonArmsSpreadIcon, SparkleIcon,
+} from '@phosphor-icons/react';
 import type { PaceTheme } from '../../data/tokens';
 import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
@@ -11,16 +16,16 @@ import { BottomBar } from '../BottomBar';
 import { BlobShape } from '../BlobShape';
 
 const EXERCISE_TYPES = [
-  { k: 'walk', emoji: '🚶' },
-  { k: 'run', emoji: '🏃' },
-  { k: 'yoga', emoji: '🧘' },
-  { k: 'weight', emoji: '🏋️' },
-  { k: 'cycle', emoji: '🚴' },
-  { k: 'swim', emoji: '🏊' },
-  { k: 'hike', emoji: '⛰️' },
-  { k: 'dance', emoji: '💃' },
-  { k: 'stretch', emoji: '🤸' },
-  { k: 'other', emoji: '✨' },
+  { k: 'walk',    Icon: PersonSimpleWalkIcon },
+  { k: 'run',     Icon: PersonSimpleRunIcon },
+  { k: 'yoga',    Icon: PersonSimpleTaiChiIcon },
+  { k: 'weight',  Icon: BarbellIcon },
+  { k: 'cycle',   Icon: PersonSimpleBikeIcon },
+  { k: 'swim',    Icon: PersonSimpleSwimIcon },
+  { k: 'hike',    Icon: PersonSimpleHikeIcon },
+  { k: 'dance',   Icon: MusicNotesIcon },
+  { k: 'stretch', Icon: PersonArmsSpreadIcon },
+  { k: 'other',   Icon: SparkleIcon },
 ];
 
 const INTENSITY_COLORS = ['#8FA0A8', '#A8B0A8', '#C8B89E', '#D9B8A8', '#C4805C'];
@@ -105,7 +110,9 @@ export const ExerciseHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               {recorded ? (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, position: 'relative' }}>
-                    <div style={{ fontSize: 20 }}>{typeInfo?.emoji || '✨'}</div>
+                    {typeInfo?.Icon
+                      ? <typeInfo.Icon size={22} weight="duotone" color={theme.terracotta} />
+                      : <SparkleIcon size={22} weight="duotone" color={theme.terracotta} />}
                     <PaceSans size={13} color={theme.inkSoft}>{L[`exercise_type_${st.exerciseType}`] || st.exerciseType}</PaceSans>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8, position: 'relative' }}>
@@ -359,9 +366,12 @@ export const ExerciseRecord: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
           </PaceSerif>
         </AnimatedEnter>
         <AnimatedEnter delay={240}>
-          <PaceSans size={14} color={theme.inkSoft} style={{ textAlign: 'center' }}>
-            {typeInfo?.emoji} {L[`exercise_type_${type}`]} · {duration} {L.u_minute}
-          </PaceSans>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
+            {typeInfo?.Icon && <typeInfo.Icon size={16} weight="duotone" color={theme.inkSoft} />}
+            <PaceSans size={14} color={theme.inkSoft}>
+              {L[`exercise_type_${type}`]} · {duration} {L.u_minute}
+            </PaceSans>
+          </div>
         </AnimatedEnter>
       </div>
     );
@@ -369,7 +379,9 @@ export const ExerciseRecord: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
   return (
     <div style={{ background: theme.bg, height: '100%', position: 'relative' }}>
-      <TopBar theme={theme} onClose={() => nav.pop()} step={L.exercise_record_title} />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <TopBar theme={theme} onBack={() => nav.pop()} step={L.exercise_record_title} />
+      </div>
       <div className="screen-scroll" style={{
         position: 'absolute', inset: 0, overflowY: 'auto',
         paddingTop: 100,
@@ -397,7 +409,7 @@ export const ExerciseRecord: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                     transform: on ? 'scale(1.03)' : 'scale(1)',
                     transition: 'all 200ms cubic-bezier(0.34,1.56,0.64,1)',
                   }}>
-                    <div style={{ fontSize: 22 }}>{t.emoji}</div>
+                    <t.Icon size={28} weight="duotone" color={on ? theme.terracotta : theme.inkSoft} />
                     <PaceSans size={12} color={on ? theme.ink : theme.inkSoft} weight={on ? 500 : 400}>
                       {L[`exercise_type_${t.k}`]}
                     </PaceSans>

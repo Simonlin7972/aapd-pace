@@ -5,13 +5,16 @@ import { PaceSerif, PaceSans } from '../UI';
 
 const ProgressBar: React.FC<{ current: number; total: number; theme: PaceTheme }> = ({ current, total, theme }) => (
   <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-    {Array.from({ length: total }).map((_, i) => (
-      <div key={i} style={{
-        width: 20, height: 4, borderRadius: 2,
-        background: i < current ? theme.terracotta : theme.line,
-        transition: 'background 300ms ease',
-      }} />
-    ))}
+    {Array.from({ length: total }).map((_, i) => {
+      const active = i === current - 1;
+      return (
+        <div key={i} style={{
+          width: active ? 28 : 16, height: 4, borderRadius: 2,
+          background: active ? theme.terracotta : theme.line,
+          transition: 'width 320ms cubic-bezier(0.4, 0, 0.2, 1), background 320ms ease',
+        }} />
+      );
+    })}
   </div>
 );
 

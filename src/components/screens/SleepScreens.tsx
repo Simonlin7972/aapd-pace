@@ -195,16 +195,8 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
     }, 280);
   };
 
-  const handleClose = () => {
-    if (step === 3) {
-      nav.replace('sleepHome');
-    } else {
-      nav.pop();
-    }
-  };
-
   const handleBack = () => {
-    if (step > 1) goTo(step - 1, 'back');
+    if (step === 2) goTo(1, 'back');
     else nav.pop();
   };
 
@@ -225,8 +217,7 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
       {/* Fixed TopBar — never transitions */}
       <TopBar
         theme={theme}
-        onClose={step === 1 || step === 3 ? handleClose : undefined}
-        onBack={step === 2 ? handleBack : undefined}
+        onBack={handleBack}
         progress={{ current: step, total: 3 }}
       />
 
@@ -418,7 +409,7 @@ export const SleepStep3: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const summary = st.sleepHours >= 7 ? L.summary_good : st.sleepHours >= 5.5 ? L.summary_ok : L.summary_low;
   return (
     <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar theme={theme} onClose={() => {}} progress={{ current: 3, total: 3 }} />
+      <TopBar theme={theme} onBack={() => {}} progress={{ current: 3, total: 3 }} />
       <div style={{ padding: '28px 24px 0', flex: 1 }}>
         <PaceSans size={12} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           {L.lastNight}

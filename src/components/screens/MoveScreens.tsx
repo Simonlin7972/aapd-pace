@@ -20,7 +20,7 @@ export const MoveScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   ];
   return (
     <div style={{ background: theme.bg, minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-      <TopBar theme={theme} onClose={() => nav.pop()} step={L.moveHeader} />
+      <TopBar theme={theme} onBack={() => nav.pop()} step={L.moveHeader} />
       <div style={{ padding: '28px 24px 0', flex: 1 }}>
         <PaceSerif size={28} weight={500} color={theme.ink} style={{ lineHeight: 1.3, marginBottom: 10 }}>
           {L.move_title}
