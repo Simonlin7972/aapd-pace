@@ -82,6 +82,7 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 | `semantic` collection | 本地 variables | 兩個 mode（Default=dark, Mode=light）。`color/bg/*`、`color/text/*`、`color/brand/*`、`spacing/*`、`radius/*` |
 | `Button` | Design System 頁（`50:38`） | 3 Variant × 3 State × 2 Width = 18 variants，Label TEXT property。核心 base components 放在 `src/components/ui/`，命名不加 `Pace` 前綴 |
 | `SegmentedControl` | Design System 頁（`91:61`） | Size（Default/Compact）× Count（2/3/4）= 6 variants。Track 綁 `color/bg/track`、outer radius 綁 `radius/segmented` |
+| `MoodSlider` | Design System 頁（`96:199`） | Value 0–4 共 5 variants。Thumb fill 綁 `color/mood/{key}/color` primitive、stroke 綁 `color/bg/canvas`；gradient track 採 MOOD_SCALE hex 直填 |
 | `color/bg/track` | semantic variable | SegmentedControl track 底色。Light=`color/alpha/ink/09`、Dark=`color/alpha/bone/15` |
 
 ## 元件命名與位置

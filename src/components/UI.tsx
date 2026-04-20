@@ -106,3 +106,4 @@ export const AnimatedEnter: React.FC<{
 export { PageSlider } from './PageSlider';
 export { SegmentedControl } from './ui/SegmentedControl';
 export { Button } from './ui/Button';
+export { MoodSlider } from './ui/MoodSlider';
