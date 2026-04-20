@@ -11,6 +11,13 @@ export const InsightsScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();
   const L = theme.L;
   const M = MOOD_SCALE;
+  const [barsReady, setBarsReady] = React.useState(false);
+  const [lineReady, setLineReady] = React.useState(false);
+  React.useEffect(() => {
+    const t1 = setTimeout(() => setBarsReady(true), 300);
+    const t2 = setTimeout(() => setLineReady(true), 1400);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
   const week = [
     { d: L.week[0], mood: 1, sleep: 5.5 },
     { d: L.week[1], mood: 2, sleep: 6.2 },
@@ -44,11 +51,12 @@ export const InsightsScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
             </div>
             <div style={{ display: 'flex', gap: 6 }}>
               {week.map((w, i) => (
-                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
+                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 8, alignItems: 'center' }}>
                   <div style={{
-                    width: '100%', height: 52, borderRadius: 10,
+                    width: '100%', borderRadius: 10,
                     background: M[w.mood].color, opacity: 0.85,
-                    transition: 'background 300ms ease',
+                    height: barsReady ? 24 + (w.mood / 4) * 32 : 0,
+                    transition: `height 600ms cubic-bezier(0.34, 1.2, 0.64, 1) ${i * 80}ms`,
                   }} />
                   <PaceSans size={11} color={theme.inkMuted}>{w.d}</PaceSans>
                 </div>
@@ -88,10 +96,17 @@ export const InsightsScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                   }, '');
                   return (
                     <>
-                      <path d={`${d} L 280 70 L 0 70 Z`} fill="url(#w-g)" />
-                      <path d={d} fill="none" stroke={theme.terracotta} strokeWidth="1.8" strokeLinecap="round" />
+                      <path d={`${d} L 280 70 L 0 70 Z`} fill="url(#w-g)"
+                        style={{ opacity: lineReady ? 1 : 0, transition: 'opacity 800ms ease 400ms' }}
+                      />
+                      <path d={d} fill="none" stroke={theme.terracotta} strokeWidth="1.8" strokeLinecap="round"
+                        strokeDasharray="500" strokeDashoffset={lineReady ? 0 : 500}
+                        style={{ transition: 'stroke-dashoffset 1200ms cubic-bezier(0.4, 0, 0.2, 1) 300ms' }}
+                      />
                       {pts.map(([x, y], i) => (
-                        <circle key={i} cx={x} cy={y} r={i === 6 ? 4 : 2.5} fill={theme.terracotta} />
+                        <circle key={i} cx={x} cy={y} r={i === 6 ? 4 : 2.5} fill={theme.terracotta}
+                          style={{ opacity: lineReady ? 1 : 0, transition: `opacity 400ms ease ${400 + i * 120}ms` }}
+                        />
                       ))}
                     </>
                   );

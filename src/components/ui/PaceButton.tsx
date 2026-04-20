@@ -22,7 +22,7 @@ export const PaceButton: React.FC<{
         gap: 8,
         padding: '14px 22px',
         borderRadius: Math.min(theme.radius, 20),
-        fontFamily: FONTS.sans, fontSize: 15, fontWeight: 500,
+        fontFamily: FONTS.serif, fontSize: 15, fontWeight: 700,
         cursor: 'pointer',
         width: full ? '100%' : undefined,
         boxSizing: 'border-box',
