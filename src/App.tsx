@@ -44,6 +44,12 @@ function buildTheme(t: Tweaks): PaceTheme {
   return theme as PaceTheme;
 }
 
+function detectStandalone() {
+  if (typeof window === 'undefined') return false;
+  if (window.matchMedia('(display-mode: standalone)').matches) return true;
+  return (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+}
+
 function App() {
   const [tweaks, setTweaks] = React.useState<Tweaks>({
     accent: 'amber',
@@ -53,11 +59,19 @@ function App() {
     profileVariant: 'classic',
   });
   const [jumpTo] = React.useState(0);
+  const [standalone, setStandalone] = React.useState(detectStandalone);
   const theme = buildTheme(tweaks);
 
   React.useEffect(() => {
     document.body.classList.toggle('pace-dark', tweaks.dark);
   }, [tweaks.dark]);
+
+  React.useEffect(() => {
+    const mql = window.matchMedia('(display-mode: standalone)');
+    const onChange = (e: MediaQueryListEvent) => setStandalone(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
 
   const update = (patch: Partial<Tweaks>) => {
     setTweaks(p => ({ ...p, ...patch }));
@@ -80,9 +94,9 @@ function App() {
 
   return (
     <SettingsCtx.Provider value={{ settings: tweaks, onUpdate: update }}>
-      <div className="stage">
-        <div style={{ position: 'relative' }}>
-          <IOSDevice width={380} height={820} dark={tweaks.dark} bg={theme.bg}>
+      <div className={standalone ? 'stage stage--standalone' : 'stage'}>
+        <div style={{ position: 'relative', width: standalone ? '100%' : undefined, height: standalone ? '100%' : undefined }}>
+          <IOSDevice width={380} height={820} dark={tweaks.dark} bg={theme.bg} standalone={standalone}>
             <DeviceRoot key={jumpTo} theme={theme} screens={SCREENS} />
           </IOSDevice>
         </div>

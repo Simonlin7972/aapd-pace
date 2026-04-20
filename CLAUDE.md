@@ -37,11 +37,15 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 8，無 UI f
 
 ## State
 
-[src/data/state.ts](src/data/state.ts) 的 `PaceState` 是 plain mutable object（**不是** React state）。元件直接讀寫：
+[src/data/state.ts](src/data/state.ts) 的 `PaceState` 是 mutable object（**不是** React state），用 `Proxy` 包住。元件直接讀寫：
 
 ```tsx
 state.mood = moodLive;  // 直接 mutate
 ```
+
+Proxy 的 `set` trap 會同步把整包狀態寫進 `localStorage`（key：`pace.state.v1`），PWA 安裝後重開 app 資料不會歸零。只有 **頂層** 賦值會被攔截（例如 `PaceState.sleepWeekly = [...]` OK；`PaceState.sleepWeekly[0] = 3` 不會觸發寫入），新增狀態時維持整包替換的寫法。
+
+`/export` 路徑下會寫入 fixture 值，state.ts 內 `isExportPath` guard 會跳過持久化，不會覆蓋真實使用者資料。
 
 這是 prototype 寫法，不要改成 reducer/context。
 
@@ -58,11 +62,28 @@ state.mood = moodLive;  // 直接 mutate
 
 ```bash
 npm run dev     # Vite dev server（port 5173，被佔會自動跳）
-npm run build   # tsc -b + vite build
+npm run build   # tsc -b + vite build（含 PWA：manifest + sw.js）
 npm run lint    # eslint
+npm run preview # 預覽 production build，SW 才會真的註冊
 ```
 
 沒有 test suite。Node 需 20.19+ 或 22.12+（22.10.0 會警告但能跑）。
+
+## PWA
+
+- 用 [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) auto-generate SW（Workbox），`registerType: 'autoUpdate'`。設定在 [vite.config.ts](vite.config.ts)、SW 在 [src/main.tsx](src/main.tsx) 以 `virtual:pwa-register` 註冊
+- Manifest 由 plugin 產出為 `dist/manifest.webmanifest`，`<link rel="manifest">` 自動注入 `index.html`；不要手寫 manifest
+- 快取範圍：precache App Shell（JS/CSS/HTML/SVG/PNG/woff2），`navigateFallback: '/index.html'`。不做 runtime cache
+- Icons 放 [public/](public/)：`icon-192.png`、`icon-512.png`、`icon-512-maskable.png`、`apple-touch-icon.png`（180）。`favicon.svg` 已在
+- `theme_color` / `background_color` = `#F5F1EA`（oat）。改動 theme 主色時 [vite.config.ts](vite.config.ts) 與 [index.html](index.html) 的 `<meta name="theme-color">` 要同步
+- **Standalone 偵測**：[App.tsx](src/App.tsx) 的 `detectStandalone()` 檢查 `display-mode: standalone` / iOS `navigator.standalone`，傳 `standalone` prop 給 `IOSDevice`。true 時跳過假 frame / status bar / home indicator，填滿 `100dvh`。`/export` 與 `/design-system` 不走這段（永遠有 frame，用於設計 review）
+- 裝 PWA 測試要跑 `npm run preview`（`npm run dev` 不會啟動 SW）
+
+### 新增 PWA 設定或圖示時要檢查
+
+1. 修改 manifest 欄位（name、icons、theme_color…）→ 改 [vite.config.ts](vite.config.ts)，rebuild 後驗證 `dist/manifest.webmanifest`
+2. 加新靜態檔要被 precache → 確認 `workbox.globPatterns` 涵蓋副檔名
+3. theme_color 改了 → 同步 [index.html](index.html) `<meta name="theme-color">`
 
 ## Figma 同步規則
 

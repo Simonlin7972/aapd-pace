@@ -44,8 +44,25 @@ export const IOSDevice: React.FC<{
   height?: number;
   dark?: boolean;
   bg?: string;
-}> = ({ children, width = 380, height = 820, dark = false, bg }) => {
+  /** PWA 安裝後 display-mode: standalone — 拿掉假 frame / status bar / home indicator，讓真手機系統 UI 接手 */
+  standalone?: boolean;
+}> = ({ children, width = 380, height = 820, dark = false, bg, standalone = false }) => {
   const frameBg = bg || (dark ? '#000' : '#F2F2F7');
+
+  if (standalone) {
+    return (
+      <div className="ios-device ios-device--standalone" style={{
+        width: '100%', height: '100dvh',
+        background: frameBg,
+        fontFamily: '-apple-system, system-ui, sans-serif',
+        WebkitFontSmoothing: 'antialiased',
+        display: 'flex', flexDirection: 'column',
+      }}>
+        <div style={{ flex: 1, overflow: 'auto' }}>{children}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="ios-device" style={{
       width, height, borderRadius: 48, overflow: 'hidden',

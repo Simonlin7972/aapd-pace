@@ -11,6 +11,16 @@ body { background: #E8DFCC; color: #3D342A; min-height: 100vh; }
   padding: 40px 20px;
 }
 
+/* PWA standalone：任何 viewport 下都填滿 */
+.stage--standalone {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+  background: transparent;
+}
+
 @media (max-width: 480px) {
   .stage {
     padding: 0;
