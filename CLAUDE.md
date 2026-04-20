@@ -70,7 +70,7 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 將 code 轉成 Figma design 時，**禁止 hardcode**，必須使用 Figma 的 design system assets：
 
 1. **Variables** — 顏色用 `setBoundVariableForPaint` 綁定 semantic variables（`color/bg/*`、`color/text/*`、`color/brand/*`），圓角用 `setBoundVariable` 綁定 `radius/*`，間距綁定 `spacing/*`
-2. **Components** — 已建立的 Component Set（如 `PaceButton`）直接 `createInstance()`，不要手刻 frame。用 `setProperties()` 覆寫 TEXT properties
+2. **Components** — 已建立的 Component Set（如 `Button`）直接 `createInstance()`，不要手刻 frame。用 `setProperties()` 覆寫 TEXT properties
 3. **Styles** — 若檔案有 text styles / effect styles，用 `textStyleId` / `effectStyleId` 套用
 4. **驗證** — 完成後 `get_screenshot` 確認視覺正確，並確認切換 Figma mode 時 light/dark 自動適配
 
@@ -80,7 +80,15 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 |---|---|---|
 | `primitives` collection | 本地 variables | `space/*`、`radius/*`、`color/oat/*`、`color/ink/*`、`color/mood/*` 等原始 tokens |
 | `semantic` collection | 本地 variables | 兩個 mode（Default=dark, Mode=light）。`color/bg/*`、`color/text/*`、`color/brand/*`、`spacing/*`、`radius/*` |
-| `PaceButton` | Design System 頁（`50:38`） | 3 Variant × 3 State × 2 Width = 18 variants，Label TEXT property |
+| `Button` | Design System 頁（`50:38`） | 3 Variant × 3 State × 2 Width = 18 variants，Label TEXT property。核心 base components 放在 `src/components/ui/`，命名不加 `Pace` 前綴 |
+
+## 元件命名與位置
+
+- 核心 base UI components（Button、SegmentedControl、Card、Typography…）放在 [src/components/ui/](src/components/ui/)
+- 命名不加 `Pace` 前綴：`Button` 而非 `PaceButton`；檔名與 export 名一致
+- App 特有或有業務邏輯的 component（BottomBar、NavStack、HomeScreen…）留在 `src/components/` 或 `screens/`
+- Figma component set 名同步遵循（e.g. Figma 中也叫 `Button`）
+- 例外：`PaceTheme` / `PaceState` 等型別、`PaceSerif` / `PaceSans` 等 typography legacy 命名未動，但新增元件一律不帶前綴
 
 ## 風格
 

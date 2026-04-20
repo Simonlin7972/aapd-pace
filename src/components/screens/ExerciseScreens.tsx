@@ -3,7 +3,7 @@ import type { PaceTheme } from '../../data/tokens';
 import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
-import { PaceSerif, PaceSans, PaceButton, AnimatedEnter } from '../UI';
+import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
 import { MoodSlider } from '../Sliders';
 import { useNav, useVisited } from '../NavStack';
 import { TopBar } from './TopBar';
@@ -132,9 +132,9 @@ export const ExerciseHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                       <PaceSans size={12} color={theme.ink}>{L[`mood_${M[st.exerciseMood].key}`]}</PaceSans>
                     </div>
                   </div>
-                  <PaceButton theme={theme} variant="soft" full onClick={() => nav.push('exerciseRecord')}>
+                  <Button theme={theme} variant="soft" full onClick={() => nav.push('exerciseRecord')}>
                     {L.exerciseHome_reRecord}
-                  </PaceButton>
+                  </Button>
                 </>
               ) : (
                 <div style={{ textAlign: 'center', padding: '20px 0', position: 'relative' }}>
@@ -142,9 +142,9 @@ export const ExerciseHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                   <PaceSans size={14} color={theme.inkSoft} style={{ marginBottom: 20 }}>
                     {L.exerciseHome_empty}
                   </PaceSans>
-                  <PaceButton theme={theme} full onClick={() => nav.push('exerciseRecord')}>
+                  <Button theme={theme} full onClick={() => nav.push('exerciseRecord')}>
                     {L.exerciseHome_startRecord}
-                  </PaceButton>
+                  </Button>
                 </div>
               )}
             </div>
@@ -455,14 +455,14 @@ export const ExerciseRecord: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
           {/* Submit button */}
           <AnimatedEnter delay={360}>
-            <PaceButton
+            <Button
               theme={theme}
               full
               onClick={canSubmit ? handleDone : undefined}
               style={{ opacity: canSubmit ? 1 : 0.4, pointerEvents: canSubmit ? 'auto' : 'none' }}
             >
               {L.exercise_done}
-            </PaceButton>
+            </Button>
           </AnimatedEnter>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import type { PaceTheme } from '../../data/tokens';
 import { FONTS } from '../../data/tokens';
 import { PaceState } from '../../data/state';
-import { PaceSerif, PaceSans, PaceButton, AnimatedEnter } from '../UI';
+import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
 import { useNav } from '../NavStack';
 import { TopBar } from './TopBar';
 import { BlobShape } from '../BlobShape';
@@ -58,11 +58,11 @@ export const MoveScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
         </div>
       </div>
       <div style={{ padding: '24px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => {
+        <Button theme={theme} full onClick={() => {
           PaceState.moveDone = true;
           PaceState.moveMinutes = min;
           nav.replace('moveDone');
-        }}>{L.record}</PaceButton>
+        }}>{L.record}</Button>
       </div>
     </div>
   );
@@ -93,7 +93,7 @@ export const MoveDoneScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
       </AnimatedEnter>
       <div style={{ width: '100%', padding: '0 4px' }}>
         <AnimatedEnter delay={500}>
-          <PaceButton theme={theme} full onClick={() => nav.replace('home')}>{L.backHome}</PaceButton>
+          <Button theme={theme} full onClick={() => nav.replace('home')}>{L.backHome}</Button>
         </AnimatedEnter>
         <AnimatedEnter delay={580}>
           <div style={{ textAlign: 'center', marginTop: 14 }}>

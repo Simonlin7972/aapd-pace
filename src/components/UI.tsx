@@ -104,5 +104,5 @@ export const AnimatedEnter: React.FC<{
 
 // Re-export from dedicated files
 export { PageSlider } from './PageSlider';
-export { SegmentedControl, SegmentedControl as PaceSegmented } from './SegmentedControl';
-export { PaceButton } from './ui/PaceButton';
+export { SegmentedControl } from './ui/SegmentedControl';
+export { Button } from './ui/Button';

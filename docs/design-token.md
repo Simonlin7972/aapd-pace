@@ -215,7 +215,7 @@ Mode 無關。
 
 | Semantic | → primitive | 用途 |
 |---|---|---|
-| `radius.button`    | `{radius.lg}`   | PaceButton |
+| `radius.button`    | `{radius.lg}`   | Button |
 | `radius.card`      | `{radius.3xl}`  | PaceCard |
 | `radius.segmented` | `{radius.sm}`   | SegmentedControl |
 | `radius.sheet`     | `{radius.2xl}`  | BottomSheet |

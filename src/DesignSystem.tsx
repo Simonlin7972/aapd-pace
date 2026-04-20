@@ -2,7 +2,7 @@ import React from 'react';
 import { THEMES, MOOD_SCALE, FONTS, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
 import { Icons } from './components/Icons';
-import { PaceCard, PaceSerif, PaceSans, PaceNum, PaceButton, SegmentedControl, AnimatedEnter } from './components/UI';
+import { PaceCard, PaceSerif, PaceSans, PaceNum, Button, SegmentedControl, AnimatedEnter } from './components/UI';
 import { MoodSlider, HoursSlider } from './components/Sliders';
 import { TopBar } from './components/screens/TopBar';
 import { BlobShape } from './components/BlobShape';
@@ -819,11 +819,11 @@ export default function DesignSystemPage() {
         <Section id="molecules" title="Molecules" subtitle="Simple groups of atoms functioning together as a unit.">
 
           {/* Buttons */}
-          <SubSection id="mol-button" title="PaceButton">
+          <SubSection id="mol-button" title="Button">
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <PaceButton theme={theme} full>Primary — 記錄</PaceButton>
-              <PaceButton theme={theme} variant="soft" full>Soft — 稍後再說</PaceButton>
-              <PaceButton theme={theme} variant="text" full>Text — 跳過也沒關係</PaceButton>
+              <Button theme={theme} full>Primary — 記錄</Button>
+              <Button theme={theme} variant="soft" full>Soft — 稍後再說</Button>
+              <Button theme={theme} variant="text" full>Text — 跳過也沒關係</Button>
             </div>
           </SubSection>
 

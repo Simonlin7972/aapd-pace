@@ -1,7 +1,7 @@
 import React from 'react';
 import { FONTS, type PaceTheme } from '../../data/tokens';
 
-export const PaceButton: React.FC<{
+export const Button: React.FC<{
   theme: PaceTheme;
   children: React.ReactNode;
   onClick?: () => void;

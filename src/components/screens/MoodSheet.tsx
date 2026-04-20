@@ -2,7 +2,7 @@ import React from 'react';
 import type { PaceTheme } from '../../data/tokens';
 import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
-import { PaceSerif, PaceSans, PaceButton } from '../UI';
+import { PaceSerif, PaceSans, Button } from '../UI';
 import { MoodSlider } from '../Sliders';
 import { BlobShape } from '../BlobShape';
 
@@ -41,10 +41,10 @@ export const MoodSheet: React.FC<{ theme: PaceTheme; onClose: () => void }> = ({
         }} />
       </div>
 
-      <PaceButton theme={theme} full onClick={() => {
+      <Button theme={theme} full onClick={() => {
         PaceState.mood = val;
         onClose();
-      }}>{L.record}</PaceButton>
+      }}>{L.record}</Button>
       <div style={{ textAlign: 'center', marginTop: 12 }}>
         <PaceSans size={13} color={theme.inkMuted} onClick={onClose} style={{ cursor: 'pointer' }}>{L.skipOk}</PaceSans>
       </div>

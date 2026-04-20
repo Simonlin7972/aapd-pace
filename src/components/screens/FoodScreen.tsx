@@ -2,7 +2,7 @@ import React from 'react';
 import type { PaceTheme } from '../../data/tokens';
 import { FONTS } from '../../data/tokens';
 import { PaceState } from '../../data/state';
-import { PaceSerif, PaceSans, PaceButton } from '../UI';
+import { PaceSerif, PaceSans, Button } from '../UI';
 import { useNav } from '../NavStack';
 import { TopBar } from './TopBar';
 
@@ -60,10 +60,10 @@ export const FoodScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
         </div>
       </div>
       <div style={{ padding: '24px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => {
+        <Button theme={theme} full onClick={() => {
           PaceState.foodLogged = Math.min(3, PaceState.foodLogged + 1);
           nav.replace('home');
-        }}>{L.record}</PaceButton>
+        }}>{L.record}</Button>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import type { PaceTheme } from '../../data/tokens';
 import { MOOD_SCALE } from '../../data/tokens';
 import { PaceState } from '../../data/state';
 import { Icons } from '../Icons';
-import { PaceSerif, PaceSans, PaceButton, AnimatedEnter } from '../UI';
+import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
 import { MoodSlider, HoursSlider } from '../Sliders';
 import { useNav, useVisited } from '../NavStack';
 import { TopBar } from './TopBar';
@@ -112,9 +112,9 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                       <PaceSans size={12} color={theme.inkSoft}>00:30 → 07:00</PaceSans>
                     </div>
                   </div>
-                  <PaceButton theme={theme} variant="soft" full onClick={() => nav.push('sleepStep1')}>
+                  <Button theme={theme} variant="soft" full onClick={() => nav.push('sleepStep1')}>
                     {L.sleepHome_reRecord}
-                  </PaceButton>
+                  </Button>
                 </>
               ) : (
                 <div style={{ textAlign: 'center', padding: '20px 0', position: 'relative' }}>
@@ -122,9 +122,9 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                   <PaceSans size={14} color={theme.inkSoft} style={{ marginBottom: 20 }}>
                     {L.sleepHome_empty}
                   </PaceSans>
-                  <PaceButton theme={theme} full onClick={() => nav.push('sleepStep1')}>
+                  <Button theme={theme} full onClick={() => nav.push('sleepStep1')}>
                     {L.sleepHome_startRecord}
-                  </PaceButton>
+                  </Button>
                 </div>
               )}
             </div>
@@ -263,10 +263,10 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               </div>
             </div>
             <div style={{ padding: '28px 20px' }}>
-              <PaceButton theme={theme} full onClick={() => {
+              <Button theme={theme} full onClick={() => {
                 PaceState.sleepFeel = feel;
                 goTo(2, 'forward');
-              }}>{L.continue}</PaceButton>
+              }}>{L.continue}</Button>
             </div>
           </>
         )}
@@ -302,11 +302,11 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               </div>
             </div>
             <div style={{ padding: '28px 20px' }}>
-              <PaceButton theme={theme} full onClick={() => {
+              <Button theme={theme} full onClick={() => {
                 PaceState.sleepHours = h;
                 PaceState.sleepRecorded = true;
                 goTo(3, 'forward');
-              }}>{L.seeLastNight}</PaceButton>
+              }}>{L.seeLastNight}</Button>
             </div>
           </>
         )}
@@ -361,7 +361,7 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               </div>
             </div>
             <div style={{ padding: '24px 20px' }}>
-              <PaceButton theme={theme} full onClick={() => nav.replace('sleepHome')}>{L.okThanks}</PaceButton>
+              <Button theme={theme} full onClick={() => nav.replace('sleepHome')}>{L.okThanks}</Button>
             </div>
           </>
         )}
@@ -405,7 +405,7 @@ export const SleepStep2: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
         </div>
       </div>
       <div style={{ padding: '28px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => {}}>{L.seeLastNight}</PaceButton>
+        <Button theme={theme} full onClick={() => {}}>{L.seeLastNight}</Button>
       </div>
     </div>
   );
@@ -464,7 +464,7 @@ export const SleepStep3: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
         </div>
       </div>
       <div style={{ padding: '24px 20px' }}>
-        <PaceButton theme={theme} full onClick={() => {}}>{L.okThanks}</PaceButton>
+        <Button theme={theme} full onClick={() => {}}>{L.okThanks}</Button>
       </div>
     </div>
   );
