@@ -1,5 +1,5 @@
 import React from 'react';
-import { THEMES, MOOD_SCALE, FONTS, type PaceTheme } from './data/tokens';
+import { THEMES, MOOD_SCALE, FONTS, TYPE_SCALE, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
 import { Icons } from './components/Icons';
 import { PaceCard, PaceSerif, PaceSans, PaceNum, Button, SegmentedControl, AnimatedEnter } from './components/UI';
@@ -478,35 +478,19 @@ export default function DesignSystemPage() {
 
           <SubSection id="type-scale" title="Type Scale">
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {[
-                { size: 64, label: 'Display Large', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 56, label: 'Display / App Name', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 42, label: 'Editorial Title', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 36, label: 'Profile Name', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 30, label: 'Page Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 28, label: 'Screen Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 26, label: 'Section Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 22, label: 'Card Title', font: 'serif', weight: 500, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 18, label: 'Subtitle', font: 'serif', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 15, label: 'Body / TopBar', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 14, label: 'Body Small', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 13, label: 'Caption', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 12, label: 'Label', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 11, label: 'Micro Label', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-                { size: 10, label: 'Tiny / Tag', font: 'sans', weight: 400, sample: '昨晚睡得好嗎？別太累了' },
-              ].map(t => (
-                <div key={t.label} style={{
+              {TYPE_SCALE.map(t => (
+                <div key={t.key} style={{
                   display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
                   borderBottom: `1px solid ${theme.line}`, paddingBottom: 12,
                 }}>
                   <div style={{
-                    fontFamily: t.font === 'serif' ? FONTS.serif : FONTS.sans,
+                    fontFamily: t.family === 'serif' ? FONTS.serif : FONTS.sans,
                     fontSize: t.size, fontWeight: t.weight,
-                    color: theme.ink, lineHeight: 1.3,
+                    color: theme.ink, lineHeight: t.lh,
                     flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                  }}>{t.sample}</div>
+                  }}>Aa 昨晚睡得好嗎</div>
                   <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 16 }}>
-                    <PaceNum size={12} color={theme.inkMuted}>{t.size}px</PaceNum>
+                    <PaceNum size={12} color={theme.inkMuted}>{t.size}px · {Math.round(t.lh * 100)}%</PaceNum>
                     <PaceSans size={10} color={theme.inkMuted} style={{ marginTop: 2 }}>{t.label}</PaceSans>
                   </div>
                 </div>
