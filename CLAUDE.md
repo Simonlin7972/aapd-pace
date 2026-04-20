@@ -95,6 +95,16 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 - Figma component set 名同步遵循（e.g. Figma 中也叫 `Button`）
 - 例外：`PaceTheme` / `PaceState` 等型別、`PaceSerif` / `PaceSans` 等 typography legacy 命名未動，但新增元件一律不帶前綴
 
+## 釐清優先
+
+在執行任務前先釐清模糊或不足的資訊，避免做錯方向再重來。當使用者的 prompt 屬於以下情況時，要主動提問而不是直接開工：
+
+- prompt 模糊、目的不明確、缺少關鍵資訊（例如「幫我寫一篇文章」、「幫我改一下這個」）
+- 涉及創作、設計、程式、策略規劃等有多種合理方向的任務
+- 一旦做錯方向，重做成本高的任務
+
+簡單、明確、低風險的 prompt 不需要觸發（例如：「今天天氣如何」、「幫我翻譯這句話」、「這個字怎麼拼」）。
+
 ## 風格
 
 - Prototype 等級 — 不要加 error handling、validation、abstraction。三行重複好過早抽象
