@@ -36,11 +36,14 @@ const Section: React.FC<{ id?: string; title: string; subtitle?: string; childre
   );
 };
 
-const SubSection: React.FC<{ id?: string; title: string; children: React.ReactNode }> = ({ id, title, children }) => {
+const SubSection: React.FC<{ id?: string; title: string; action?: React.ReactNode; children: React.ReactNode }> = ({ id, title, action, children }) => {
   const t = React.useContext(ThemeCtx);
   return (
     <div id={id} style={{ marginBottom: 40, scrollMarginTop: 32 }}>
-      <PaceSans size={12} color={t.inkMuted} style={{ letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 16 }}>{title}</PaceSans>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <PaceSans size={12} color={t.inkMuted} style={{ letterSpacing: '0.12em', textTransform: 'uppercase' }}>{title}</PaceSans>
+        {action}
+      </div>
       {children}
     </div>
   );
@@ -803,7 +806,24 @@ export default function DesignSystemPage() {
         <Section id="molecules" title="Molecules" subtitle="Simple groups of atoms functioning together as a unit.">
 
           {/* Buttons */}
-          <SubSection id="mol-button" title="Button">
+          <SubSection
+            id="mol-button"
+            title="Button"
+            action={
+              <a
+                href="/design-system/button"
+                style={{
+                  fontFamily: FONTS.sans,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: theme.terracotta,
+                  textDecoration: 'none',
+                }}
+              >
+                查看詳細文件 →
+              </a>
+            }
+          >
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
               <Button theme={theme} full>Primary — 記錄</Button>
               <Button theme={theme} variant="soft" full>Soft — 稍後再說</Button>
@@ -838,7 +858,24 @@ export default function DesignSystemPage() {
           </SubSection>
 
           {/* Segmented Control */}
-          <SubSection id="mol-segmented" title="SegmentedControl">
+          <SubSection
+            id="mol-segmented"
+            title="SegmentedControl"
+            action={
+              <a
+                href="/design-system/segmented-control"
+                style={{
+                  fontFamily: FONTS.sans,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: theme.terracotta,
+                  textDecoration: 'none',
+                }}
+              >
+                查看詳細文件 →
+              </a>
+            }
+          >
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
               <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
                 <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>2 options</PaceSans>

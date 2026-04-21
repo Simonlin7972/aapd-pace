@@ -16,6 +16,22 @@ if (path === '/export') {
       </StrictMode>,
     )
   })
+} else if (path === '/design-system/button') {
+  import('./ButtonDoc.tsx').then(({ default: ButtonDocPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <ButtonDocPage />
+      </StrictMode>,
+    )
+  })
+} else if (path === '/design-system/segmented-control') {
+  import('./SegmentedControlDoc.tsx').then(({ default: SegmentedControlDocPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <SegmentedControlDocPage />
+      </StrictMode>,
+    )
+  })
 } else if (path === '/design-system') {
   import('./DesignSystem.tsx').then(({ default: DesignSystemPage }) => {
     createRoot(document.getElementById('root')!).render(
