@@ -1,15 +1,18 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { MOOD_SCALE } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { appendRow, nowFields } from '../../data/db';
-import { Icons } from '../Icons';
-import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
-import { MoodSlider, HoursSlider } from '../Sliders';
-import { useNav, useVisited } from '../NavStack';
-import { TopBar } from './TopBar';
-import { BottomBar } from '../BottomBar';
-import { BlobShape } from '../BlobShape';
+import type { PaceTheme } from '../data/tokens';
+import { MOOD_SCALE } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { appendRow, nowFields } from '../data/db';
+import { Icons } from '../components/ui/foundations/Icons';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { Button } from '../components/ui/actions/Button';
+import { AnimatedEnter } from '../components/ui/feedback/AnimatedEnter';
+import { MoodSlider } from '../components/ui/inputs/MoodSlider';
+import { HoursSlider } from '../components/ui/inputs/HoursSlider';
+import { useNav, useVisited } from '../components/system/NavStack';
+import { TopBar } from '../components/ui/navigation/TopBar';
+import { BottomBar } from '../components/ui/navigation/BottomBar';
+import { BlobShape } from '../components/ui/foundations/BlobShape';
 
 // SleepHome: landing page for sleep tab
 const WeekChart: React.FC<{ theme: PaceTheme; data: number[]; L: Record<string, any> }> = ({ theme, data, L }) => {

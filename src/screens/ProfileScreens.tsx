@@ -1,13 +1,17 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { FONTS } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { Icons } from '../Icons';
-import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl, PageSlider } from '../UI';
-import { useNav } from '../NavStack';
-import { SettingsCtx } from '../../App';
-import { BlobShape } from '../BlobShape';
-import { useHeaderPadding, useScrolledParent } from './TopBar';
+import type { PaceTheme } from '../data/tokens';
+import { FONTS } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { Icons } from '../components/ui/foundations/Icons';
+import { PaceCard } from '../components/ui/containers/Card';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { AnimatedEnter } from '../components/ui/feedback/AnimatedEnter';
+import { SegmentedControl } from '../components/ui/inputs/SegmentedControl';
+import { PageSlider } from '../components/system/PageSlider';
+import { useNav } from '../components/system/NavStack';
+import { SettingsCtx } from '../App';
+import { BlobShape } from '../components/ui/foundations/BlobShape';
+import { useHeaderPadding, useScrolledParent } from '../components/ui/navigation/TopBar';
 
 // Profile 三個 variant 共用的 sticky header wrapper — 跟 TopBar 同樣的 scroll-aware bg layer + blur 機制
 const ProfileHeader: React.FC<{

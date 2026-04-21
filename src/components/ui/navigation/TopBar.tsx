@@ -1,7 +1,7 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { Icons } from '../Icons';
-import { PaceSerif, PaceSans } from '../UI';
+import type { PaceTheme } from '../../../data/tokens';
+import { Icons } from '../foundations/Icons';
+import { PaceSerif, PaceSans } from '../foundations/Text';
 
 // 假 iOS status bar 的高度（IOSStatusBar 的 padding 21+22+19）。desktop iPhone frame 下，TopBar 要多讓這麼多空間才不會跟 9:41/訊號圖示 重疊
 const STATUS_BAR_H = 62;

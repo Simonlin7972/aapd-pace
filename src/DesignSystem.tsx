@@ -1,11 +1,16 @@
 import React from 'react';
 import { THEMES, MOOD_SCALE, FONTS, TYPE_SCALE, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
-import { Icons } from './components/Icons';
-import { PaceCard, PaceSerif, PaceSans, PaceNum, Button, SegmentedControl, AnimatedEnter } from './components/UI';
-import { MoodSlider, HoursSlider } from './components/Sliders';
-import { TopBar } from './components/screens/TopBar';
-import { BlobShape } from './components/BlobShape';
+import { Icons } from './components/ui/foundations/Icons';
+import { PaceSerif, PaceSans, PaceNum } from './components/ui/foundations/Text';
+import { PaceCard } from './components/ui/containers/Card';
+import { Button } from './components/ui/actions/Button';
+import { SegmentedControl } from './components/ui/inputs/SegmentedControl';
+import { MoodSlider } from './components/ui/inputs/MoodSlider';
+import { HoursSlider } from './components/ui/inputs/HoursSlider';
+import { AnimatedEnter } from './components/ui/feedback/AnimatedEnter';
+import { TopBar } from './components/ui/navigation/TopBar';
+import { BlobShape } from './components/ui/foundations/BlobShape';
 
 function buildTheme(dark = false): PaceTheme {
   const base = dark ? { ...THEMES.oatDark } : { ...THEMES.oat };

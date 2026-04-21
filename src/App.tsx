@@ -1,17 +1,17 @@
 import React from 'react';
 import { THEMES, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
-import { IOSDevice } from './components/IOSFrame';
-import { NavStack } from './components/NavStack';
-import { LaunchScreen } from './components/LaunchScreen';
-import { HomeScreen } from './components/screens/HomeScreen';
-import { SleepHome, SleepFlow } from './components/screens/SleepScreens';
-import { MoodSheet } from './components/screens/MoodSheet';
-import { MoveScreen, MoveDoneScreen } from './components/screens/MoveScreens';
-import { ExerciseHome, ExerciseRecord } from './components/screens/ExerciseScreens';
-import { FoodScreen } from './components/screens/FoodScreen';
-import { InsightsScreen } from './components/screens/InsightsScreen';
-import { ProfileScreen } from './components/screens/ProfileScreens';
+import { IOSDevice } from './components/system/IOSFrame';
+import { NavStack } from './components/system/NavStack';
+import { LaunchScreen } from './components/system/LaunchScreen';
+import { HomeScreen } from './screens/HomeScreen';
+import { SleepHome, SleepFlow } from './screens/SleepScreens';
+import { MoodSheet } from './screens/MoodSheet';
+import { MoveScreen, MoveDoneScreen } from './screens/MoveScreens';
+import { ExerciseHome, ExerciseRecord } from './screens/ExerciseScreens';
+import { FoodScreen } from './screens/FoodScreen';
+import { InsightsScreen } from './screens/InsightsScreen';
+import { ProfileScreen } from './screens/ProfileScreens';
 
 export interface Tweaks {
   accent: string;

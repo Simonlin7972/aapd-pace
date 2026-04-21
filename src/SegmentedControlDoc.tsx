@@ -1,8 +1,8 @@
 import React from 'react';
 import { THEMES, FONTS, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
-import { PaceSerif, PaceSans } from './components/UI';
-import { SegmentedControl } from './components/ui/SegmentedControl';
+import { PaceSerif, PaceSans } from './components/ui/foundations/Text';
+import { SegmentedControl } from './components/ui/inputs/SegmentedControl';
 
 function buildTheme(): PaceTheme {
   return {

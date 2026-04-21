@@ -1,5 +1,5 @@
 import React from 'react';
-import type { PaceTheme } from '../data/tokens';
+import type { PaceTheme } from '../../data/tokens';
 
 const iosEase = 'cubic-bezier(0.25, 0.8, 0.25, 1)';
 

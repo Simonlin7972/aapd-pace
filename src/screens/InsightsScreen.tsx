@@ -1,11 +1,13 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { MOOD_SCALE } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { Icons } from '../Icons';
-import { PaceCard, PaceSerif, PaceSans, AnimatedEnter } from '../UI';
-import { useNav } from '../NavStack';
-import { TopBar } from './TopBar';
+import type { PaceTheme } from '../data/tokens';
+import { MOOD_SCALE } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { Icons } from '../components/ui/foundations/Icons';
+import { PaceCard } from '../components/ui/containers/Card';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { AnimatedEnter } from '../components/ui/feedback/AnimatedEnter';
+import { useNav } from '../components/system/NavStack';
+import { TopBar } from '../components/ui/navigation/TopBar';
 
 export const InsightsScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();

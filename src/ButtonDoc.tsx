@@ -1,7 +1,8 @@
 import React from 'react';
 import { THEMES, FONTS, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
-import { PaceSerif, PaceSans, Button } from './components/UI';
+import { PaceSerif, PaceSans } from './components/ui/foundations/Text';
+import { Button } from './components/ui/actions/Button';
 
 function buildTheme(): PaceTheme {
   return {

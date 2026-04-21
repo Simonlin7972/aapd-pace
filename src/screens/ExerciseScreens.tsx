@@ -4,17 +4,19 @@ import {
   PersonSimpleBikeIcon, PersonSimpleSwimIcon, PersonSimpleHikeIcon, MusicNotesIcon,
   PersonArmsSpreadIcon, SparkleIcon,
 } from '@phosphor-icons/react';
-import type { PaceTheme } from '../../data/tokens';
-import { MOOD_SCALE } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { appendRow, nowFields } from '../../data/db';
-import { Icons } from '../Icons';
-import { PaceSerif, PaceSans, Button, AnimatedEnter } from '../UI';
-import { MoodSlider } from '../Sliders';
-import { useNav, useVisited } from '../NavStack';
-import { TopBar } from './TopBar';
-import { BottomBar } from '../BottomBar';
-import { BlobShape } from '../BlobShape';
+import type { PaceTheme } from '../data/tokens';
+import { MOOD_SCALE } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { appendRow, nowFields } from '../data/db';
+import { Icons } from '../components/ui/foundations/Icons';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { Button } from '../components/ui/actions/Button';
+import { AnimatedEnter } from '../components/ui/feedback/AnimatedEnter';
+import { MoodSlider } from '../components/ui/inputs/MoodSlider';
+import { useNav, useVisited } from '../components/system/NavStack';
+import { TopBar } from '../components/ui/navigation/TopBar';
+import { BottomBar } from '../components/ui/navigation/BottomBar';
+import { BlobShape } from '../components/ui/foundations/BlobShape';
 
 const EXERCISE_TYPES = [
   { k: 'walk',    Icon: PersonSimpleWalkIcon },

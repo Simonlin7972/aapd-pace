@@ -1,8 +1,8 @@
 import React from 'react';
-import type { PaceTheme } from '../data/tokens';
-import { FONTS } from '../data/tokens';
-import { Icons } from './Icons';
-import { useNav } from './NavStack';
+import type { PaceTheme } from '../../../data/tokens';
+import { FONTS } from '../../../data/tokens';
+import { Icons } from '../foundations/Icons';
+import { useNav } from '../../system/NavStack';
 
 export type BottomTabKey = 'today' | 'sleep' | 'move' | 'food' | 'mood';
 

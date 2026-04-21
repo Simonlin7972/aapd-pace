@@ -1,14 +1,16 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { MOOD_SCALE } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { Icons } from '../Icons';
-import { PaceCard, PaceSerif, PaceSans, AnimatedEnter } from '../UI';
-import { MoodSlider } from '../Sliders';
-import { useNav, useToast, useVisited } from '../NavStack';
-import { BottomBar } from '../BottomBar';
-import { BlobShape } from '../BlobShape';
-import { TopBar } from './TopBar';
+import type { PaceTheme } from '../data/tokens';
+import { MOOD_SCALE } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { Icons } from '../components/ui/foundations/Icons';
+import { PaceCard } from '../components/ui/containers/Card';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { AnimatedEnter } from '../components/ui/feedback/AnimatedEnter';
+import { MoodSlider } from '../components/ui/inputs/MoodSlider';
+import { useNav, useToast, useVisited } from '../components/system/NavStack';
+import { BottomBar } from '../components/ui/navigation/BottomBar';
+import { BlobShape } from '../components/ui/foundations/BlobShape';
+import { TopBar } from '../components/ui/navigation/TopBar';
 
 function formatDateToday(lang: string): string {
   const now = new Date();

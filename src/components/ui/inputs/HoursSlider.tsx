@@ -1,8 +1,6 @@
 import React from 'react';
-import type { PaceTheme } from '../data/tokens';
-import { PaceNum } from './UI';
-
-export { MoodSlider } from './ui/MoodSlider';
+import type { PaceTheme } from '../../../data/tokens';
+import { PaceNum } from '../foundations/Text';
 
 const iosEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
 const spring = 'cubic-bezier(0.34, 1.56, 0.64, 1)';

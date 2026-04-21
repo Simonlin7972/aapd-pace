@@ -1,5 +1,5 @@
 import React from 'react';
-import { FONTS, type PaceTheme } from '../../data/tokens';
+import { FONTS, type PaceTheme } from '../../../data/tokens';
 
 export const Button: React.FC<{
   theme: PaceTheme;

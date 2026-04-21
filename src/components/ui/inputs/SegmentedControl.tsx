@@ -1,5 +1,5 @@
 import React from 'react';
-import { FONTS, type PaceTheme } from '../../data/tokens';
+import { FONTS, type PaceTheme } from '../../../data/tokens';
 
 // Segmented control (iOS-style)
 export const SegmentedControl: React.FC<{

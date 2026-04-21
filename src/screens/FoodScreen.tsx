@@ -1,10 +1,11 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { FONTS } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { PaceSerif, PaceSans, Button } from '../UI';
-import { useNav } from '../NavStack';
-import { TopBar } from './TopBar';
+import type { PaceTheme } from '../data/tokens';
+import { FONTS } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { Button } from '../components/ui/actions/Button';
+import { useNav } from '../components/system/NavStack';
+import { TopBar } from '../components/ui/navigation/TopBar';
 
 export const FoodScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const nav = useNav();

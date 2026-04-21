@@ -1,10 +1,11 @@
 import React from 'react';
-import type { PaceTheme } from '../../data/tokens';
-import { MOOD_SCALE } from '../../data/tokens';
-import { PaceState } from '../../data/state';
-import { PaceSerif, PaceSans, Button } from '../UI';
-import { MoodSlider } from '../Sliders';
-import { BlobShape } from '../BlobShape';
+import type { PaceTheme } from '../data/tokens';
+import { MOOD_SCALE } from '../data/tokens';
+import { PaceState } from '../data/state';
+import { PaceSerif, PaceSans } from '../components/ui/foundations/Text';
+import { Button } from '../components/ui/actions/Button';
+import { MoodSlider } from '../components/ui/inputs/MoodSlider';
+import { BlobShape } from '../components/ui/foundations/BlobShape';
 
 export const MoodSheet: React.FC<{ theme: PaceTheme; onClose: () => void }> = ({ theme, onClose }) => {
   const L = theme.L;

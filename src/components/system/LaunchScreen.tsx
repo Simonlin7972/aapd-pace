@@ -1,5 +1,5 @@
 import React from 'react';
-import type { PaceTheme } from '../data/tokens';
+import type { PaceTheme } from '../../data/tokens';
 
 // Living blob — continuously morphing organic shape with drifting warm colors
 const LivingBlob: React.FC<{ theme: PaceTheme; visible: boolean }> = ({ visible }) => {

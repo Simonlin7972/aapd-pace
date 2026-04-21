@@ -20,11 +20,11 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 8，無 UI f
 1. `SCREENS` in [src/App.tsx](src/App.tsx) — runtime 用
 2. `SCREEN_MAP` + `screens` array in [src/Export.tsx](src/Export.tsx) — export 頁用
 
-`.claude/settings.local.json` 裡有 PostToolUse hook：編輯 `src/components/screens/` 或 `src/data/state.ts` 時會自動提醒檢查 Export.tsx 是否需同步。
+`.claude/settings.local.json` 裡有 PostToolUse hook：編輯 `src/screens/` 或 `src/data/state.ts` 時會自動提醒檢查 Export.tsx 是否需同步。
 
 ## Navigation
 
-自製 `NavStack` in [src/components/NavStack.tsx](src/components/NavStack.tsx)。元件用 `useNav()` 取得：
+自製 `NavStack` in [src/components/system/NavStack.tsx](src/components/system/NavStack.tsx)。元件用 `useNav()` 取得：
 
 - `push(name, props?)` / `pop()` / `replace(name, props?)`
 - `presentSheet(name, props?)` / `dismissSheet()` — 底部抽屜（e.g. `moodSheet`）
@@ -59,7 +59,7 @@ Proxy 的 `set` trap 會同步把整包狀態寫進 `localStorage`（key：`pace
 
 ## BottomBar
 
-[src/components/BottomBar.tsx](src/components/BottomBar.tsx)。只在 `HomeScreen` 渲染（sub-flow 進入後自然隱藏）。5 個 tab：今天 / 睡眠 / 運動 / 飲食 / 情緒。Responsive：item 用 `flex: 1` 均分寬度。
+[src/components/ui/navigation/BottomBar.tsx](src/components/ui/navigation/BottomBar.tsx)。只在 `HomeScreen` 渲染（sub-flow 進入後自然隱藏）。5 個 tab：今天 / 睡眠 / 運動 / 飲食 / 情緒。Responsive：item 用 `flex: 1` 均分寬度。
 
 ## Commands
 
@@ -113,11 +113,14 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 
 ## 元件命名與位置
 
-- 核心 base UI components（Button、SegmentedControl、Card、Typography…）放在 [src/components/ui/](src/components/ui/)
+完整分類原則見 [docs/component-architecture.md](docs/component-architecture.md)。核心：**以用途分類，不以複雜度分類**。
+
+- `src/components/system/` — 產品外殼（IOSFrame、LaunchScreen、NavStack、PageSlider）
+- `src/components/ui/` — 按用途分七類：`foundations/`、`actions/`、`inputs/`、`containers/`、`data-display/`、`feedback/`、`navigation/`
+- `src/screens/` — 頁面（HomeScreen、SleepScreens、MoodSheet…），**不再放在 `components/` 底下**
 - 命名不加 `Pace` 前綴：`Button` 而非 `PaceButton`；檔名與 export 名一致
-- App 特有或有業務邏輯的 component（BottomBar、NavStack、HomeScreen…）留在 `src/components/` 或 `screens/`
 - Figma component set 名同步遵循（e.g. Figma 中也叫 `Button`）
-- 例外：`PaceTheme` / `PaceState` 等型別、`PaceSerif` / `PaceSans` 等 typography legacy 命名未動，但新增元件一律不帶前綴
+- 例外：`PaceTheme` / `PaceState` 等型別、`PaceSerif` / `PaceSans` / `PaceCard` / `PaceNum` 等 legacy 命名未動，但新增元件一律不帶前綴
 
 ## 釐清優先
 
