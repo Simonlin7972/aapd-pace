@@ -3,9 +3,7 @@ import { THEMES, FONTS, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
 import { PaceSerif, PaceSans } from './components/ui/foundations/Text';
 import { SegmentedControl } from './components/ui/inputs/SegmentedControl';
-
-const DS_THEME_KEY = 'pace.ds.theme';
-const readDarkPref = () => localStorage.getItem(DS_THEME_KEY) === 'dark';
+import { SideNav, SIDENAV_WIDTH, DS_THEME_KEY, readDarkPref } from './components/design-system/SideNav';
 
 function buildTheme(dark = false): PaceTheme {
   const base = dark ? THEMES.oatDark : THEMES.oat;
@@ -58,7 +56,14 @@ const NumberDot: React.FC<{ theme: PaceTheme; n: number }> = ({ theme, n }) => (
 );
 
 const SegmentedControlDoc: React.FC = () => {
-  const theme = buildTheme(readDarkPref());
+  const [isDark, setIsDark] = React.useState<boolean>(() => readDarkPref());
+  const theme = buildTheme(isDark);
+
+  const handleThemeToggle = (v: string) => {
+    const dark = v === 'dark';
+    setIsDark(dark);
+    localStorage.setItem(DS_THEME_KEY, dark ? 'dark' : 'light');
+  };
 
   const [anatomyVal, setAnatomyVal] = React.useState('day');
   const [sizeDefault, setSizeDefault] = React.useState('day');
@@ -82,6 +87,15 @@ const SegmentedControlDoc: React.FC = () => {
         color: theme.ink,
       }}
     >
+      <SideNav
+        theme={theme}
+        activeL1="inputs"
+        activeL2="mol-segmented"
+        isDark={isDark}
+        onToggle={handleThemeToggle}
+      />
+
+      <div style={{ marginLeft: SIDENAV_WIDTH }}>
       {/* Header bar — back to design system */}
       <div
         style={{
@@ -365,6 +379,7 @@ const SegmentedControlDoc: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

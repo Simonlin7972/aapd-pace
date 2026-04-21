@@ -3,9 +3,7 @@ import { THEMES, FONTS, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
 import { PaceSerif, PaceSans } from './components/ui/foundations/Text';
 import { Button } from './components/ui/actions/Button';
-
-const DS_THEME_KEY = 'pace.ds.theme';
-const readDarkPref = () => localStorage.getItem(DS_THEME_KEY) === 'dark';
+import { SideNav, SIDENAV_WIDTH, DS_THEME_KEY, readDarkPref } from './components/design-system/SideNav';
 
 function buildTheme(dark = false): PaceTheme {
   const base = dark ? THEMES.oatDark : THEMES.oat;
@@ -71,7 +69,14 @@ const UsageBar: React.FC<{ theme: PaceTheme }> = ({ theme }) => (
 );
 
 const ButtonDoc: React.FC = () => {
-  const theme = buildTheme(readDarkPref());
+  const [isDark, setIsDark] = React.useState<boolean>(() => readDarkPref());
+  const theme = buildTheme(isDark);
+
+  const handleThemeToggle = (v: string) => {
+    const dark = v === 'dark';
+    setIsDark(dark);
+    localStorage.setItem(DS_THEME_KEY, dark ? 'dark' : 'light');
+  };
 
   return (
     <div
@@ -82,6 +87,15 @@ const ButtonDoc: React.FC = () => {
         color: theme.ink,
       }}
     >
+      <SideNav
+        theme={theme}
+        activeL1="actions"
+        activeL2="mol-button"
+        isDark={isDark}
+        onToggle={handleThemeToggle}
+      />
+
+      <div style={{ marginLeft: SIDENAV_WIDTH }}>
       {/* Header bar — back to design system */}
       <div
         style={{
@@ -364,6 +378,7 @@ const ButtonDoc: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
