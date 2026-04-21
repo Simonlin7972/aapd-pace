@@ -1,7 +1,25 @@
 import React from 'react';
+import {
+  PersonSimpleWalkIcon, PersonSimpleRunIcon, PersonSimpleTaiChiIcon, BarbellIcon,
+  PersonSimpleBikeIcon, PersonSimpleSwimIcon, PersonSimpleHikeIcon, MusicNotesIcon,
+  PersonArmsSpreadIcon, SparkleIcon,
+} from '@phosphor-icons/react';
 import { THEMES, MOOD_SCALE, FONTS, TYPE_SCALE, type PaceTheme } from './data/tokens';
 import { PACE_I18N } from './data/i18n';
 import { Icons } from './components/ui/foundations/Icons';
+
+const EXERCISE_ICONS = [
+  { k: 'walk',    Icon: PersonSimpleWalkIcon },
+  { k: 'run',     Icon: PersonSimpleRunIcon },
+  { k: 'yoga',    Icon: PersonSimpleTaiChiIcon },
+  { k: 'weight',  Icon: BarbellIcon },
+  { k: 'cycle',   Icon: PersonSimpleBikeIcon },
+  { k: 'swim',    Icon: PersonSimpleSwimIcon },
+  { k: 'hike',    Icon: PersonSimpleHikeIcon },
+  { k: 'dance',   Icon: MusicNotesIcon },
+  { k: 'stretch', Icon: PersonArmsSpreadIcon },
+  { k: 'other',   Icon: SparkleIcon },
+];
 import { PaceSerif, PaceSans, PaceNum } from './components/ui/foundations/Text';
 import { PaceCard } from './components/ui/containers/Card';
 import { Button } from './components/ui/actions/Button';
@@ -904,6 +922,23 @@ export default function DesignSystemPage() {
                     <div key={s} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                       <div style={{ color: theme.ink }}>{Icons.Sleep({ size: s })}</div>
                       <PaceNum size={10} color={theme.inkMuted}>{s}</PaceNum>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Exercise icons (Phosphor duotone) */}
+              <div style={{ marginTop: 24, borderTop: `1px solid ${theme.line}`, paddingTop: 20 }}>
+                <PaceSans size={11} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Exercise Icons</PaceSans>
+                <PaceSans size={12} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
+                  Phosphor duotone set used on the exercise logging screen.
+                </PaceSans>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 20 }}>
+                  {EXERCISE_ICONS.map(({ k, Icon }) => (
+                    <div key={k} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                      <div style={{ color: theme.terracotta, padding: 8 }}>
+                        <Icon size={28} weight="duotone" />
+                      </div>
+                      <PaceSans size={10} color={theme.inkMuted}>{theme.L[`exercise_type_${k}`]}</PaceSans>
                     </div>
                   ))}
                 </div>
