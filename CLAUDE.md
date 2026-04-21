@@ -11,6 +11,7 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 8，無 UI f
 | `/` | `App.tsx` | 互動 prototype，裝在 380×820 iPhone frame 裡 |
 | `/export` | `Export.tsx` | 所有 screens 一頁攤開（給設計 review / Figma 截圖） |
 | `/design-system` | `DesignSystem.tsx` | tokens / typography / components 展示 |
+| `/deck` | `Deck.tsx` | 產品簡報（1920×1080，← → 翻頁，R 回第一頁） |
 
 ## 新增 screen 要動兩處
 

@@ -24,6 +24,14 @@ if (path === '/export') {
       </StrictMode>,
     )
   })
+} else if (path === '/deck') {
+  import('./Deck.tsx').then(({ default: DeckPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <DeckPage />
+      </StrictMode>,
+    )
+  })
 } else {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
