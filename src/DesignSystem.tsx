@@ -142,7 +142,9 @@ const NAV_ITEMS: NavItem[] = [
 
 const SideNav: React.FC<{ activeL1: string; activeL2: string; isDark: boolean; onToggle: (v: string) => void }> = ({ activeL1, activeL2, isDark, onToggle }) => {
   const t = React.useContext(ThemeCtx);
-  const [collapsed, setCollapsed] = React.useState<Set<string>>(new Set());
+  const [collapsed, setCollapsed] = React.useState<Set<string>>(
+    () => new Set(NAV_ITEMS.filter(n => n.level === 1).map(n => n.id))
+  );
   const [query, setQuery] = React.useState('');
   const handleClick = (id: string) => {
     const el = document.getElementById(id);
@@ -269,6 +271,7 @@ const SideNav: React.FC<{ activeL1: string; activeL2: string; isDark: boolean; o
         )}
         {(() => {
           let currentL1: string | null = null;
+          let l0Count = 0;
           return NAV_ITEMS.map(item => {
             if (item.level === 1) currentL1 = item.id;
             if (searchVisibleIds && !searchVisibleIds.has(item.id)) return null;
@@ -280,15 +283,24 @@ const SideNav: React.FC<{ activeL1: string; activeL2: string; isDark: boolean; o
             const isLevel1 = item.level === 1;
 
             if (isLevel0) {
+              l0Count++;
               return (
-                <div key={item.id} style={{
-                  fontSize: 10,
-                  fontWeight: 600,
-                  color: t.inkMuted,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  padding: '20px 12px 8px',
-                }}>{item.label}</div>
+                <React.Fragment key={item.id}>
+                  {l0Count > 1 && (
+                    <div style={{
+                      borderTop: `1px solid ${t.line}`,
+                      margin: '16px 12px 0',
+                    }} />
+                  )}
+                  <div style={{
+                    fontSize: 10,
+                    fontWeight: 600,
+                    color: t.inkMuted,
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    padding: '20px 12px 8px',
+                  }}>{item.label}</div>
+                </React.Fragment>
               );
             }
 
@@ -297,34 +309,26 @@ const SideNav: React.FC<{ activeL1: string; activeL2: string; isDark: boolean; o
               return (
                 <div
                   key={item.id}
+                  onClick={() => toggleCollapse(item.id)}
                   style={{
                     display: 'flex', alignItems: 'center',
                     fontSize: 13,
                     fontWeight: isActive ? 500 : 400,
                     color: isActive ? t.ink : t.inkSoft,
                     borderRadius: 8,
+                    padding: '7px 10px 7px 12px',
+                    cursor: 'pointer',
                     lineHeight: 1.4,
                     transition: 'color 150ms ease',
                   }}
                 >
-                  <div
-                    onClick={() => handleClick(item.id)}
-                    style={{ flex: 1, padding: '7px 0 7px 12px', cursor: 'pointer' }}
-                  >
-                    {item.label}
-                  </div>
-                  <div
-                    onClick={() => toggleCollapse(item.id)}
-                    style={{
-                      padding: '7px 10px 7px 8px',
-                      cursor: 'pointer',
-                      color: t.inkMuted,
-                      display: 'flex', alignItems: 'center',
-                      transform: isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)',
-                      transition: 'transform 180ms ease',
-                    }}
-                    aria-label={isCollapsed ? 'Expand' : 'Collapse'}
-                  >
+                  <div style={{ flex: 1 }}>{item.label}</div>
+                  <div style={{
+                    color: t.inkMuted,
+                    display: 'flex', alignItems: 'center',
+                    transform: isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)',
+                    transition: 'transform 180ms ease',
+                  }}>
                     {Icons.ChevronR({ size: 14 })}
                   </div>
                 </div>
