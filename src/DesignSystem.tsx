@@ -907,7 +907,14 @@ export default function DesignSystemPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 20 }}>
                 {Object.entries(Icons).map(([name, Icon]) => (
                   <div key={name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                    <div style={{ color: theme.ink, padding: 8 }}>
+                    <div style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      width: 56, height: 56,
+                      border: `1px solid ${theme.line}`,
+                      borderRadius: 14,
+                      color: theme.ink,
+                      background: theme.bg,
+                    }}>
                       {Icon({ size: 28 })}
                     </div>
                     <PaceSans size={10} color={theme.inkMuted}>{name}</PaceSans>
@@ -935,7 +942,14 @@ export default function DesignSystemPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 20 }}>
                   {EXERCISE_ICONS.map(({ k, Icon }) => (
                     <div key={k} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                      <div style={{ color: theme.terracotta, padding: 8 }}>
+                      <div style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        width: 56, height: 56,
+                        border: `1px solid ${theme.line}`,
+                        borderRadius: 14,
+                        color: theme.terracotta,
+                        background: theme.bg,
+                      }}>
                         <Icon size={28} weight="duotone" />
                       </div>
                       <PaceSans size={10} color={theme.inkMuted}>{theme.L[`exercise_type_${k}`]}</PaceSans>
