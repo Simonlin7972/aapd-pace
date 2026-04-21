@@ -1,6 +1,6 @@
 # Pace — Claude Code notes
 
-iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 8，無 UI framework、無 router、無狀態管理 lib。所有 styling 走 inline style + design tokens。
+iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 7，無 UI framework、無 router、無狀態管理 lib。所有 styling 走 inline style + design tokens。
 
 ## Entry points（非 react-router）
 
