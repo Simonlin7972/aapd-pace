@@ -1,7 +1,6 @@
 // Pace — i18n dictionary across all screens
 export const PACE_I18N: Record<string, Record<string, any>> = {
   'zh-TW': {
-    dateToday: '週六·4月18日',
     greeting: '早安，Anniie',
     greetingNight: '晚安，Simon',
     statusRecorded: (h: number) => `睡得${h >= 7 ? '不錯' : '還行'}，${h >= 7 ? '今天可以多做點事。' : '記得今天對自己溫柔一點。'}`,
@@ -115,7 +114,6 @@ export const PACE_I18N: Record<string, Record<string, any>> = {
   },
 
   'en': {
-    dateToday: 'Sat · Apr 18',
     greeting: 'Good morning, Anniie',
     greetingNight: 'Good evening, Simon',
     statusRecorded: (h: number) => h >= 7
@@ -231,7 +229,6 @@ export const PACE_I18N: Record<string, Record<string, any>> = {
   },
 
   'ja': {
-    dateToday: '土 · 4月18日',
     greeting: 'おはよう、Anniie',
     greetingNight: 'こんばんは、Simon',
     statusRecorded: (h: number) => h >= 7 ? 'よく眠れた。今日は少し踏み込んでも大丈夫。' : 'まあまあの眠り。今日は自分に優しく。',

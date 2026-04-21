@@ -7,7 +7,37 @@ import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl, PageSli
 import { useNav } from '../NavStack';
 import { SettingsCtx } from '../../App';
 import { BlobShape } from '../BlobShape';
-import { useHeaderPadding } from './TopBar';
+import { useHeaderPadding, useScrolledParent } from './TopBar';
+
+// Profile 三個 variant 共用的 sticky header wrapper — 跟 TopBar 同樣的 scroll-aware bg layer + blur 機制
+const ProfileHeader: React.FC<{
+  theme: PaceTheme;
+  onBack: () => void;
+  center?: React.ReactNode;
+  rightWidth?: number;
+}> = ({ theme, onBack, center, rightWidth = 22 }) => {
+  const headerPad = useHeaderPadding();
+  const [ref, scrolled] = useScrolledParent<HTMLDivElement>();
+  return (
+    <div ref={ref} style={{
+      position: 'sticky', top: 0, zIndex: 5,
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      ...headerPad,
+    }}>
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: -1,
+        background: theme.bg,
+        opacity: scrolled ? 1 : 0,
+        transition: 'opacity 240ms ease',
+      }} />
+      <div onClick={onBack} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
+        {Icons.ChevronL({ size: 22 })}
+      </div>
+      {center}
+      <div style={{ width: rightWidth }} />
+    </div>
+  );
+};
 
 // Shared settings controls
 const SettingsRow: React.FC<{ theme: PaceTheme; label: string; children: React.ReactNode }> = ({ theme, label, children }) => (
@@ -83,7 +113,6 @@ const ProfileClassic: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
   const nav = useNav();
   const st = PaceState;
   const L = theme.L;
-  const headerPad = useHeaderPadding();
 
   const stats = [
     { l: L.p_streak, v: st.streak || 3, u: L.p_u_day },
@@ -102,17 +131,11 @@ const ProfileClassic: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
 
   return (
     <div style={{ background: theme.bg, position: 'absolute', inset: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <div style={{
-        position: 'sticky', top: 0, zIndex: 5, background: theme.bg,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        ...headerPad,
-      }}>
-        <div onClick={() => nav.pop()} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
-          {Icons.ChevronL({ size: 22 })}
-        </div>
-        <PaceSans size={15} color={theme.ink}>{L.p_title}</PaceSans>
-        <div style={{ width: 22 }} />
-      </div>
+      <ProfileHeader
+        theme={theme}
+        onBack={() => nav.pop()}
+        center={<PaceSans size={15} color={theme.ink}>{L.p_title}</PaceSans>}
+      />
 
       <div style={{ padding: '32px 24px 40px' }}>
         <AnimatedEnter delay={60}>
@@ -193,7 +216,6 @@ const ProfileEditorial: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p
   const nav = useNav();
   const L = theme.L;
   const isDark = !!settings.dark;
-  const headerPad = useHeaderPadding();
 
   const photoBg = isDark
     ? `radial-gradient(120% 80% at 30% 20%, ${theme.dust}40, transparent 60%),
@@ -205,19 +227,15 @@ const ProfileEditorial: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p
 
   return (
     <div style={{ background: theme.bg, position: 'absolute', inset: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <div style={{
-        position: 'sticky', top: 0, zIndex: 5, background: theme.bg,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        ...headerPad,
-      }}>
-        <div onClick={() => nav.pop()} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
-          {Icons.ChevronL({ size: 22 })}
-        </div>
-        <PaceSans size={11} color={theme.inkMuted} style={{ letterSpacing: '0.18em', textTransform: 'uppercase' }}>
-          {L.p_tagline_editorial}
-        </PaceSans>
-        <div style={{ width: 22 }} />
-      </div>
+      <ProfileHeader
+        theme={theme}
+        onBack={() => nav.pop()}
+        center={
+          <PaceSans size={11} color={theme.inkMuted} style={{ letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+            {L.p_tagline_editorial}
+          </PaceSans>
+        }
+      />
 
       <div style={{ padding: '40px 28px 20px', textAlign: 'center' }}>
         <AnimatedEnter delay={60}>
@@ -345,7 +363,6 @@ const ProfileEditorial: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p
 const ProfileMinimal: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: any) => void }> = ({ theme, settings, onUpdate }) => {
   const nav = useNav();
   const L = theme.L;
-  const headerPad = useHeaderPadding();
 
   const WEEKS = 6, DAYS = 7;
   const totalCells = WEEKS * DAYS;
@@ -354,17 +371,7 @@ const ProfileMinimal: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
 
   return (
     <div style={{ background: theme.bg, position: 'absolute', inset: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <div style={{
-        position: 'sticky', top: 0, zIndex: 5, background: theme.bg,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        ...headerPad,
-      }}>
-        <div onClick={() => nav.pop()} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
-          {Icons.ChevronL({ size: 22 })}
-        </div>
-        <div style={{ width: 22 }} />
-        <div style={{ width: 22 }} />
-      </div>
+      <ProfileHeader theme={theme} onBack={() => nav.pop()} />
 
       <div style={{ padding: '64px 32px 0' }}>
         <AnimatedEnter delay={60}>

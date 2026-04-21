@@ -8,6 +8,28 @@ const STATUS_BAR_H = 62;
 // 與 styles.css 內隱藏 .ios-status-bar 的 breakpoint 同步：narrow viewport 下假 status bar 已經消失，不用讓空間
 const NARROW_VP = '(max-width: 480px)';
 
+// 偵測 ref 所在的最近 scroll ancestor 是否已經捲動超過 threshold。用來做 sticky header 滾動到頂時才淡入背景的效果
+export function useScrolledParent<T extends HTMLElement = HTMLElement>(threshold = 4) {
+  const ref = React.useRef<T | null>(null);
+  const [scrolled, setScrolled] = React.useState(false);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    let el: HTMLElement | null = ref.current.parentElement;
+    while (el) {
+      const s = getComputedStyle(el);
+      if (/(auto|scroll|overlay)/.test(s.overflowY)) break;
+      el = el.parentElement;
+    }
+    if (!el) return;
+    const target = el;
+    const onScroll = () => setScrolled(target.scrollTop > threshold);
+    onScroll();
+    target.addEventListener('scroll', onScroll, { passive: true });
+    return () => target.removeEventListener('scroll', onScroll);
+  }, [threshold]);
+  return [ref, scrolled] as const;
+}
+
 // header 共用 padding：mobile 規格 16/12/12/16（top/right/bottom/left）。假 status bar 可見時（desktop iPhone frame）top 再補 62px
 export function useHeaderPadding(): React.CSSProperties {
   const compute = () => {
@@ -64,14 +86,20 @@ export const TopBar: React.FC<{
   progress?: { current: number; total: number };
 }> = ({ theme, onBack, onClose, leftLabel, right, step, title, progress }) => {
   const headerPad = useHeaderPadding();
+  const [ref, scrolled] = useScrolledParent<HTMLDivElement>();
   const action = onBack || onClose;
   return (
-    <div style={{
+    <div ref={ref} style={{
       position: 'sticky', top: 0, zIndex: 5,
-      background: theme.bg,
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       ...headerPad,
     }}>
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: -1,
+        background: theme.bg,
+        opacity: scrolled ? 1 : 0,
+        transition: 'opacity 240ms ease',
+      }} />
       <div
         onClick={action}
         style={{
@@ -83,11 +111,11 @@ export const TopBar: React.FC<{
       >
         {onBack ? Icons.ChevronL({ size: 22 })
           : onClose ? Icons.Close({ size: 22 })
-          : leftLabel ? (
-            <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              {leftLabel}
-            </PaceSans>
-          ) : null}
+            : leftLabel ? (
+              <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                {leftLabel}
+              </PaceSans>
+            ) : null}
       </div>
       {progress && <ProgressBar current={progress.current} total={progress.total} theme={theme} />}
       {!progress && title && <PaceSerif size={15} color={theme.ink}>{title}</PaceSerif>}

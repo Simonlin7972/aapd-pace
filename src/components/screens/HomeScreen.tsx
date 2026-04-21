@@ -10,6 +10,23 @@ import { BottomBar } from '../BottomBar';
 import { BlobShape } from '../BlobShape';
 import { TopBar } from './TopBar';
 
+function formatDateToday(lang: string): string {
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  if (lang === 'ja') {
+    const wd = now.toLocaleDateString('ja-JP', { weekday: 'narrow' });
+    return `${wd} · ${m}月${d}日`;
+  }
+  if (lang === 'en') {
+    const wd = now.toLocaleDateString('en-US', { weekday: 'short' });
+    const md = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return `${wd} · ${md}`;
+  }
+  const wd = now.toLocaleDateString('zh-TW', { weekday: 'short' });
+  return `${wd}·${m}月${d}日`;
+}
+
 const DimCard: React.FC<{ theme: PaceTheme; d: any }> = ({ theme, d }) => {
   const [pressed, setPressed] = React.useState(false);
   return (
@@ -69,7 +86,7 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
       <div style={{ position: 'absolute', inset: 0, overflowY: 'auto' }}>
         <TopBar
           theme={theme}
-          leftLabel={L.dateToday}
+          leftLabel={formatDateToday(theme.lang)}
           right={
             <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
               <div onClick={() => nav.push('insights')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
