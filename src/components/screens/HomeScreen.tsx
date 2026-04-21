@@ -8,6 +8,7 @@ import { MoodSlider } from '../Sliders';
 import { useNav, useToast, useVisited } from '../NavStack';
 import { BottomBar } from '../BottomBar';
 import { BlobShape } from '../BlobShape';
+import { TopBar } from './TopBar';
 
 const DimCard: React.FC<{ theme: PaceTheme; d: any }> = ({ theme, d }) => {
   const [pressed, setPressed] = React.useState(false);
@@ -65,18 +66,18 @@ export const HomeScreen: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
 
   return (
     <div style={{ background: theme.bg, height: '100%', position: 'relative' }}>
-      <div className="screen-scroll" style={{ position: 'absolute', inset: 0, overflowY: 'auto', paddingTop: 56 }}>
-        <div style={{ padding: '8px 20px 120px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0 20px' }}>
-            <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              {L.dateToday}
-            </PaceSans>
+      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto' }}>
+        <TopBar
+          theme={theme}
+          leftLabel={L.dateToday}
+          right={
             <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
               <div onClick={() => nav.push('insights')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
               <div onClick={() => nav.push('profile')} style={{ cursor: 'pointer', padding: 4 }}>{Icons.Me({ size: 20 })}</div>
             </div>
-          </div>
-
+          }
+        />
+        <div style={{ padding: '8px 20px 120px' }}>
           <AnimatedEnter delay={50} skip={skip}>
             <div style={{ position: 'relative', marginBottom: 24 }}>
               <BlobShape

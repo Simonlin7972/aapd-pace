@@ -57,12 +57,14 @@ export const TopBar: React.FC<{
   theme: PaceTheme;
   onBack?: () => void;
   onClose?: () => void;
+  leftLabel?: string; // 左側無 back/close action 時顯示的小標（e.g. home 的日期）
   right?: React.ReactNode;
   step?: string;
   title?: string;
   progress?: { current: number; total: number };
-}> = ({ theme, onBack, onClose, right, step, title, progress }) => {
+}> = ({ theme, onBack, onClose, leftLabel, right, step, title, progress }) => {
   const headerPad = useHeaderPadding();
+  const action = onBack || onClose;
   return (
     <div style={{
       position: 'sticky', top: 0, zIndex: 5,
@@ -70,8 +72,22 @@ export const TopBar: React.FC<{
       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       ...headerPad,
     }}>
-      <div onClick={onBack || onClose} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
-        {onBack ? Icons.ChevronL({ size: 22 }) : onClose ? Icons.Close({ size: 22 }) : null}
+      <div
+        onClick={action}
+        style={{
+          color: theme.inkSoft,
+          cursor: action ? 'pointer' : 'default',
+          padding: action ? 8 : 0,
+          margin: action ? -8 : 0,
+        }}
+      >
+        {onBack ? Icons.ChevronL({ size: 22 })
+          : onClose ? Icons.Close({ size: 22 })
+          : leftLabel ? (
+            <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              {leftLabel}
+            </PaceSans>
+          ) : null}
       </div>
       {progress && <ProgressBar current={progress.current} total={progress.total} theme={theme} />}
       {!progress && title && <PaceSerif size={15} color={theme.ink}>{title}</PaceSerif>}

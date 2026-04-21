@@ -1007,18 +1007,53 @@ export default function DesignSystemPage() {
           {/* TopBar */}
           <SubSection id="org-topbar" title="TopBar">
             <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
-              Navigation header with back/close icon, optional title, and step indicator or right content.
+              Sticky navigation header. Left slot: back chevron, or small uppercase label when there's no action (home). Center slot: serif title, progress bar, or empty. Right slot: small step label, or custom node (home icons). Padding adapts to viewport — desktop frame reserves space for the fake status bar, mobile browser and PWA standalone use safe-area insets.
             </PaceSans>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 24 }}>
               {[
-                { label: 'With close + step', props: { onClose: () => {}, step: '1 / 3' } },
-                { label: 'With back + title', props: { onBack: () => {}, title: '本週回顧' } },
-                { label: 'With back + done', props: { onBack: () => {}, step: '完成' } },
+                {
+                  label: 'Date + icons — Home',
+                  render: (
+                    <TopBar
+                      theme={theme}
+                      leftLabel="週六・4 月 18 日"
+                      right={
+                        <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
+                          <div style={{ padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
+                          <div style={{ padding: 4 }}>{Icons.Me({ size: 20 })}</div>
+                        </div>
+                      }
+                    />
+                  ),
+                },
+                {
+                  label: 'Back + title — Insights',
+                  render: <TopBar theme={theme} onBack={() => {}} title="4 月 12 – 18" />,
+                },
+                {
+                  label: 'Back + step — Food / Move / Exercise',
+                  render: <TopBar theme={theme} onBack={() => {}} step="記錄運動" />,
+                },
+                {
+                  label: 'Back + progress — Sleep flow',
+                  render: <TopBar theme={theme} onBack={() => {}} progress={{ current: 2, total: 3 }} />,
+                },
               ].map(v => (
                 <div key={v.label} style={{ background: theme.bg, borderRadius: 20, overflow: 'hidden' }}>
                   <PaceSans size={10} color={theme.inkMuted} style={{ padding: '8px 12px 0', textAlign: 'center' }}>{v.label}</PaceSans>
+                  <div style={{ paddingTop: 0 }}>{v.render}</div>
+                </div>
+              ))}
+            </div>
+            <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Sleep flow — progress states
+            </PaceSans>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+              {[1, 2, 3].map(n => (
+                <div key={n} style={{ background: theme.bg, borderRadius: 20, overflow: 'hidden' }}>
+                  <PaceSans size={10} color={theme.inkMuted} style={{ padding: '8px 12px 0', textAlign: 'center' }}>Step {n} / 3</PaceSans>
                   <div style={{ paddingTop: 0 }}>
-                    <TopBar theme={theme} {...v.props} />
+                    <TopBar theme={theme} onBack={() => {}} progress={{ current: n, total: 3 }} />
                   </div>
                 </div>
               ))}
