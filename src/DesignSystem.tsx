@@ -23,6 +23,7 @@ const EXERCISE_ICONS = [
 import { PaceSerif, PaceSans, PaceNum } from './components/ui/foundations/Text';
 import { PaceCard } from './components/ui/containers/Card';
 import { Button } from './components/ui/actions/Button';
+import { TextLink } from './components/ui/actions/TextLink';
 import { SegmentedControl } from './components/ui/inputs/SegmentedControl';
 import { MoodSlider } from './components/ui/inputs/MoodSlider';
 import { HoursSlider } from './components/ui/inputs/HoursSlider';
@@ -719,18 +720,7 @@ export default function DesignSystemPage() {
             id="mol-button"
             title="Button"
             action={
-              <a
-                href="/design-system/button"
-                style={{
-                  fontFamily: FONTS.sans,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: theme.terracotta,
-                  textDecoration: 'none',
-                }}
-              >
-                查看詳細文件 →
-              </a>
+              <TextLink theme={theme} href="/design-system/button">查看詳細文件</TextLink>
             }
           >
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -862,18 +852,7 @@ export default function DesignSystemPage() {
             id="mol-segmented"
             title="SegmentedControl"
             action={
-              <a
-                href="/design-system/segmented-control"
-                style={{
-                  fontFamily: FONTS.sans,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: theme.terracotta,
-                  textDecoration: 'none',
-                }}
-              >
-                查看詳細文件 →
-              </a>
+              <TextLink theme={theme} href="/design-system/segmented-control">查看詳細文件</TextLink>
             }
           >
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
