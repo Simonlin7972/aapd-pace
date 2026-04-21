@@ -4,9 +4,13 @@ import { PACE_I18N } from './data/i18n';
 import { PaceSerif, PaceSans } from './components/ui/foundations/Text';
 import { SegmentedControl } from './components/ui/inputs/SegmentedControl';
 
-function buildTheme(): PaceTheme {
+const DS_THEME_KEY = 'pace.ds.theme';
+const readDarkPref = () => localStorage.getItem(DS_THEME_KEY) === 'dark';
+
+function buildTheme(dark = false): PaceTheme {
+  const base = dark ? THEMES.oatDark : THEMES.oat;
   return {
-    ...THEMES.oat,
+    ...base,
     radius: 30,
     lang: 'zh-TW',
     L: PACE_I18N['zh-TW'],
@@ -54,7 +58,7 @@ const NumberDot: React.FC<{ theme: PaceTheme; n: number }> = ({ theme, n }) => (
 );
 
 const SegmentedControlDoc: React.FC = () => {
-  const theme = buildTheme();
+  const theme = buildTheme(readDarkPref());
 
   const [anatomyVal, setAnatomyVal] = React.useState('day');
   const [sizeDefault, setSizeDefault] = React.useState('day');

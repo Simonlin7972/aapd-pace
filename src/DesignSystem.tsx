@@ -23,6 +23,10 @@ function buildTheme(dark = false): PaceTheme {
   } as PaceTheme;
 }
 
+// Persist theme preference across DS / Button / SegmentedControl doc pages
+const DS_THEME_KEY = 'pace.ds.theme';
+const readDarkPref = () => localStorage.getItem(DS_THEME_KEY) === 'dark';
+
 // React context to thread active theme through helper components
 const ThemeCtx = React.createContext<PaceTheme>(buildTheme(false));
 
@@ -63,7 +67,7 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  // ── Foundations ──
+  // ── Foundations (Design tokens) ──
   { id: 'part-foundations', label: 'Foundations', level: 0 },
 
   { id: 'colors', label: 'Color', level: 1 },
@@ -90,50 +94,90 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'motion-easing', label: 'Easing curves', level: 2 },
   { id: 'motion-duration', label: 'Duration scale', level: 2 },
 
-  // ── Components ──
+  // ── Components (按用途分類) ──
   { id: 'part-components', label: 'Components', level: 0 },
 
-  { id: 'atoms', label: 'Atoms', level: 1 },
+  { id: 'foundations', label: 'Foundations', level: 1 },
   { id: 'atom-typography', label: 'Text primitives', level: 2 },
   { id: 'atom-icons', label: 'Iconography', level: 2 },
   { id: 'atom-dividers', label: 'Dividers', level: 2 },
   { id: 'atom-indicators', label: 'Color indicators', level: 2 },
 
-  { id: 'molecules', label: 'Molecules', level: 1 },
+  { id: 'actions', label: 'Actions', level: 1 },
   { id: 'mol-button', label: 'Button', level: 2 },
-  { id: 'mol-card', label: 'Card', level: 2 },
-  { id: 'mol-segmented', label: 'Segmented control', level: 2 },
+  { id: 'mol-chips', label: 'Chips & pills', level: 2 },
+  { id: 'org-settings-row', label: 'Settings row', level: 2 },
+
+  { id: 'inputs', label: 'Inputs', level: 1 },
   { id: 'mol-mood-slider', label: 'Mood slider', level: 2 },
   { id: 'mol-hours-slider', label: 'Hours slider', level: 2 },
-  { id: 'mol-chips', label: 'Chips & pills', level: 2 },
+  { id: 'mol-segmented', label: 'Segmented control', level: 2 },
   { id: 'mol-satisfaction', label: 'Satisfaction cards', level: 2 },
-  { id: 'mol-animated', label: 'Animated enter', level: 2 },
-  { id: 'mol-toast', label: 'Toast', level: 2 },
 
-  { id: 'organisms', label: 'Organisms', level: 1 },
-  { id: 'org-topbar', label: 'Top bar', level: 2 },
+  { id: 'containers', label: 'Containers', level: 1 },
+  { id: 'mol-card', label: 'Card', level: 2 },
   { id: 'org-dimcard', label: 'Dimension card', level: 2 },
+  { id: 'org-insight', label: 'Insight card', level: 2 },
+  { id: 'org-quote', label: 'Quote block', level: 2 },
+  { id: 'org-sheet', label: 'Bottom sheet', level: 2 },
+
+  { id: 'data-display', label: 'Data display', level: 1 },
   { id: 'org-stats', label: 'Stats grid', level: 2 },
   { id: 'org-profile-stats', label: 'Profile stats', level: 2 },
   { id: 'org-heatmap', label: 'Mood heatmap', level: 2 },
   { id: 'org-sleep-chart', label: 'Sleep trend chart', level: 2 },
-  { id: 'org-settings-row', label: 'Settings row', level: 2 },
-  { id: 'org-insight', label: 'Insight card', level: 2 },
-  { id: 'org-sheet', label: 'Bottom sheet', level: 2 },
-  { id: 'org-quote', label: 'Quote block', level: 2 },
-  { id: 'org-hint', label: 'Hint line', level: 2 },
   { id: 'org-calendar', label: 'Activity calendar', level: 2 },
+
+  { id: 'feedback', label: 'Feedback', level: 1 },
+  { id: 'mol-toast', label: 'Toast', level: 2 },
+  { id: 'org-hint', label: 'Hint line', level: 2 },
+  { id: 'mol-animated', label: 'Animated enter', level: 2 },
+
+  { id: 'navigation', label: 'Navigation', level: 1 },
+  { id: 'org-topbar', label: 'Top bar', level: 2 },
 
   { id: 'templates', label: 'Templates', level: 1 },
   { id: 'tpl-layouts', label: 'Screen layouts', level: 2 },
 ];
 
-const SideNav: React.FC<{ activeId: string; isDark: boolean; onToggle: (v: string) => void }> = ({ activeId, isDark, onToggle }) => {
+const SideNav: React.FC<{ activeL1: string; activeL2: string; isDark: boolean; onToggle: (v: string) => void }> = ({ activeL1, activeL2, isDark, onToggle }) => {
   const t = React.useContext(ThemeCtx);
+  const [collapsed, setCollapsed] = React.useState<Set<string>>(new Set());
+  const [query, setQuery] = React.useState('');
   const handleClick = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.location.hash.slice(1) !== id) {
+      history.pushState(null, '', `#${id}`);
+    }
   };
+  const toggleCollapse = (id: string) => {
+    setCollapsed(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  // Search: build set of visible ids (matches + their parent context). `null` = no active search.
+  const q = query.trim().toLowerCase();
+  const searchVisibleIds = React.useMemo<Set<string> | null>(() => {
+    if (!q) return null;
+    const visible = new Set<string>();
+    let currentL0: string | null = null;
+    let currentL1: string | null = null;
+    NAV_ITEMS.forEach(item => {
+      if (item.level === 0) currentL0 = item.id;
+      if (item.level === 1) currentL1 = item.id;
+      if (item.label.toLowerCase().includes(q)) {
+        visible.add(item.id);
+        if (currentL0) visible.add(currentL0);
+        if (item.level === 2 && currentL1) visible.add(currentL1);
+      }
+    });
+    return visible;
+  }, [q]);
 
   return (
     <nav style={{
@@ -164,7 +208,7 @@ const SideNav: React.FC<{ activeId: string; isDark: boolean; onToggle: (v: strin
       </div>
 
       {/* Theme switcher */}
-      <div style={{ padding: '0 16px 16px', borderBottom: `1px solid ${t.line}`, marginBottom: 12 }}>
+      <div style={{ padding: '0 16px 12px' }}>
         <SegmentedControl
           theme={t}
           value={isDark ? 'dark' : 'light'}
@@ -174,47 +218,141 @@ const SideNav: React.FC<{ activeId: string; isDark: boolean; onToggle: (v: strin
         />
       </div>
 
-      {/* Nav items */}
-      <div style={{ padding: '0 8px' }}>
-        {NAV_ITEMS.map(item => {
-          const isActive = activeId === item.id;
-          const isLevel0 = item.level === 0;
-          const isLevel1 = item.level === 1;
-
-          if (isLevel0) {
-            return (
-              <div key={item.id} style={{
-                fontSize: 10,
-                fontWeight: 600,
-                color: t.inkMuted,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                padding: '20px 12px 8px',
-              }}>{item.label}</div>
-            );
-          }
-
-          return (
+      {/* Search */}
+      <div style={{ padding: '0 16px 16px', borderBottom: `1px solid ${t.line}`, marginBottom: 12 }}>
+        <div style={{ position: 'relative' }}>
+          <input
+            type="text"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search…"
+            style={{
+              width: '100%',
+              boxSizing: 'border-box',
+              padding: '8px 28px 8px 12px',
+              fontFamily: FONTS.sans,
+              fontSize: 13,
+              color: t.ink,
+              background: isDark ? 'rgba(242,234,219,0.06)' : 'rgba(61,52,42,0.04)',
+              border: `1px solid ${t.line}`,
+              borderRadius: 8,
+              outline: 'none',
+              transition: 'border-color 150ms ease, background 150ms ease',
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = t.lineStrong; }}
+            onBlur={e => { e.currentTarget.style.borderColor = t.line; }}
+          />
+          {query && (
             <div
-              key={item.id}
-              onClick={() => handleClick(item.id)}
+              onClick={() => setQuery('')}
               style={{
-                fontSize: isLevel1 ? 13 : 12,
-                fontWeight: isActive ? 500 : 400,
-                color: isActive ? t.ink : (isLevel1 ? t.inkSoft : t.inkMuted),
-                padding: isLevel1 ? '7px 12px' : '5px 12px',
-                paddingLeft: isLevel1 ? 12 : 24,
-                borderRadius: 8,
-                cursor: 'pointer',
-                background: isActive ? (isDark ? 'rgba(242,234,219,0.07)' : 'rgba(61,52,42,0.07)') : 'transparent',
-                transition: 'all 150ms ease',
-                lineHeight: 1.4,
+                position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)',
+                padding: 4, cursor: 'pointer', color: t.inkMuted,
+                display: 'flex', alignItems: 'center',
               }}
+              aria-label="Clear search"
             >
-              {item.label}
+              {Icons.Close({ size: 12 })}
             </div>
-          );
-        })}
+          )}
+        </div>
+      </div>
+
+      {/* Nav items */}
+      <div style={{ padding: '0 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {searchVisibleIds && searchVisibleIds.size === 0 && (
+          <div style={{
+            padding: '16px 12px', fontSize: 12, color: t.inkMuted, fontStyle: 'italic',
+          }}>
+            No results for "{query}"
+          </div>
+        )}
+        {(() => {
+          let currentL1: string | null = null;
+          return NAV_ITEMS.map(item => {
+            if (item.level === 1) currentL1 = item.id;
+            if (searchVisibleIds && !searchVisibleIds.has(item.id)) return null;
+            const isHidden = !searchVisibleIds && item.level === 2 && currentL1 !== null && collapsed.has(currentL1);
+            if (isHidden) return null;
+
+            const isActive = item.level === 1 ? activeL1 === item.id : activeL2 === item.id;
+            const isLevel0 = item.level === 0;
+            const isLevel1 = item.level === 1;
+
+            if (isLevel0) {
+              return (
+                <div key={item.id} style={{
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: t.inkMuted,
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                  padding: '20px 12px 8px',
+                }}>{item.label}</div>
+              );
+            }
+
+            if (isLevel1) {
+              const isCollapsed = collapsed.has(item.id);
+              return (
+                <div
+                  key={item.id}
+                  style={{
+                    display: 'flex', alignItems: 'center',
+                    fontSize: 13,
+                    fontWeight: isActive ? 500 : 400,
+                    color: isActive ? t.ink : t.inkSoft,
+                    borderRadius: 8,
+                    lineHeight: 1.4,
+                    transition: 'color 150ms ease',
+                  }}
+                >
+                  <div
+                    onClick={() => handleClick(item.id)}
+                    style={{ flex: 1, padding: '7px 0 7px 12px', cursor: 'pointer' }}
+                  >
+                    {item.label}
+                  </div>
+                  <div
+                    onClick={() => toggleCollapse(item.id)}
+                    style={{
+                      padding: '7px 10px 7px 8px',
+                      cursor: 'pointer',
+                      color: t.inkMuted,
+                      display: 'flex', alignItems: 'center',
+                      transform: isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)',
+                      transition: 'transform 180ms ease',
+                    }}
+                    aria-label={isCollapsed ? 'Expand' : 'Collapse'}
+                  >
+                    {Icons.ChevronR({ size: 14 })}
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => handleClick(item.id)}
+                style={{
+                  fontSize: 12,
+                  fontWeight: isActive ? 500 : 400,
+                  color: isActive ? t.ink : t.inkMuted,
+                  padding: '5px 12px',
+                  paddingLeft: 24,
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  background: isActive ? (isDark ? 'rgba(242,234,219,0.07)' : 'rgba(61,52,42,0.07)') : 'transparent',
+                  transition: 'all 150ms ease',
+                  lineHeight: 1.4,
+                }}
+              >
+                {item.label}
+              </div>
+            );
+          });
+        })()}
       </div>
     </nav>
   );
@@ -325,7 +463,7 @@ const PulseRing: React.FC<{ color: string; radius: number }> = ({ color, radius 
 // ─── Design System Page ─────────────────────────
 
 export default function DesignSystemPage() {
-  const [isDark, setIsDark] = React.useState(false);
+  const [isDark, setIsDark] = React.useState<boolean>(() => readDarkPref());
   const [segVal, setSegVal] = React.useState('a');
   const [moodVal, setMoodVal] = React.useState(2);
   const [hoursVal, setHoursVal] = React.useState(6.5);
@@ -337,17 +475,36 @@ export default function DesignSystemPage() {
   const theme = buildTheme(isDark);
   const themeSource = isDark ? THEMES.oatDark : THEMES.oat;
 
-  const sectionIds = NAV_ITEMS.filter(n => n.level > 0).map(n => n.id);
-  const activeId = useScrollSpy(sectionIds);
+  // Observe only level-2 items so nested Section wrappers don't override their children
+  const sectionIds = React.useMemo(() => NAV_ITEMS.filter(n => n.level === 2).map(n => n.id), []);
+  const activeL2 = useScrollSpy(sectionIds);
+  const activeL1 = React.useMemo(() => {
+    if (!activeL2) return '';
+    const idx = NAV_ITEMS.findIndex(n => n.id === activeL2);
+    for (let i = idx; i >= 0; i--) {
+      if (NAV_ITEMS[i].level === 1) return NAV_ITEMS[i].id;
+    }
+    return '';
+  }, [activeL2]);
+
+  // Scroll to hash on initial mount (browser's native hash scroll happens before React renders)
+  React.useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (el) requestAnimationFrame(() => el.scrollIntoView({ block: 'start' }));
+  }, []);
 
   const handleThemeToggle = (v: string) => {
-    setIsDark(v === 'dark');
+    const dark = v === 'dark';
+    setIsDark(dark);
+    localStorage.setItem(DS_THEME_KEY, dark ? 'dark' : 'light');
   };
 
   return (
     <ThemeCtx.Provider value={theme}>
     <div style={{ background: isDark ? '#1F1A14' : '#E8DFCC', minHeight: '100vh', transition: 'background 300ms ease' }}>
-      <SideNav activeId={activeId} isDark={isDark} onToggle={handleThemeToggle} />
+      <SideNav activeL1={activeL1} activeL2={activeL2} isDark={isDark} onToggle={handleThemeToggle} />
       <div style={{
         marginLeft: 232,
         display: 'flex',
@@ -686,7 +843,8 @@ export default function DesignSystemPage() {
       </div>
 
       {/* ═══════════════════════════════════════════════
-          PART 2 — COMPONENTS (Atomic Design)
+          PART 2 — COMPONENTS (按用途分類)
+          詳見 docs/component-architecture.md
           ═══════════════════════════════════════════════ */}
       <div id="part-components" style={{ scrollMarginTop: 32 }}>
         <PaceSans size={11} color={theme.inkMuted} style={{
@@ -694,8 +852,8 @@ export default function DesignSystemPage() {
           textAlign: 'center',
         }}>Components</PaceSans>
 
-        {/* ── ATOMS ── */}
-        <Section id="atoms" title="Atoms" subtitle="The smallest indivisible UI elements.">
+        {/* ── FOUNDATIONS ── */}
+        <Section id="foundations" title="Foundations" subtitle="Visual primitives — the raw vocabulary of the system. Not interactive.">
 
           {/* Typography components */}
           <SubSection id="atom-typography" title="Typography Components">
@@ -807,8 +965,8 @@ export default function DesignSystemPage() {
           </SubSection>
         </Section>
 
-        {/* ── MOLECULES ── */}
-        <Section id="molecules" title="Molecules" subtitle="Simple groups of atoms functioning together as a unit.">
+        {/* ── ACTIONS ── */}
+        <Section id="actions" title="Actions" subtitle="Components users actively tap to trigger behaviour.">
 
           {/* Buttons */}
           <SubSection
@@ -833,99 +991,6 @@ export default function DesignSystemPage() {
               <Button theme={theme} full>Primary — 記錄</Button>
               <Button theme={theme} variant="soft" full>Soft — 稍後再說</Button>
               <Button theme={theme} variant="text" full>Text — 跳過也沒關係</Button>
-            </div>
-          </SubSection>
-
-          {/* Cards */}
-          <SubSection id="mol-card" title="PaceCard">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              <div>
-                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 8 }}>tone="surface" (default)</PaceSans>
-                <PaceCard theme={theme}>
-                  <PaceSans size={14} color={theme.ink}>Card content with surface background</PaceSans>
-                  <PaceSans size={12} color={theme.inkSoft} style={{ marginTop: 4 }}>Padding: 20px, radius: theme.radius</PaceSans>
-                </PaceCard>
-              </div>
-              <div>
-                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 8 }}>tone="elevated"</PaceSans>
-                <PaceCard theme={theme} tone="elevated">
-                  <PaceSans size={14} color={theme.ink}>Card content with elevated background</PaceSans>
-                  <PaceSans size={12} color={theme.inkSoft} style={{ marginTop: 4 }}>Brighter surface for emphasis</PaceSans>
-                </PaceCard>
-              </div>
-            </div>
-            <div style={{ marginTop: 16 }}>
-              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 8 }}>Clickable card (interactive)</PaceSans>
-              <PaceCard theme={theme} onClick={() => {}} padding={18}>
-                <PaceSans size={14} color={theme.ink}>Tap me — cursor: pointer, transitions on hover</PaceSans>
-              </PaceCard>
-            </div>
-          </SubSection>
-
-          {/* Segmented Control */}
-          <SubSection
-            id="mol-segmented"
-            title="SegmentedControl"
-            action={
-              <a
-                href="/design-system/segmented-control"
-                style={{
-                  fontFamily: FONTS.sans,
-                  fontSize: 13,
-                  fontWeight: 500,
-                  color: theme.terracotta,
-                  textDecoration: 'none',
-                }}
-              >
-                查看詳細文件 →
-              </a>
-            }
-          >
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
-                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>2 options</PaceSans>
-                <SegmentedControl theme={theme}
-                  value={segVal === 'a' || segVal === 'b' ? segVal : 'a'}
-                  onChange={setSegVal}
-                  options={[{ k: 'a', l: '日間' }, { k: 'b', l: '夜間' }]}
-                />
-              </div>
-              <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
-                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>3 options</PaceSans>
-                <SegmentedControl theme={theme}
-                  value="zh-TW"
-                  onChange={() => {}}
-                  options={[{ k: 'zh-TW', l: '中文' }, { k: 'en', l: 'EN' }, { k: 'ja', l: '日本語' }]}
-                />
-              </div>
-            </div>
-            <div style={{ marginTop: 16, background: theme.surface, borderRadius: 20, padding: 24 }}>
-              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>Compact variant</PaceSans>
-              <SegmentedControl theme={theme}
-                value="a"
-                onChange={() => {}}
-                options={[{ k: 'a', l: '日' }, { k: 'b', l: '夜' }]}
-                compact
-              />
-            </div>
-          </SubSection>
-
-          {/* Sliders */}
-          <SubSection id="mol-mood-slider" title="MoodSlider">
-            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
-              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                5-point horizontal drag slider with gradient
-              </PaceSans>
-              <MoodSlider theme={theme} value={moodVal} onChange={setMoodVal} />
-            </div>
-          </SubSection>
-
-          <SubSection id="mol-hours-slider" title="HoursSlider">
-            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
-              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Range slider (0–12h, 0.5h steps) with gradient fill
-              </PaceSans>
-              <HoursSlider theme={theme} value={hoursVal} onChange={setHoursVal} />
             </div>
           </SubSection>
 
@@ -983,6 +1048,117 @@ export default function DesignSystemPage() {
             </div>
           </SubSection>
 
+          {/* Settings Row */}
+          <SubSection id="org-settings-row" title="SettingsRow &amp; ClassicRow">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+              <div style={{ background: theme.surface, borderRadius: 20, padding: 20 }}>
+                <PaceSans size={10} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>SettingsRow + Segmented</PaceSans>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div>
+                    <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>外觀</PaceSans>
+                    <SegmentedControl theme={theme}
+                      value={isDark ? 'dark' : 'light'}
+                      onChange={() => {}}
+                      options={[{ k: 'light', l: '淺色' }, { k: 'dark', l: '深色' }]}
+                      compact
+                    />
+                  </div>
+                </div>
+              </div>
+              <div style={{ background: theme.surface, borderRadius: 20, overflow: 'hidden' }}>
+                <PaceSans size={10} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', padding: '12px 18px 0' }}>ClassicRow (list item)</PaceSans>
+                {[
+                  { icon: Icons.Mood({ size: 18 }), label: '提醒設定', hint: '每晚 22:00' },
+                  { icon: Icons.Leaf({ size: 18 }), label: '聲音回饋', hint: '開啟' },
+                  { icon: Icons.Insight({ size: 18 }), label: '數據管理', hint: '匯出' },
+                ].map((r, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: 14,
+                    padding: '16px 18px',
+                    borderTop: i > 0 ? `1px solid ${theme.line}` : 'none',
+                  }}>
+                    <div style={{ color: theme.inkSoft, opacity: 0.85 }}>{r.icon}</div>
+                    <PaceSans size={15} color={theme.ink} style={{ flex: 1 }}>{r.label}</PaceSans>
+                    <PaceSans size={12} color={theme.inkMuted}>{r.hint}</PaceSans>
+                    <div style={{ color: theme.inkMuted, opacity: 0.6 }}>{Icons.ChevronR({ size: 16 })}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </SubSection>
+        </Section>
+
+        {/* ── INPUTS ── */}
+        <Section id="inputs" title="Inputs" subtitle="Components that capture feeling or data — Pace 的核心分類。">
+
+          {/* Mood Slider */}
+          <SubSection id="mol-mood-slider" title="MoodSlider">
+            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
+              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                5-point horizontal drag slider with gradient
+              </PaceSans>
+              <MoodSlider theme={theme} value={moodVal} onChange={setMoodVal} />
+            </div>
+          </SubSection>
+
+          {/* Hours Slider */}
+          <SubSection id="mol-hours-slider" title="HoursSlider">
+            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
+              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                Range slider (0–12h, 0.5h steps) with gradient fill
+              </PaceSans>
+              <HoursSlider theme={theme} value={hoursVal} onChange={setHoursVal} />
+            </div>
+          </SubSection>
+
+          {/* Segmented Control */}
+          <SubSection
+            id="mol-segmented"
+            title="SegmentedControl"
+            action={
+              <a
+                href="/design-system/segmented-control"
+                style={{
+                  fontFamily: FONTS.sans,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: theme.terracotta,
+                  textDecoration: 'none',
+                }}
+              >
+                查看詳細文件 →
+              </a>
+            }
+          >
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+              <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
+                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>2 options</PaceSans>
+                <SegmentedControl theme={theme}
+                  value={segVal === 'a' || segVal === 'b' ? segVal : 'a'}
+                  onChange={setSegVal}
+                  options={[{ k: 'a', l: '日間' }, { k: 'b', l: '夜間' }]}
+                />
+              </div>
+              <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
+                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>3 options</PaceSans>
+                <SegmentedControl theme={theme}
+                  value="zh-TW"
+                  onChange={() => {}}
+                  options={[{ k: 'zh-TW', l: '中文' }, { k: 'en', l: 'EN' }, { k: 'ja', l: '日本語' }]}
+                />
+              </div>
+            </div>
+            <div style={{ marginTop: 16, background: theme.surface, borderRadius: 20, padding: 24 }}>
+              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 12 }}>Compact variant</PaceSans>
+              <SegmentedControl theme={theme}
+                value="a"
+                onChange={() => {}}
+                options={[{ k: 'a', l: '日' }, { k: 'b', l: '夜' }]}
+                compact
+              />
+            </div>
+          </SubSection>
+
           {/* Health / satisfaction cards */}
           <SubSection id="mol-satisfaction" title="Satisfaction Cards">
             <div style={{ display: 'flex', gap: 10 }}>
@@ -1002,103 +1178,34 @@ export default function DesignSystemPage() {
               ))}
             </div>
           </SubSection>
-
-          {/* AnimatedEnter */}
-          <SubSection id="mol-animated" title="AnimatedEnter">
-            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
-              <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
-                Fade + translateY entrance wrapper. Stagger with increasing delay values (60ms increments).
-              </PaceSans>
-              <div style={{ display: 'flex', gap: 12 }}>
-                {[0, 60, 120, 180, 240].map((d) => (
-                  <AnimatedEnter key={d} delay={d}>
-                    <div style={{
-                      background: theme.bg, borderRadius: 12,
-                      padding: 16, textAlign: 'center', flex: 1,
-                    }}>
-                      <PaceNum size={12} color={theme.inkMuted}>delay={d}</PaceNum>
-                    </div>
-                  </AnimatedEnter>
-                ))}
-              </div>
-            </div>
-          </SubSection>
-
-          {/* Toast */}
-          <SubSection id="mol-toast" title="Toast">
-            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
-              <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16 }}>
-                Auto-dismiss notification (2200ms). Positioned absolute bottom-center.
-              </PaceSans>
-              <div style={{ position: 'relative', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{
-                  background: isDark ? 'rgba(242,234,219,0.92)' : 'rgba(61,52,42,0.92)',
-                  color: isDark ? '#2A241D' : '#FBF6EC',
-                  padding: '10px 18px', borderRadius: 999,
-                  fontFamily: FONTS.sans, fontSize: 13,
-                  whiteSpace: 'nowrap',
-                }}>已記錄今天的情緒 ✓</div>
-              </div>
-            </div>
-          </SubSection>
         </Section>
 
-        {/* ── ORGANISMS ── */}
-        <Section id="organisms" title="Organisms" subtitle="Complex UI components composed of molecules and atoms.">
+        {/* ── CONTAINERS ── */}
+        <Section id="containers" title="Containers" subtitle="Shells that hold content.">
 
-          {/* TopBar */}
-          <SubSection id="org-topbar" title="TopBar">
-            <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
-              Sticky navigation header. Left slot: back chevron, or small uppercase label when there's no action (home). Center slot: serif title, progress bar, or empty. Right slot: small step label, or custom node (home icons). Padding adapts to viewport — desktop frame reserves space for the fake status bar, mobile browser and PWA standalone use safe-area insets.
-            </PaceSans>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 24 }}>
-              {[
-                {
-                  label: 'Date + icons — Home',
-                  render: (
-                    <TopBar
-                      theme={theme}
-                      leftLabel="週六・4 月 18 日"
-                      right={
-                        <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
-                          <div style={{ padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
-                          <div style={{ padding: 4 }}>{Icons.Me({ size: 20 })}</div>
-                        </div>
-                      }
-                    />
-                  ),
-                },
-                {
-                  label: 'Back + title — Insights',
-                  render: <TopBar theme={theme} onBack={() => {}} title="4 月 12 – 18" />,
-                },
-                {
-                  label: 'Back + step — Food / Move / Exercise',
-                  render: <TopBar theme={theme} onBack={() => {}} step="記錄運動" />,
-                },
-                {
-                  label: 'Back + progress — Sleep flow',
-                  render: <TopBar theme={theme} onBack={() => {}} progress={{ current: 2, total: 3 }} />,
-                },
-              ].map(v => (
-                <div key={v.label} style={{ background: theme.bg, borderRadius: 20, overflow: 'hidden' }}>
-                  <PaceSans size={10} color={theme.inkMuted} style={{ padding: '8px 12px 0', textAlign: 'center' }}>{v.label}</PaceSans>
-                  <div style={{ paddingTop: 0 }}>{v.render}</div>
-                </div>
-              ))}
+          {/* Cards */}
+          <SubSection id="mol-card" title="PaceCard">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+              <div>
+                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 8 }}>tone="surface" (default)</PaceSans>
+                <PaceCard theme={theme}>
+                  <PaceSans size={14} color={theme.ink}>Card content with surface background</PaceSans>
+                  <PaceSans size={12} color={theme.inkSoft} style={{ marginTop: 4 }}>Padding: 20px, radius: theme.radius</PaceSans>
+                </PaceCard>
+              </div>
+              <div>
+                <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 8 }}>tone="elevated"</PaceSans>
+                <PaceCard theme={theme} tone="elevated">
+                  <PaceSans size={14} color={theme.ink}>Card content with elevated background</PaceSans>
+                  <PaceSans size={12} color={theme.inkSoft} style={{ marginTop: 4 }}>Brighter surface for emphasis</PaceSans>
+                </PaceCard>
+              </div>
             </div>
-            <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Sleep flow — progress states
-            </PaceSans>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
-              {[1, 2, 3].map(n => (
-                <div key={n} style={{ background: theme.bg, borderRadius: 20, overflow: 'hidden' }}>
-                  <PaceSans size={10} color={theme.inkMuted} style={{ padding: '8px 12px 0', textAlign: 'center' }}>Step {n} / 3</PaceSans>
-                  <div style={{ paddingTop: 0 }}>
-                    <TopBar theme={theme} onBack={() => {}} progress={{ current: n, total: 3 }} />
-                  </div>
-                </div>
-              ))}
+            <div style={{ marginTop: 16 }}>
+              <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 8 }}>Clickable card (interactive)</PaceSans>
+              <PaceCard theme={theme} onClick={() => {}} padding={18}>
+                <PaceSans size={14} color={theme.ink}>Tap me — cursor: pointer, transitions on hover</PaceSans>
+              </PaceCard>
             </div>
           </SubSection>
 
@@ -1134,6 +1241,78 @@ export default function DesignSystemPage() {
               ))}
             </div>
           </SubSection>
+
+          {/* Insight Card */}
+          <SubSection id="org-insight" title="Insight Card">
+            <PaceCard theme={theme} padding={18} tone="elevated">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <div style={{ color: theme.terracotta, opacity: 0.8 }}>{Icons.Leaf({ size: 16 })}</div>
+                <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                  我們注意到
+                </PaceSans>
+              </div>
+              <PaceSerif size={18} color={theme.ink} style={{ lineHeight: 1.5, marginBottom: 10 }}>
+                運動的日子，你的睡眠品質比較好
+              </PaceSerif>
+              <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.6 }}>
+                本週有運動的三天，你的平均睡眠時數是 7.2 小時，沒有運動的日子則是 5.8 小時。
+              </PaceSans>
+            </PaceCard>
+          </SubSection>
+
+          {/* Quote block */}
+          <SubSection id="org-quote" title="Quote Block">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+              <div style={{ background: theme.surface, borderRadius: 20, padding: '18px 20px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.75 }}>{Icons.Leaf({ size: 16 })}</div>
+                <PaceSerif size={15} color={theme.inkSoft} style={{ lineHeight: 1.6, fontStyle: 'italic' }}>
+                  不需要追求完美的每一天，只要誠實面對自己。
+                </PaceSerif>
+              </div>
+              <div style={{ textAlign: 'center', padding: '20px 24px' }}>
+                <PaceSerif size={16} color={theme.inkSoft} style={{ fontStyle: 'italic', lineHeight: 1.6 }}>
+                  「慢慢來，也是一種節奏。」
+                </PaceSerif>
+                <div style={{ margin: '14px auto 0', width: 24, height: 1, background: theme.terracotta, opacity: 0.7 }} />
+              </div>
+            </div>
+          </SubSection>
+
+          {/* Bottom Sheet */}
+          <SubSection id="org-sheet" title="Bottom Sheet">
+            <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
+              Modal sheet sliding up from bottom with backdrop overlay. Used for mood check-in.
+            </PaceSans>
+            <div style={{
+              background: theme.bg, borderRadius: 20, overflow: 'hidden',
+              position: 'relative', height: 300,
+            }}>
+              {/* Fake backdrop */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(61,52,42,0.4)',
+              }} />
+              {/* Sheet */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                background: theme.bg,
+                borderTopLeftRadius: 24, borderTopRightRadius: 24,
+                paddingBottom: 20,
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 6px' }}>
+                  <div style={{ width: 36, height: 4, borderRadius: 2, background: theme.lineStrong }} />
+                </div>
+                <div style={{ padding: '8px 22px' }}>
+                  <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>此刻</PaceSans>
+                  <PaceSerif size={22} weight={500} color={theme.ink}>現在感覺怎麼樣？</PaceSerif>
+                </div>
+              </div>
+            </div>
+          </SubSection>
+        </Section>
+
+        {/* ── DATA DISPLAY ── */}
+        <Section id="data-display" title="Data Display" subtitle="Turning records into readable visuals. Read-only.">
 
           {/* Stats Grid */}
           <SubSection id="org-stats" title="Stats Grid">
@@ -1291,127 +1470,6 @@ export default function DesignSystemPage() {
             </PaceCard>
           </SubSection>
 
-          {/* Settings Row */}
-          <SubSection id="org-settings-row" title="SettingsRow &amp; ClassicRow">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              <div style={{ background: theme.surface, borderRadius: 20, padding: 20 }}>
-                <PaceSans size={10} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>SettingsRow + Segmented</PaceSans>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <div>
-                    <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>外觀</PaceSans>
-                    <SegmentedControl theme={theme}
-                      value={isDark ? 'dark' : 'light'}
-                      onChange={() => {}}
-                      options={[{ k: 'light', l: '淺色' }, { k: 'dark', l: '深色' }]}
-                      compact
-                    />
-                  </div>
-                </div>
-              </div>
-              <div style={{ background: theme.surface, borderRadius: 20, overflow: 'hidden' }}>
-                <PaceSans size={10} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', padding: '12px 18px 0' }}>ClassicRow (list item)</PaceSans>
-                {[
-                  { icon: Icons.Mood({ size: 18 }), label: '提醒設定', hint: '每晚 22:00' },
-                  { icon: Icons.Leaf({ size: 18 }), label: '聲音回饋', hint: '開啟' },
-                  { icon: Icons.Insight({ size: 18 }), label: '數據管理', hint: '匯出' },
-                ].map((r, i) => (
-                  <div key={i} style={{
-                    display: 'flex', alignItems: 'center', gap: 14,
-                    padding: '16px 18px',
-                    borderTop: i > 0 ? `1px solid ${theme.line}` : 'none',
-                  }}>
-                    <div style={{ color: theme.inkSoft, opacity: 0.85 }}>{r.icon}</div>
-                    <PaceSans size={15} color={theme.ink} style={{ flex: 1 }}>{r.label}</PaceSans>
-                    <PaceSans size={12} color={theme.inkMuted}>{r.hint}</PaceSans>
-                    <div style={{ color: theme.inkMuted, opacity: 0.6 }}>{Icons.ChevronR({ size: 16 })}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </SubSection>
-
-          {/* Insight Card */}
-          <SubSection id="org-insight" title="Insight Card">
-            <PaceCard theme={theme} padding={18} tone="elevated">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                <div style={{ color: theme.terracotta, opacity: 0.8 }}>{Icons.Leaf({ size: 16 })}</div>
-                <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                  我們注意到
-                </PaceSans>
-              </div>
-              <PaceSerif size={18} color={theme.ink} style={{ lineHeight: 1.5, marginBottom: 10 }}>
-                運動的日子，你的睡眠品質比較好
-              </PaceSerif>
-              <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.6 }}>
-                本週有運動的三天，你的平均睡眠時數是 7.2 小時，沒有運動的日子則是 5.8 小時。
-              </PaceSans>
-            </PaceCard>
-          </SubSection>
-
-          {/* Bottom Sheet */}
-          <SubSection id="org-sheet" title="Bottom Sheet">
-            <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
-              Modal sheet sliding up from bottom with backdrop overlay. Used for mood check-in.
-            </PaceSans>
-            <div style={{
-              background: theme.bg, borderRadius: 20, overflow: 'hidden',
-              position: 'relative', height: 300,
-            }}>
-              {/* Fake backdrop */}
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(61,52,42,0.4)',
-              }} />
-              {/* Sheet */}
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0,
-                background: theme.bg,
-                borderTopLeftRadius: 24, borderTopRightRadius: 24,
-                paddingBottom: 20,
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 6px' }}>
-                  <div style={{ width: 36, height: 4, borderRadius: 2, background: theme.lineStrong }} />
-                </div>
-                <div style={{ padding: '8px 22px' }}>
-                  <PaceSans size={12} color={theme.inkMuted} style={{ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>此刻</PaceSans>
-                  <PaceSerif size={22} weight={500} color={theme.ink}>現在感覺怎麼樣？</PaceSerif>
-                </div>
-              </div>
-            </div>
-          </SubSection>
-
-          {/* Quote block */}
-          <SubSection id="org-quote" title="Quote Block">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
-              <div style={{ background: theme.surface, borderRadius: 20, padding: '18px 20px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.75 }}>{Icons.Leaf({ size: 16 })}</div>
-                <PaceSerif size={15} color={theme.inkSoft} style={{ lineHeight: 1.6, fontStyle: 'italic' }}>
-                  不需要追求完美的每一天，只要誠實面對自己。
-                </PaceSerif>
-              </div>
-              <div style={{ textAlign: 'center', padding: '20px 24px' }}>
-                <PaceSerif size={16} color={theme.inkSoft} style={{ fontStyle: 'italic', lineHeight: 1.6 }}>
-                  「慢慢來，也是一種節奏。」
-                </PaceSerif>
-                <div style={{ margin: '14px auto 0', width: 24, height: 1, background: theme.terracotta, opacity: 0.7 }} />
-              </div>
-            </div>
-          </SubSection>
-
-          {/* Streak / hint line */}
-          <SubSection id="org-hint" title="Hint Line">
-            <div style={{ background: theme.surface, borderRadius: 20, padding: 20 }}>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.7 }}>
-                  {Icons.Leaf({ size: 16 })}
-                </div>
-                <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.6, flex: 1 }}>
-                  已經連續 3 天記錄了，你做得很好。
-                </PaceSans>
-              </div>
-            </div>
-          </SubSection>
-
           {/* Minimal Calendar Grid */}
           <SubSection id="org-calendar" title="Activity Calendar (Minimal Profile)">
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
@@ -1444,8 +1502,125 @@ export default function DesignSystemPage() {
           </SubSection>
         </Section>
 
+        {/* ── FEEDBACK ── */}
+        <Section id="feedback" title="Feedback" subtitle="系統給使用者的溫柔回應，對應 Pace 的陪伴式提醒設計哲學。">
+
+          {/* Toast */}
+          <SubSection id="mol-toast" title="Toast">
+            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
+              <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16 }}>
+                Auto-dismiss notification (2200ms). Positioned absolute bottom-center.
+              </PaceSans>
+              <div style={{ position: 'relative', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{
+                  background: isDark ? 'rgba(242,234,219,0.92)' : 'rgba(61,52,42,0.92)',
+                  color: isDark ? '#2A241D' : '#FBF6EC',
+                  padding: '10px 18px', borderRadius: 999,
+                  fontFamily: FONTS.sans, fontSize: 13,
+                  whiteSpace: 'nowrap',
+                }}>已記錄今天的情緒 ✓</div>
+              </div>
+            </div>
+          </SubSection>
+
+          {/* Streak / hint line */}
+          <SubSection id="org-hint" title="Hint Line">
+            <div style={{ background: theme.surface, borderRadius: 20, padding: 20 }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <div style={{ color: theme.terracotta, marginTop: 2, opacity: 0.7 }}>
+                  {Icons.Leaf({ size: 16 })}
+                </div>
+                <PaceSans size={13} color={theme.inkSoft} style={{ lineHeight: 1.6, flex: 1 }}>
+                  已經連續 3 天記錄了，你做得很好。
+                </PaceSans>
+              </div>
+            </div>
+          </SubSection>
+
+          {/* AnimatedEnter */}
+          <SubSection id="mol-animated" title="AnimatedEnter">
+            <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
+              <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
+                Fade + translateY entrance wrapper. Stagger with increasing delay values (60ms increments).
+              </PaceSans>
+              <div style={{ display: 'flex', gap: 12 }}>
+                {[0, 60, 120, 180, 240].map((d) => (
+                  <AnimatedEnter key={d} delay={d}>
+                    <div style={{
+                      background: theme.bg, borderRadius: 12,
+                      padding: 16, textAlign: 'center', flex: 1,
+                    }}>
+                      <PaceNum size={12} color={theme.inkMuted}>delay={d}</PaceNum>
+                    </div>
+                  </AnimatedEnter>
+                ))}
+              </div>
+            </div>
+          </SubSection>
+        </Section>
+
+        {/* ── NAVIGATION ── */}
+        <Section id="navigation" title="Navigation" subtitle="頁內導覽結構元件。跨頁面的 NavStack / PageSlider 屬於 System 層。">
+
+          {/* TopBar */}
+          <SubSection id="org-topbar" title="TopBar">
+            <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 16, lineHeight: 1.6 }}>
+              Sticky navigation header. Left slot: back chevron, or small uppercase label when there's no action (home). Center slot: serif title, progress bar, or empty. Right slot: small step label, or custom node (home icons). Padding adapts to viewport — desktop frame reserves space for the fake status bar, mobile browser and PWA standalone use safe-area insets.
+            </PaceSans>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, marginBottom: 24 }}>
+              {[
+                {
+                  label: 'Date + icons — Home',
+                  render: (
+                    <TopBar
+                      theme={theme}
+                      leftLabel="週六・4 月 18 日"
+                      right={
+                        <div style={{ color: theme.inkSoft, display: 'flex', gap: 16 }}>
+                          <div style={{ padding: 4 }}>{Icons.Insight({ size: 20 })}</div>
+                          <div style={{ padding: 4 }}>{Icons.Me({ size: 20 })}</div>
+                        </div>
+                      }
+                    />
+                  ),
+                },
+                {
+                  label: 'Back + title — Insights',
+                  render: <TopBar theme={theme} onBack={() => {}} title="4 月 12 – 18" />,
+                },
+                {
+                  label: 'Back + step — Food / Move / Exercise',
+                  render: <TopBar theme={theme} onBack={() => {}} step="記錄運動" />,
+                },
+                {
+                  label: 'Back + progress — Sleep flow',
+                  render: <TopBar theme={theme} onBack={() => {}} progress={{ current: 2, total: 3 }} />,
+                },
+              ].map(v => (
+                <div key={v.label} style={{ background: theme.bg, borderRadius: 20, overflow: 'hidden' }}>
+                  <PaceSans size={10} color={theme.inkMuted} style={{ padding: '8px 12px 0', textAlign: 'center' }}>{v.label}</PaceSans>
+                  <div style={{ paddingTop: 0 }}>{v.render}</div>
+                </div>
+              ))}
+            </div>
+            <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 10, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Sleep flow — progress states
+            </PaceSans>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+              {[1, 2, 3].map(n => (
+                <div key={n} style={{ background: theme.bg, borderRadius: 20, overflow: 'hidden' }}>
+                  <PaceSans size={10} color={theme.inkMuted} style={{ padding: '8px 12px 0', textAlign: 'center' }}>Step {n} / 3</PaceSans>
+                  <div style={{ paddingTop: 0 }}>
+                    <TopBar theme={theme} onBack={() => {}} progress={{ current: n, total: 3 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </SubSection>
+        </Section>
+
         {/* ── TEMPLATES ── */}
-        <Section id="templates" title="Templates" subtitle="Full-screen layouts composed of organisms. Shown at actual device size.">
+        <Section id="templates" title="Templates" subtitle="Full-screen layouts composed of components. Shown at actual device size.">
 
           <SubSection id="tpl-layouts" title="Screen Layout Patterns">
             <PaceSans size={13} color={theme.inkSoft} style={{ marginBottom: 24, lineHeight: 1.6 }}>
