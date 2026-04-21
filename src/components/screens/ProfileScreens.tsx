@@ -7,6 +7,7 @@ import { PaceCard, PaceSerif, PaceSans, AnimatedEnter, SegmentedControl, PageSli
 import { useNav } from '../NavStack';
 import { SettingsCtx } from '../../App';
 import { BlobShape } from '../BlobShape';
+import { useHeaderPadding } from './TopBar';
 
 // Shared settings controls
 const SettingsRow: React.FC<{ theme: PaceTheme; label: string; children: React.ReactNode }> = ({ theme, label, children }) => (
@@ -82,6 +83,7 @@ const ProfileClassic: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
   const nav = useNav();
   const st = PaceState;
   const L = theme.L;
+  const headerPad = useHeaderPadding();
 
   const stats = [
     { l: L.p_streak, v: st.streak || 3, u: L.p_u_day },
@@ -100,7 +102,11 @@ const ProfileClassic: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
 
   return (
     <div style={{ background: theme.bg, position: 'absolute', inset: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '56px 20px 0' }}>
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 5, background: theme.bg,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        ...headerPad,
+      }}>
         <div onClick={() => nav.pop()} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
           {Icons.ChevronL({ size: 22 })}
         </div>
@@ -187,6 +193,7 @@ const ProfileEditorial: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p
   const nav = useNav();
   const L = theme.L;
   const isDark = !!settings.dark;
+  const headerPad = useHeaderPadding();
 
   const photoBg = isDark
     ? `radial-gradient(120% 80% at 30% 20%, ${theme.dust}40, transparent 60%),
@@ -198,7 +205,11 @@ const ProfileEditorial: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p
 
   return (
     <div style={{ background: theme.bg, position: 'absolute', inset: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '56px 20px 0' }}>
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 5, background: theme.bg,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        ...headerPad,
+      }}>
         <div onClick={() => nav.pop()} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
           {Icons.ChevronL({ size: 22 })}
         </div>
@@ -334,6 +345,7 @@ const ProfileEditorial: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p
 const ProfileMinimal: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: any) => void }> = ({ theme, settings, onUpdate }) => {
   const nav = useNav();
   const L = theme.L;
+  const headerPad = useHeaderPadding();
 
   const WEEKS = 6, DAYS = 7;
   const totalCells = WEEKS * DAYS;
@@ -342,7 +354,11 @@ const ProfileMinimal: React.FC<{ theme: PaceTheme; settings: any; onUpdate: (p: 
 
   return (
     <div style={{ background: theme.bg, position: 'absolute', inset: 0, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '56px 24px 0' }}>
+      <div style={{
+        position: 'sticky', top: 0, zIndex: 5, background: theme.bg,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        ...headerPad,
+      }}>
         <div onClick={() => nav.pop()} style={{ color: theme.inkSoft, cursor: 'pointer', padding: 8, margin: -8 }}>
           {Icons.ChevronL({ size: 22 })}
         </div>
