@@ -27,6 +27,8 @@ import { TextLink } from './components/ui/actions/TextLink';
 import { SegmentedControl } from './components/ui/inputs/SegmentedControl';
 import { MoodSlider } from './components/ui/inputs/MoodSlider';
 import { HoursSlider } from './components/ui/inputs/HoursSlider';
+import { MoodHeatmap } from './components/ui/data-display/MoodHeatmap';
+import { SleepChart } from './components/ui/data-display/SleepChart';
 import { AnimatedEnter } from './components/ui/feedback/AnimatedEnter';
 import { TopBar } from './components/ui/navigation/TopBar';
 import { BlobShape } from './components/ui/foundations/BlobShape';
@@ -1136,75 +1138,25 @@ export default function DesignSystemPage() {
           </SubSection>
 
           {/* Mood Heatmap */}
-          <SubSection id="org-heatmap" title="Mood Heatmap">
-            <PaceCard theme={theme} padding={18}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
-                <PaceSans size={13} color={theme.ink} weight={500}>情緒色溫</PaceSans>
-                <PaceSans size={11} color={theme.inkMuted}>冷→暖</PaceSans>
-              </div>
-              <div style={{ display: 'flex', gap: 6 }}>
-                {[1, 2, 3, 2, 0, 3, 4].map((mood, i) => (
-                  <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
-                    <div style={{
-                      width: '100%', height: 52, borderRadius: 10,
-                      background: MOOD_SCALE[mood].color, opacity: 0.85,
-                    }} />
-                    <PaceSans size={11} color={theme.inkMuted}>{['一', '二', '三', '四', '五', '六', '日'][i]}</PaceSans>
-                  </div>
-                ))}
-              </div>
-            </PaceCard>
+          <SubSection
+            id="org-heatmap"
+            title="Mood Heatmap"
+            action={
+              <TextLink theme={theme} href="/design-system/mood-heatmap">查看詳細文件</TextLink>
+            }
+          >
+            <MoodHeatmap theme={theme} data={[1, 2, 3, 2, 0, 3, 4]} />
           </SubSection>
 
           {/* Sleep Trend Chart */}
-          <SubSection id="org-sleep-chart" title="Sleep Trend Chart">
-            <PaceCard theme={theme} padding={18}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
-                <PaceSans size={13} color={theme.ink} weight={500}>睡眠趨勢</PaceSans>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
-                  <PaceSerif size={16} color={theme.ink}>6.3</PaceSerif>
-                  <PaceSans size={11} color={theme.inkMuted}>週平均</PaceSans>
-                </div>
-              </div>
-              <div style={{ position: 'relative', height: 70, marginBottom: 10 }}>
-                <svg viewBox="0 0 280 70" width="100%" height="70" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="ds-g" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0" stopColor={theme.terracotta} stopOpacity="0.28" />
-                      <stop offset="1" stopColor={theme.terracotta} stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  {(() => {
-                    const data = [5.5, 6.2, 7.0, 6.5, 4.8, 7.8, 6.5];
-                    const pts = data.map((s, i) => {
-                      const x = (i / 6) * 280;
-                      const y = 70 - ((s - 3) / 6) * 60;
-                      return [x, Math.max(8, Math.min(66, y))];
-                    });
-                    const d = pts.reduce((acc, [x, y], i) => {
-                      if (i === 0) return `M ${x} ${y}`;
-                      const [px, py] = pts[i - 1];
-                      const cx2 = (px + x) / 2;
-                      return `${acc} Q ${cx2} ${py}, ${cx2} ${(py + y) / 2} T ${x} ${y}`;
-                    }, '');
-                    return (
-                      <>
-                        <path d={`${d} L 280 70 L 0 70 Z`} fill="url(#ds-g)" />
-                        <path d={d} fill="none" stroke={theme.terracotta} strokeWidth="1.8" strokeLinecap="round" />
-                        {pts.map(([x, y], i) => (
-                          <circle key={i} cx={x} cy={y} r={i === 6 ? 4 : 2.5} fill={theme.terracotta} />
-                        ))}
-                      </>
-                    );
-                  })()}
-                </svg>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                {['一', '二', '三', '四', '五', '六', '日'].map(d => (
-                  <PaceSans key={d} size={11} color={theme.inkMuted} style={{ width: 20, textAlign: 'center' }}>{d}</PaceSans>
-                ))}
-              </div>
-            </PaceCard>
+          <SubSection
+            id="org-sleep-chart"
+            title="Sleep Trend Chart"
+            action={
+              <TextLink theme={theme} href="/design-system/sleep-chart">查看詳細文件</TextLink>
+            }
+          >
+            <SleepChart theme={theme} data={[5.5, 6.2, 7.0, 6.5, 4.8, 7.8, 6.5]} average={6.3} />
           </SubSection>
 
           {/* Minimal Calendar Grid */}

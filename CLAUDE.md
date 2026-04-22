@@ -15,6 +15,8 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 7，無 UI f
 | `/design-system/segmented-control` | `SegmentedControlDoc.tsx` | Segmented Control 元件詳細文件（anatomy / size / options / usage） |
 | `/design-system/hours-slider` | `HoursSliderDoc.tsx` | Hours Slider 元件詳細文件（anatomy / states / range & step / usage） |
 | `/design-system/mood-slider` | `MoodSliderDoc.tsx` | Mood Slider 元件詳細文件（anatomy / values / usage） |
+| `/design-system/mood-heatmap` | `MoodHeatmapDoc.tsx` | Mood Heatmap 元件詳細文件（anatomy / values / data patterns / usage） |
+| `/design-system/sleep-chart` | `SleepChartDoc.tsx` | Sleep Chart 元件詳細文件（anatomy / data patterns / usage） |
 | `/deck` | `Deck.tsx` | 產品簡報（1920×1080，← → 翻頁，R 回第一頁） |
 
 ## 新增 screen 要動兩處
@@ -111,6 +113,8 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 | `SegmentedControl` | Design System 頁（`91:61`） | Size（Default/Compact）× Count（2/3/4）= 6 variants。Track 綁 `color/bg/track`、outer radius 綁 `radius/segmented` |
 | `MoodSlider` | Design System 頁（`96:199`） | Value 0–4 共 5 variants。Thumb fill 綁 `color/mood/{key}/color` primitive、stroke 綁 `color/bg/canvas`；gradient track 採 MOOD_SCALE hex 直填 |
 | `HoursSlider` | Design System 頁（`185:405`） | State=Default / Dragging 共 2 variants（Dragging 的 thumb 34×34 + 更重陰影）。Track 綁 `color/border/subtle`、Thumb fill 綁 `color/bg/surface`、stroke 綁 `color/brand/default`；gradient fill 採 dust/300 → terracotta/500 hex 直填。Tick labels 綁 `color/text/tertiary` |
+| `MoodHeatmap` | Design System 頁（`193:530`） | 1 variant（State=Default）。Card bg 綁 `color/bg/surface` + `radius/card`。7 個 tile 綁 `color/mood/{key}/color` primitive（opacity 0.85）。Header title 綁 `color/text/primary`、hint 與 day labels 綁 `color/text/tertiary`。Tile row 用 HORIZONTAL auto-layout + FILL 均分寬度（responsive） |
+| `SleepChart` | Design System 頁（`199:657`） | 1 variant（State=Default）。Card bg 綁 `color/bg/surface` + `radius/card`。Curve 是兩個 `createVector`（stroke + gradient fill），path data 採 M/Q only（Figma `vectorPaths` 不支援 T，且要空白分隔、數值 round 到 0.1）。Stroke/dots 綁 `color/brand/default`；gradient 採 terracotta hex 直填（stop 難綁 variable）。Chart area 內元素用 `constraints: SCALE` 隨寬度縮放 |
 | `color/bg/track` | semantic variable | SegmentedControl track 底色。Light=`color/alpha/ink/09`、Dark=`color/alpha/bone/15` |
 | Typography text styles | 本地 text styles（17 個） | `Display`、`Heading/1`–`Heading/6`（Serif Medium）、`Text/LG`–`Text/XS` + `Text/2XS`（Sans Regular）、`Text/MD Medium` / `Text/RG Medium` / `Text/SM Medium` / `Text/XS Medium`（Sans Medium，UI 標籤 / 選中態用）。對應 code 的 `TYPE_SCALE` / `FONT_SIZES` |
 

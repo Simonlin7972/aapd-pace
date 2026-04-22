@@ -48,6 +48,22 @@ if (path === '/export') {
       </StrictMode>,
     )
   })
+} else if (path === '/design-system/mood-heatmap') {
+  import('./MoodHeatmapDoc.tsx').then(({ default: MoodHeatmapDocPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <MoodHeatmapDocPage />
+      </StrictMode>,
+    )
+  })
+} else if (path === '/design-system/sleep-chart') {
+  import('./SleepChartDoc.tsx').then(({ default: SleepChartDocPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <SleepChartDocPage />
+      </StrictMode>,
+    )
+  })
 } else if (path === '/design-system') {
   import('./DesignSystem.tsx').then(({ default: DesignSystemPage }) => {
     createRoot(document.getElementById('root')!).render(
