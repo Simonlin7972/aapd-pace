@@ -232,35 +232,41 @@ const ButtonDoc: React.FC = () => {
 
         {/* STATES */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <SectionHead theme={theme} kicker="States" sub="每個 Variant 都有三種互動狀態：預設、懸停、按下。" />
+          <SectionHead theme={theme} kicker="States" sub="每個 Variant 都有四種互動狀態：預設、懸停、按下、停用。" />
           <div
             style={{
               background: theme.surface,
               borderRadius: 12,
-              padding: 40,
+              padding: 32,
               display: 'flex',
-              gap: 40,
-              alignItems: 'center',
-              justifyContent: 'center',
+              flexDirection: 'column',
+              gap: 28,
             }}
           >
-            {[
-              { label: 'Default', opacity: 1 },
-              { label: 'Hover', opacity: 0.88 },
-              { label: 'Pressed', opacity: 0.92, scale: 0.97 },
-            ].map((s) => (
-              <div key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
-                <Button
-                  theme={theme}
-                  style={{
-                    opacity: s.opacity,
-                    transform: s.scale ? `scale(${s.scale})` : undefined,
-                  }}
-                >
-                  按鈕
-                </Button>
-                <PaceSans size={13} weight={500} color={theme.inkMuted}>{s.label}</PaceSans>
-              </div>
+            {(['primary', 'soft', 'text'] as const).map((v, idx) => (
+              <React.Fragment key={v}>
+                {idx > 0 && <Divider theme={theme} />}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <PaceSans
+                    size={12}
+                    weight={500}
+                    color={theme.inkMuted}
+                    style={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}
+                  >
+                    {v}
+                  </PaceSans>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                    {(['default', 'hover', 'pressed', 'disabled'] as const).map((s) => (
+                      <div key={s} style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
+                        <Button theme={theme} variant={v} state={s}>按鈕</Button>
+                        <PaceSans size={13} weight={500} color={theme.inkMuted}>
+                          {s.charAt(0).toUpperCase() + s.slice(1)}
+                        </PaceSans>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </React.Fragment>
             ))}
           </div>
         </div>
