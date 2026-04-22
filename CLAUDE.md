@@ -13,6 +13,7 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 7，無 UI f
 | `/design-system` | `DesignSystem.tsx` | tokens / typography / components 展示 |
 | `/design-system/button` | `ButtonDoc.tsx` | Button 元件詳細文件（anatomy / variants / states / width / usage） |
 | `/design-system/segmented-control` | `SegmentedControlDoc.tsx` | Segmented Control 元件詳細文件（anatomy / size / options / usage） |
+| `/design-system/hours-slider` | `HoursSliderDoc.tsx` | Hours Slider 元件詳細文件（anatomy / states / range & step / usage） |
 | `/deck` | `Deck.tsx` | 產品簡報（1920×1080，← → 翻頁，R 回第一頁） |
 
 ## 新增 screen 要動兩處
@@ -108,6 +109,7 @@ Figma 檔案：`8UlMgAIjI3XVwsujXjnGdL`（PDBC | 產品 Pace）
 | `Button` | Design System 頁（`50:38`） | 3 Variant × 4 State × 2 Width = 24 variants（State 含 Disabled），Label TEXT property。Hover/Pressed 用實際色票變化（Primary: `color/brand/hover` / `color/brand/deep`；Soft: `color/bg/elevated` + `color/border/strong`；Text: 10% / 18% 品牌色底），不再依 opacity。核心 base components 放在 `src/components/ui/`，命名不加 `Pace` 前綴 |
 | `SegmentedControl` | Design System 頁（`91:61`） | Size（Default/Compact）× Count（2/3/4）= 6 variants。Track 綁 `color/bg/track`、outer radius 綁 `radius/segmented` |
 | `MoodSlider` | Design System 頁（`96:199`） | Value 0–4 共 5 variants。Thumb fill 綁 `color/mood/{key}/color` primitive、stroke 綁 `color/bg/canvas`；gradient track 採 MOOD_SCALE hex 直填 |
+| `HoursSlider` | Design System 頁（`185:405`） | State=Default / Dragging 共 2 variants（Dragging 的 thumb 34×34 + 更重陰影）。Track 綁 `color/border/subtle`、Thumb fill 綁 `color/bg/surface`、stroke 綁 `color/brand/default`；gradient fill 採 dust/300 → terracotta/500 hex 直填。Tick labels 綁 `color/text/tertiary` |
 | `color/bg/track` | semantic variable | SegmentedControl track 底色。Light=`color/alpha/ink/09`、Dark=`color/alpha/bone/15` |
 | Typography text styles | 本地 text styles（17 個） | `Display`、`Heading/1`–`Heading/6`（Serif Medium）、`Text/LG`–`Text/XS` + `Text/2XS`（Sans Regular）、`Text/MD Medium` / `Text/RG Medium` / `Text/SM Medium` / `Text/XS Medium`（Sans Medium，UI 標籤 / 選中態用）。對應 code 的 `TYPE_SCALE` / `FONT_SIZES` |
 

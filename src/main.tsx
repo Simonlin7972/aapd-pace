@@ -32,6 +32,14 @@ if (path === '/export') {
       </StrictMode>,
     )
   })
+} else if (path === '/design-system/hours-slider') {
+  import('./HoursSliderDoc.tsx').then(({ default: HoursSliderDocPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <HoursSliderDocPage />
+      </StrictMode>,
+    )
+  })
 } else if (path === '/design-system') {
   import('./DesignSystem.tsx').then(({ default: DesignSystemPage }) => {
     createRoot(document.getElementById('root')!).render(

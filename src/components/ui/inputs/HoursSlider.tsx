@@ -5,6 +5,8 @@ import { PaceNum } from '../foundations/Text';
 const iosEase = 'cubic-bezier(0.32, 0.72, 0, 1)';
 const spring = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
 
+type HoursState = 'default' | 'dragging';
+
 // Draggable hours slider
 export const HoursSlider: React.FC<{
   theme: PaceTheme;
@@ -13,9 +15,11 @@ export const HoursSlider: React.FC<{
   min?: number;
   max?: number;
   step?: number;
-}> = ({ theme, value, onChange, min = 0, max = 12, step = 0.5 }) => {
+  state?: HoursState;
+}> = ({ theme, value, onChange, min = 0, max = 12, step = 0.5, state }) => {
   const trackRef = React.useRef<HTMLDivElement>(null);
-  const [dragging, setDragging] = React.useState(false);
+  const [internalDragging, setInternalDragging] = React.useState(false);
+  const dragging = state !== undefined ? state === 'dragging' : internalDragging;
   const steps = Math.round((max - min) / step);
 
   const getValFromX = (clientX: number) => {
@@ -26,20 +30,20 @@ export const HoursSlider: React.FC<{
   };
 
   const start = (e: React.MouseEvent | React.TouchEvent) => {
-    setDragging(true);
+    setInternalDragging(true);
     e.preventDefault();
     const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
     onChange(getValFromX(x));
   };
 
   React.useEffect(() => {
-    if (!dragging) return;
+    if (!internalDragging) return;
     const move = (e: MouseEvent | TouchEvent) => {
       const x = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const next = getValFromX(x);
       if (next !== value) onChange(next);
     };
-    const end = () => setDragging(false);
+    const end = () => setInternalDragging(false);
     window.addEventListener('mousemove', move);
     window.addEventListener('mouseup', end);
     window.addEventListener('touchmove', move, { passive: false });
@@ -50,7 +54,7 @@ export const HoursSlider: React.FC<{
       window.removeEventListener('touchmove', move);
       window.removeEventListener('touchend', end);
     };
-  }, [dragging, value, onChange]);
+  }, [internalDragging, value, onChange]);
 
   const pct = ((value - min) / (max - min)) * 100;
 

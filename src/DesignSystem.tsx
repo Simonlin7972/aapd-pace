@@ -838,7 +838,13 @@ export default function DesignSystemPage() {
           </SubSection>
 
           {/* Hours Slider */}
-          <SubSection id="mol-hours-slider" title="HoursSlider">
+          <SubSection
+            id="mol-hours-slider"
+            title="HoursSlider"
+            action={
+              <TextLink theme={theme} href="/design-system/hours-slider">查看詳細文件</TextLink>
+            }
+          >
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
               <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 Range slider (0–12h, 0.5h steps) with gradient fill
