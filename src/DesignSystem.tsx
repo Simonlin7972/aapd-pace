@@ -828,7 +828,13 @@ export default function DesignSystemPage() {
         <Section id="inputs" title="Inputs" subtitle="Components that capture feeling or data — Pace 的核心分類。">
 
           {/* Mood Slider */}
-          <SubSection id="mol-mood-slider" title="MoodSlider">
+          <SubSection
+            id="mol-mood-slider"
+            title="MoodSlider"
+            action={
+              <TextLink theme={theme} href="/design-system/mood-slider">查看詳細文件</TextLink>
+            }
+          >
             <div style={{ background: theme.surface, borderRadius: 20, padding: 24 }}>
               <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 16, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 5-point horizontal drag slider with gradient

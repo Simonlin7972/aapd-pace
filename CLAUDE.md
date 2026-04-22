@@ -14,6 +14,7 @@ iOS-style wellness tracking prototype. React 19 + TypeScript + Vite 7，無 UI f
 | `/design-system/button` | `ButtonDoc.tsx` | Button 元件詳細文件（anatomy / variants / states / width / usage） |
 | `/design-system/segmented-control` | `SegmentedControlDoc.tsx` | Segmented Control 元件詳細文件（anatomy / size / options / usage） |
 | `/design-system/hours-slider` | `HoursSliderDoc.tsx` | Hours Slider 元件詳細文件（anatomy / states / range & step / usage） |
+| `/design-system/mood-slider` | `MoodSliderDoc.tsx` | Mood Slider 元件詳細文件（anatomy / values / usage） |
 | `/deck` | `Deck.tsx` | 產品簡報（1920×1080，← → 翻頁，R 回第一頁） |
 
 ## 新增 screen 要動兩處

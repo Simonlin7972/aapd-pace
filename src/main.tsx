@@ -40,6 +40,14 @@ if (path === '/export') {
       </StrictMode>,
     )
   })
+} else if (path === '/design-system/mood-slider') {
+  import('./MoodSliderDoc.tsx').then(({ default: MoodSliderDocPage }) => {
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <MoodSliderDocPage />
+      </StrictMode>,
+    )
+  })
 } else if (path === '/design-system') {
   import('./DesignSystem.tsx').then(({ default: DesignSystemPage }) => {
     createRoot(document.getElementById('root')!).render(
