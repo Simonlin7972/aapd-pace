@@ -114,7 +114,7 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                       display: 'inline-flex', alignItems: 'center', gap: 6,
                       background: theme.line, padding: '5px 12px', borderRadius: 12,
                     }}>
-                      <PaceSans size={12} color={theme.inkSoft}>00:30 → 07:00</PaceSans>
+                      <PaceSans size={12} color={theme.inkSoft}>{formatHM(st.bedtimeMin)} → {formatHM(st.wakeTimeMin)}</PaceSans>
                     </div>
                   </div>
                   <Button theme={theme} variant="soft" full onClick={() => nav.push('sleepStep1')}>
@@ -444,11 +444,11 @@ export const SleepStep2: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
         <div style={{ marginTop: 44, display: 'flex', gap: 8, width: '100%' }}>
           <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
             <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.bedtime}</PaceSans>
-            <PaceSerif size={17} color={theme.ink}>00:30</PaceSerif>
+            <PaceSerif size={17} color={theme.ink}>{formatHM(st.bedtimeMin)}</PaceSerif>
           </div>
           <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
             <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.waketime}</PaceSans>
-            <PaceSerif size={17} color={theme.ink}>07:00</PaceSerif>
+            <PaceSerif size={17} color={theme.ink}>{formatHM(st.wakeTimeMin)}</PaceSerif>
           </div>
         </div>
       </div>
