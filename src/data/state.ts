@@ -8,6 +8,8 @@ const defaults = {
   mood: 2,
   sleepFeel: 2,
   sleepHours: 6.5,
+  bedtimeMin: 30,
+  wakeTimeMin: 420,
   sleepRecorded: false,
   moveMinutes: 25,
   moveDone: true,

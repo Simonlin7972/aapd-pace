@@ -9,6 +9,7 @@ import { Button } from '../components/ui/actions/Button';
 import { AnimatedEnter } from '../components/ui/feedback/AnimatedEnter';
 import { MoodSlider } from '../components/ui/inputs/MoodSlider';
 import { HoursSlider } from '../components/ui/inputs/HoursSlider';
+import { formatHM, durationHours, addHours } from '../lib/time';
 import { useNav, useVisited } from '../components/system/NavStack';
 import { TopBar } from '../components/ui/navigation/TopBar';
 import { BottomBar } from '../components/ui/navigation/BottomBar';
@@ -187,6 +188,8 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
   const [step, setStep] = React.useState(1);
   const [feel, setFeel] = React.useState(PaceState.sleepFeel);
   const [h, setH] = React.useState(PaceState.sleepHours);
+  const [bed, setBed] = React.useState(PaceState.bedtimeMin);
+  const [wake, setWake] = React.useState(PaceState.wakeTimeMin);
   const [dir, setDir] = React.useState<'forward' | 'back'>('forward');
   const [entering, setEntering] = React.useState(false);
 
@@ -285,20 +288,58 @@ export const SleepFlow: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
                 <PaceSans size={18} color={theme.inkSoft}>{L.u_hour}</PaceSans>
               </div>
               <div style={{ width: '100%' }}>
-                <HoursSlider theme={theme} value={h} onChange={(v) => {
+                <HoursSlider theme={theme} value={Math.min(h, 12)} onChange={(v) => {
                   if (v !== h && navigator.vibrate) navigator.vibrate(4);
                   setH(v);
+                  const newWake = addHours(bed, v);
+                  setWake(newWake);
+                  PaceState.sleepHours = v;
+                  PaceState.wakeTimeMin = newWake;
                 }} />
               </div>
               <div style={{ marginTop: 44, display: 'flex', gap: 8, width: '100%' }}>
-                <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
+                <button
+                  type="button"
+                  onClick={() => nav.presentSheet('timeSheet', {
+                    mode: 'bedtime',
+                    initialMin: bed,
+                    onSave: (min: number) => {
+                      setBed(min);
+                      PaceState.bedtimeMin = min;
+                      const newH = durationHours(min, wake);
+                      setH(newH);
+                      PaceState.sleepHours = newH;
+                    },
+                  })}
+                  style={{
+                    flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14,
+                    border: 'none', textAlign: 'left', cursor: 'pointer', font: 'inherit',
+                  }}
+                >
                   <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.bedtime}</PaceSans>
-                  <PaceSerif size={17} color={theme.ink}>00:30</PaceSerif>
-                </div>
-                <div style={{ flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14 }}>
+                  <PaceSerif size={17} color={theme.ink}>{formatHM(bed)}</PaceSerif>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => nav.presentSheet('timeSheet', {
+                    mode: 'wakeTime',
+                    initialMin: wake,
+                    onSave: (min: number) => {
+                      setWake(min);
+                      PaceState.wakeTimeMin = min;
+                      const newH = durationHours(bed, min);
+                      setH(newH);
+                      PaceState.sleepHours = newH;
+                    },
+                  })}
+                  style={{
+                    flex: 1, background: theme.surface, borderRadius: theme.radius, padding: 14,
+                    border: 'none', textAlign: 'left', cursor: 'pointer', font: 'inherit',
+                  }}
+                >
                   <PaceSans size={11} color={theme.inkMuted} style={{ marginBottom: 4 }}>{L.waketime}</PaceSans>
-                  <PaceSerif size={17} color={theme.ink}>07:00</PaceSerif>
-                </div>
+                  <PaceSerif size={17} color={theme.ink}>{formatHM(wake)}</PaceSerif>
+                </button>
               </div>
             </div>
             <div style={{ padding: '28px 20px' }}>

@@ -99,6 +99,8 @@ export default function ExportPage() {
   // Ensure state is set for screens that need it
   PaceState.sleepRecorded = true;
   PaceState.sleepHours = 6.5;
+  PaceState.bedtimeMin = 30;
+  PaceState.wakeTimeMin = 420;
   PaceState.sleepFeel = 2;
   PaceState.mood = 2;
   PaceState.moveDone = true;

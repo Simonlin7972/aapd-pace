@@ -7,6 +7,7 @@ import { LaunchScreen } from './components/system/LaunchScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { SleepHome, SleepFlow } from './screens/SleepScreens';
 import { MoodSheet } from './screens/MoodSheet';
+import { TimeSheet } from './screens/TimeSheet';
 import { MoveScreen, MoveDoneScreen } from './screens/MoveScreens';
 import { ExerciseHome, ExerciseRecord } from './screens/ExerciseScreens';
 import { FoodScreen } from './screens/FoodScreen';
@@ -83,6 +84,7 @@ function App() {
     sleepHome: SleepHome,
     sleepStep1: SleepFlow,
     moodSheet: MoodSheet,
+    timeSheet: TimeSheet,
     move: MoveScreen,
     moveDone: MoveDoneScreen,
     exerciseHome: ExerciseHome,
