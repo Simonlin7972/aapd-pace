@@ -151,6 +151,11 @@ export const SleepHome: React.FC<{ theme: PaceTheme }> = ({ theme }) => {
               </div>
               <WeekChart theme={theme} data={weekly} L={L} />
             </div>
+            <div style={{ marginBottom: 16 }}>
+              <Button theme={theme} variant="soft" full onClick={() => nav.push('sleepLog')}>
+                {L.sleepHome_allRecords}
+              </Button>
+            </div>
           </AnimatedEnter>
 
           {/* Insight card */}

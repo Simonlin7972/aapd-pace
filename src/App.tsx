@@ -6,6 +6,7 @@ import { NavStack } from './components/system/NavStack';
 import { LaunchScreen } from './components/system/LaunchScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { SleepHome, SleepFlow } from './screens/SleepScreens';
+import { SleepLog } from './screens/SleepLog';
 import { MoodSheet } from './screens/MoodSheet';
 import { TimeSheet } from './screens/TimeSheet';
 import { MoveScreen, MoveDoneScreen } from './screens/MoveScreens';
@@ -82,6 +83,7 @@ function App() {
   const SCREENS = React.useMemo<Record<string, React.ComponentType<any>>>(() => ({
     home: HomeScreen,
     sleepHome: SleepHome,
+    sleepLog: SleepLog,
     sleepStep1: SleepFlow,
     moodSheet: MoodSheet,
     timeSheet: TimeSheet,

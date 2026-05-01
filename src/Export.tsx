@@ -6,6 +6,7 @@ import { IOSDevice } from './components/system/IOSFrame';
 import { NavStack } from './components/system/NavStack';
 import { HomeScreen } from './screens/HomeScreen';
 import { SleepHome, SleepStep1, SleepStep2, SleepStep3 } from './screens/SleepScreens';
+import { SleepLog } from './screens/SleepLog';
 import { MoodSheet } from './screens/MoodSheet';
 import { MoveScreen, MoveDoneScreen } from './screens/MoveScreens';
 import { ExerciseHome, ExerciseRecord } from './screens/ExerciseScreens';
@@ -117,6 +118,7 @@ export default function ExportPage() {
   const screens = [
     { label: '首頁 Home', name: 'home' },
     { label: '睡眠首頁 Sleep Home', name: 'sleepHome' },
+    { label: '所有睡眠記錄 Sleep Log', name: 'sleepLog' },
     { label: '睡眠 Step 1', name: 'sleepStep1' },
     { label: '睡眠 Step 2', name: 'sleepStep2' },
     { label: '睡眠 Step 3', name: 'sleepStep3' },
@@ -133,6 +135,7 @@ export default function ExportPage() {
   const SCREEN_MAP: Record<string, React.ComponentType<any>> = {
     home: HomeScreen,
     sleepHome: SleepHome,
+    sleepLog: SleepLog,
     sleepStep1: SleepStep1,
     sleepStep2: SleepStep2,
     sleepStep3: SleepStep3,
