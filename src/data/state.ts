@@ -84,7 +84,8 @@ type PaceStateShape = typeof defaults;
 const load = (): PaceStateShape => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...defaults, ...JSON.parse(raw) };
+    // sleepLog 屬於 fixture，不從 localStorage 還原（避免日期過期）
+    if (raw) return { ...defaults, ...JSON.parse(raw), sleepLog: defaults.sleepLog };
   } catch { /* localStorage 不可用（隱私模式、quota 已滿）時忽略，不中斷 app */ }
   return { ...defaults };
 };

@@ -54,6 +54,8 @@ Proxy 的 `set` trap 會同步把整包狀態寫進 `localStorage`（key：`pace
 
 `/export` 路徑下會寫入 fixture 值，state.ts 內 `isExportPath` guard 會跳過持久化，不會覆蓋真實使用者資料。
 
+`sleepLog` 是相對今日生成的 fixture，`load()` 會強制覆蓋 localStorage 中的舊值，避免日期過期。新增類似的「相對時間 fixture」欄位時要在 `load()` 同步加排除。
+
 這是 prototype 寫法，不要改成 reducer/context。
 
 ## iPhone frame 注意事項
